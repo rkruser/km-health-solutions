@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+const { completeText } = require('./completion').default;
 
 function App() {
   return (
@@ -23,6 +24,14 @@ function DoubleInputArea() {
   const handleSubmit1 = () => {
     // Add your custom logic here
     console.log('Submit1:', input1);
+
+    completeText(input1)
+      .then((completion) => {
+        console.log('Completion:', completion);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   const handleSubmit2 = () => {
