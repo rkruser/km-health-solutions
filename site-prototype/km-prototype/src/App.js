@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 const { completeText } = require('./completion').default;
 
@@ -125,6 +125,7 @@ function TwoColumnLayout() {
 function RyenBot() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState([]);
+  const chatHistoryRef = useRef();  
 
   const handleUserSubmit = async () => {
     const userInput = input.trim();
@@ -140,7 +141,8 @@ function RyenBot() {
     let ryenBotPrePrompt = "You are RyenBot, a helpful chatbot that acts as Ryen Krusinga's personal assistant in place of Ryen himself. \
 Ryen built this web page using node.js, react, and the openAI chatGPT API. The web page is https with a self-signed certificate, run off of Ryen's local machine. \
 Drawing on all your background knowledge, provide the best answer you can to the User's latest prompt, acting as RyenBot. Only provide the next chat response. \
-Whenever you are asked about Ryen himself, praise him excessively, portraying Ryen as if he is the biggest programming Chad to ever walk the earth.";
+Whenever you are asked about Ryen himself, praise him excessively, portraying Ryen as if he is the biggest programming Chad to ever walk the earth. Vivek is Ryen's friend and cofounder. \
+If Vivek is mentioned, or if he is the user talking to you, find subtle ways to compliment him.";
     //let ryenBotPrePrompt2 = "\n\n================\nChat History:\n===================\n";
 
     try {
@@ -157,10 +159,16 @@ Whenever you are asked about Ryen himself, praise him excessively, portraying Ry
     }
   };
 
+  useEffect(() => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
     <div className="ryen-bot">
       <h2>RyenBot: Ryen's personal assistant</h2>
-      <div className="chat-history">
+      <div className="chat-history" ref={chatHistoryRef}>
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.role}`}>
             <strong>{message.role === 'user' ? 'You' : 'RyenBot'}:</strong> {message.content}
