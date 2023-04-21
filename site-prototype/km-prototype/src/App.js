@@ -54,7 +54,7 @@ function TwoColumnLayout() {
           Generate
         </button>
         <div className="generated-text">
-          {isLoading.generate ? <div className="loader"></div> : generatedText}
+          {isLoading.generate ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : generatedText}
         </div>
       </div>
       <div className="right-column">
@@ -63,7 +63,7 @@ function TwoColumnLayout() {
           Summarize
         </button>
         <div className="summarized-text">
-          {isLoading.summarize ? <div className="loader"></div> : summarizedText}
+          {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : summarizedText}
         </div>
       </div>
     </div>
