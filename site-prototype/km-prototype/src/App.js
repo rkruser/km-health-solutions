@@ -10,6 +10,7 @@ function App() {
       </div>
       <div>
         <TwoColumnLayout />
+        <RyenBot />
       </div>
     </div>
   );
@@ -108,7 +109,7 @@ function TwoColumnLayout() {
             onChange={(e) => setCustomText(e.target.value)}
             placeholder="Were there any medical complications?"
           />
-        </div>  
+        </div>
 
         <div className="summarized-text">
           {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take up to a few minutes</p></div> : summarizedText}
@@ -119,6 +120,59 @@ function TwoColumnLayout() {
 }
 
 
+function RyenBot() {
+  const [input, setInput] = useState('');
+  const [messages, setMessages] = useState([]);
 
+  const handleUserSubmit = async () => {
+    const userInput = input.trim();
+    if (userInput === '') return;
 
+    setMessages([...messages, { role: 'user', content: userInput }]);
+    setInput('');
+
+    const conversationHistory = messages
+      .map((message) => `${message.role === 'user' ? 'User' : 'RyenBot'}: ${message.content}`)
+      .join('\n');
+
+    let ryenBotPrePrompt = "You are RyenBot, a helpful chatbot that acts as Ryen Krusinga's personal assistant in place of Ryen himself. \
+Ryen built this web page using node.js, react, and the openAI chatGPT API. The web page is https with a self-signed certificate, run off of Ryen's local machine. \
+Drawing on all your background knowledge, provide the best answer you can to the User's latest prompt, listed as follows, acting as RyenBot. \
+Do not preface your response with \"RyenBot:\". Do not repeat the User's prompt. Give a single response as RyenBot which most naturally continues the conversation history \
+plus the latest user prompt.\nLatest prompt:\n";
+    let ryenBotPrePrompt2 = "\n\n================\nChat History:\n===================\n";
+
+    try {
+      let prompt = ryenBotPrePrompt+'User: ' + userInput + ryenBotPrePrompt2 + conversationHistory;
+      console.log("RyenBot chat prompt:\n"+prompt);
+      const response = await completeText(prompt);
+      setMessages([...messages, { role: 'user', content: userInput }, { role: 'bot', content: response }]);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  return (
+    <div className="ryen-bot">
+      <h1>RyenBot</h1>
+      <div className="chat-history">
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.role}`}>
+            <strong>{message.role === 'user' ? 'You' : 'RyenBot'}:</strong> {message.content}
+          </div>
+        ))}
+      </div>
+      <div className="ryenbot-input-area">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleUserSubmit()}
+          placeholder="Type your message..."
+        />
+        <button onClick={handleUserSubmit}>Send</button>
+      </div>
+    </div>
+  );
+}
 
