@@ -23,16 +23,21 @@ function TwoColumnLayout() {
   const [inputText, setInputText] = useState('');
   const [generatedText, setGeneratedText] = useState('');
   const [summarizedText, setSummarizedText] = useState('');
+  const [isLoading, setIsLoading] = useState({ generate: false, summarize: false });
 
   const handleGenerate = () => {
+    setIsLoading({ ...isLoading, generate: true });
     completeText(inputText).then((completion) => {
       setGeneratedText(completion);
+      setIsLoading({ ...isLoading, generate: false });
     });
   };
 
   const handleSummarize = () => {
+    setIsLoading({ ...isLoading, summarize: true });
     completeText(generatedText).then((completion) => {
       setSummarizedText(completion);
+      setIsLoading({ ...isLoading, summarize: false });
     });
   };
 
@@ -48,14 +53,18 @@ function TwoColumnLayout() {
         <button className="generate-btn" onClick={handleGenerate}>
           Generate
         </button>
-        <div className="generated-text">{generatedText}</div>
+        <div className="generated-text">
+          {isLoading.generate ? <div className="loader"></div> : generatedText}
+        </div>
       </div>
       <div className="right-column">
-        <div style={{ height: '213px' }}></div>
+        <div style={{ height: 'calc(20vh + 20px)' }}></div>
         <button className="summarize-btn" onClick={handleSummarize}>
           Summarize
         </button>
-        <div className="summarized-text">{summarizedText}</div>
+        <div className="summarized-text">
+          {isLoading.summarize ? <div className="loader"></div> : summarizedText}
+        </div>
       </div>
     </div>
   );
