@@ -61,7 +61,7 @@ function TwoColumnLayout() {
           Generate Patient Notes
         </button>
         <div className="generated-text">
-          {isLoading.generate ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : generatedText}
+          {isLoading.generate ? <div><div className="loader"></div><p>Querying chatGPT... this may take up to a few minutes</p></div> : generatedText}
         </div>
       </div>
       <div className="right-column">
@@ -69,7 +69,7 @@ function TwoColumnLayout() {
           <p>Instructions</p>
           <ol>
             <li>Edit the text in the box to the left to describe a fictional patient.</li>
-            <li>Click the "Generate notes" button to generate an example set of nurse's notes for the given patient.</li>
+            <li>Click the "Generate notes" button to generate an example set of nurse's notes for the given patient. If you would like the notes formatted in a certain manner, you may ask the model to do this in natural language in the text input box, though this is not required.</li>
             <li>Once the notes have loaded, click the "Summarize" button to generate a brief summary of the notes.</li>
           </ol>
         </div>
@@ -77,7 +77,7 @@ function TwoColumnLayout() {
           Summarize Patient Notes
         </button>
         <div className="summarized-text">
-          {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : summarizedText}
+          {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take up to a few minutes</p></div> : summarizedText}
         </div>
       </div>
     </div>
