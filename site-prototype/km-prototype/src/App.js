@@ -17,6 +17,17 @@ function App() {
 
 export default App;
 
+
+/*
+Some TODOs:
+
+1. Add custom query button
+2. Add https
+3. Add RyenBot
+
+
+*/
+
 // ****************** GPT-4 Code (with some modifications) *******************
 
 
@@ -26,9 +37,10 @@ function TwoColumnLayout() {
   const [generatedText, setGeneratedText] = useState('');
   const [summarizedText, setSummarizedText] = useState('');
   const [isLoading, setIsLoading] = useState({ generate: false, summarize: false });
+  const [customText, setCustomText] = useState('');
 
   const handleGenerate = () => {
-    let generatePrePrompt = "Given the following description of a hypothetical medical patient, generate a realistic and detailed set of hourly nurse's notes, including vital signs, for that patient spanning 48 hours of a hospital stay. Patient description:\n\n";
+    let generatePrePrompt = "Given the following description of a hypothetical medical patient, generate a realistic and detailed set of hourly nurse's notes, including vital signs, for that patient spanning 48 hours of a hospital stay (unless otherwise specified). Patient description:\n\n";
 
     setIsLoading({ ...isLoading, generate: true });
     completeText(generatePrePrompt+inputText).then((completion) => {
@@ -47,6 +59,16 @@ function TwoColumnLayout() {
     });
   };
 
+  const handleCustom = () => {
+    let customPrompt = "Answer the following prompt about the nurse's notes for a patient as best you can:\n\n Prompt: ";
+    let customPrompt2 = "\n\nNurse's notes:\n";
+
+    setIsLoading({ ...isLoading, summarize: true });
+    completeText(customPrompt+customText+customPrompt2+generatedText).then((completion) => {
+      setSummarizedText(completion);
+      setIsLoading({ ...isLoading, summarize: false });
+    });
+  };
 
   return (
     <div className="two-column-layout">
@@ -71,11 +93,23 @@ function TwoColumnLayout() {
             <li>Edit the text in the box to the left to describe a fictional patient.</li>
             <li>Click the "Generate notes" button to generate an example set of nurse's notes for the given patient. If you would like the notes formatted in a certain manner, you may ask the model to do this in natural language in the text input box, though this is not required.</li>
             <li>Once the notes have loaded, click the "Summarize" button to generate a brief summary of the notes.</li>
+            <li>If you would like to ask a custom question about the notes, use the Custom Query button after writing your question in the adjacent text area.</li>
           </ol>
         </div>
         <button className="summarize-btn" onClick={handleSummarize}>
           Summarize Patient Notes
         </button>
+
+        <div id="custom-div">
+          <button id="custom-btn" onClick={handleCustom}>Custom Query</button>
+          <input id="custom-input"
+            type="text"
+            value={customText}
+            onChange={(e) => setCustomText(e.target.value)}
+            placeholder="Were there any medical complications?"
+          />
+        </div>  
+
         <div className="summarized-text">
           {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take up to a few minutes</p></div> : summarizedText}
         </div>
