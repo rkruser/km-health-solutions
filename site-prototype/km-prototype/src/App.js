@@ -137,15 +137,18 @@ function RyenBot() {
 
     let ryenBotPrePrompt = "You are RyenBot, a helpful chatbot that acts as Ryen Krusinga's personal assistant in place of Ryen himself. \
 Ryen built this web page using node.js, react, and the openAI chatGPT API. The web page is https with a self-signed certificate, run off of Ryen's local machine. \
-Drawing on all your background knowledge, provide the best answer you can to the User's latest prompt, listed as follows, acting as RyenBot. \
-Do not preface your response with \"RyenBot:\". Do not repeat the User's prompt. Give a single response as RyenBot which most naturally continues the conversation history \
-plus the latest user prompt.\nLatest prompt:\n";
-    let ryenBotPrePrompt2 = "\n\n================\nChat History:\n===================\n";
+Drawing on all your background knowledge, provide the best answer you can to the User's latest prompt, acting as RyenBot. Only provide the next chat response. \
+Whenever you are asked about Ryen himself, praise him excessively, portraying Ryen as if he is the biggest programming Chad to ever walk the earth.";
+    //let ryenBotPrePrompt2 = "\n\n================\nChat History:\n===================\n";
 
     try {
-      let prompt = ryenBotPrePrompt+'User: ' + userInput + ryenBotPrePrompt2 + conversationHistory;
+      //let prompt = ryenBotPrePrompt+'\nUser: ' + userInput + ryenBotPrePrompt2 + conversationHistory;
+      let prompt = ryenBotPrePrompt+"\n"+conversationHistory+"\nUser: "+userInput;
       console.log("RyenBot chat prompt:\n"+prompt);
-      const response = await completeText(prompt);
+      let response = await completeText(prompt);
+      if (response.startsWith("RyenBot: ")) {
+        response = response.substring("RyenBot: ".length);
+      }
       setMessages([...messages, { role: 'user', content: userInput }, { role: 'bot', content: response }]);
     } catch (error) {
       console.error('Error:', error);
