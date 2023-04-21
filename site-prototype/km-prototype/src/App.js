@@ -180,7 +180,7 @@ If Vivek is mentioned, or if he is the user talking to you, find subtle ways to 
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          //onKeyPress={(e) => e.key === 'Enter' && handleUserSubmit()}
+          onKeyPress={(e) => e.key === 'Enter' && handleUserSubmit()}
           placeholder="Ask RyenBot a question..."
         />
         <button onClick={handleUserSubmit}>Send</button>
