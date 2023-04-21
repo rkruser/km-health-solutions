@@ -5,8 +5,8 @@ const { completeText } = require('./completion').default;
 function App() {
   return (
     <div className="App">
-      <div class="site-banner">
-        <h1 class="site-title">Demo Medical App</h1>
+      <div className="site-banner">
+        <h1 className="site-title">Demo Medical App</h1>
       </div>
       <div>
         <TwoColumnLayout />
@@ -21,26 +21,32 @@ export default App;
 
 
 function TwoColumnLayout() {
-  const [inputText, setInputText] = useState('');
+  let patientExampleText = "John Doe is a 64-year-old male who is recovering from heart surgery in the ICU.";  
+  const [inputText, setInputText] = useState(patientExampleText);
   const [generatedText, setGeneratedText] = useState('');
   const [summarizedText, setSummarizedText] = useState('');
   const [isLoading, setIsLoading] = useState({ generate: false, summarize: false });
 
   const handleGenerate = () => {
+    let generatePrePrompt = "Given the following description of a hypothetical medical patient, generate a realistic and detailed set of hourly nurse's notes, including vital signs, for that patient spanning 48 hours of a hospital stay. Patient description:\n\n";
+
     setIsLoading({ ...isLoading, generate: true });
-    completeText(inputText).then((completion) => {
+    completeText(generatePrePrompt+inputText).then((completion) => {
       setGeneratedText(completion);
       setIsLoading({ ...isLoading, generate: false });
     });
   };
 
   const handleSummarize = () => {
+    let summarizePrePrompt = "Given the following set of nurse's notes, write a compact and succint summary of the major medically relevant events described therein. Notes:\n\n";
+
     setIsLoading({ ...isLoading, summarize: true });
-    completeText(generatedText).then((completion) => {
+    completeText(summarizePrePrompt+generatedText).then((completion) => {
       setSummarizedText(completion);
       setIsLoading({ ...isLoading, summarize: false });
     });
   };
+
 
   return (
     <div className="two-column-layout">
