@@ -18,6 +18,7 @@ export default App;
 
 // ****************** GPT-4 Code (with some modifications) *******************
 
+
 function TwoColumnLayout() {
   const [inputText, setInputText] = useState('');
   const [generatedText, setGeneratedText] = useState('');
@@ -50,6 +51,7 @@ function TwoColumnLayout() {
         <div className="generated-text">{generatedText}</div>
       </div>
       <div className="right-column">
+        <div style={{ height: '213px' }}></div>
         <button className="summarize-btn" onClick={handleSummarize}>
           Summarize
         </button>
