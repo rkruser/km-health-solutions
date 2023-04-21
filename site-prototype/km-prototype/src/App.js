@@ -7,9 +7,9 @@ function App() {
     <div className="App">
       <header>
       </header>
-      <body>
+      <div>
         <DoubleInputArea />
-      </body>
+      </div>
     </div>
   );
 }
@@ -37,6 +37,16 @@ function DoubleInputArea() {
   const handleSubmit2 = () => {
     // Add your custom logic here
     console.log('Submit2:', input2);
+
+    let pre_prompt = "You are a chatbot proxy for someone named Ryen Krusinga. Sign off all your responses with --Ryen K.\n\n";
+
+    completeText(pre_prompt + input2)
+    .then((completion) => {
+      console.log('Completion:', completion);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
 
   return (
