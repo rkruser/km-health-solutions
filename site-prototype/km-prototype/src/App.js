@@ -52,7 +52,7 @@ function TwoColumnLayout() {
           placeholder="Enter text here..."
         />
         <button className="generate-btn" onClick={handleGenerate}>
-          Generate
+          Generate Patient Notes
         </button>
         <div className="generated-text">
           {isLoading.generate ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : generatedText}
@@ -68,7 +68,7 @@ function TwoColumnLayout() {
           </ol>
         </div>
         <button className="summarize-btn" onClick={handleSummarize}>
-          Summarize
+          Summarize Patient Notes
         </button>
         <div className="summarized-text">
           {isLoading.summarize ? <div><div className="loader"></div><p>Querying chatGPT... this may take a moment</p></div> : summarizedText}
