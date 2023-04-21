@@ -65,7 +65,9 @@ async function completeText(prompt) {
   }
 
 
-export default {
+const exportedFuncs = {
     completeText,
   };
+
+export default exportedFuncs;
   
