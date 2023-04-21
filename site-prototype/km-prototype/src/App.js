@@ -5,8 +5,9 @@ const { completeText } = require('./completion').default;
 function App() {
   return (
     <div className="App">
-      <header>
-      </header>
+      <div class="site-banner">
+        <h1 class="site-title">Demo Medical App</h1>
+      </div>
       <div>
         <TwoColumnLayout />
       </div>
@@ -58,7 +59,14 @@ function TwoColumnLayout() {
         </div>
       </div>
       <div className="right-column">
-        <div style={{ height: 'calc(20vh + 20px)' }}></div>
+        <div id="spacerdiv">
+          <p>Instructions</p>
+          <ol>
+            <li>Edit the text in the box to the left to describe a fictional patient.</li>
+            <li>Click the "Generate notes" button to generate an example set of nurse's notes for the given patient.</li>
+            <li>Once the notes have loaded, click the "Summarize" button to generate a brief summary of the notes.</li>
+          </ol>
+        </div>
         <button className="summarize-btn" onClick={handleSummarize}>
           Summarize
         </button>
