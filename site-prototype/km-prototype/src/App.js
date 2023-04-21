@@ -8,7 +8,7 @@ function App() {
       <header>
       </header>
       <div>
-        <DoubleInputArea />
+        <TwoColumnLayout />
       </div>
     </div>
   );
@@ -17,69 +17,43 @@ function App() {
 export default App;
 
 // ****************** GPT-4 Code (with some modifications) *******************
-function DoubleInputArea() {
-  const [input1, setInput1] = useState('');
-  const [input2, setInput2] = useState('');
-  const [response1, setResponse1] = useState('');
-  const [response2, setResponse2] = useState('');
 
-  const handleSubmit1 = () => {
-    console.log('Submit1:', input1);
+function TwoColumnLayout() {
+  const [inputText, setInputText] = useState('');
+  const [generatedText, setGeneratedText] = useState('');
+  const [summarizedText, setSummarizedText] = useState('');
 
-    completeText(input1)
-      .then((completion) => {
-        console.log('Completion:', completion);
-        setResponse1(completion);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  const handleGenerate = () => {
+    completeText(inputText).then((completion) => {
+      setGeneratedText(completion);
+    });
   };
 
-  const handleSubmit2 = () => {
-    console.log('Submit2:', input2);
-
-    let pre_prompt = "You are a chatbot proxy for someone named Ryen Krusinga. Sign off all your responses with --Ryen K.\n\n";
-
-    completeText(pre_prompt + input2)
-      .then((completion) => {
-        console.log('Completion:', completion);
-        setResponse2(completion);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+  const handleSummarize = () => {
+    completeText(generatedText).then((completion) => {
+      setSummarizedText(completion);
+    });
   };
 
   return (
-    <div className="container">
-      <div className="text-input-container">
+    <div className="two-column-layout">
+      <div className="left-column">
         <textarea
-          className="text-input"
-          value={input1}
-          onChange={(e) => setInput1(e.target.value)}
+          className="input-area"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
           placeholder="Enter text here..."
         />
-        <button className="submit-btn" onClick={handleSubmit1}>
-          Submit
+        <button className="generate-btn" onClick={handleGenerate}>
+          Generate
         </button>
-        <div className="response">
-          {response1}
-        </div>
+        <div className="generated-text">{generatedText}</div>
       </div>
-      <div className="text-input-container">
-        <textarea
-          className="text-input"
-          value={input2}
-          onChange={(e) => setInput2(e.target.value)}
-          placeholder="Enter text here..."
-        />
-        <button className="submit-btn" onClick={handleSubmit2}>
-          Submit
+      <div className="right-column">
+        <button className="summarize-btn" onClick={handleSummarize}>
+          Summarize
         </button>
-        <div className="response">
-          {response2}
-        </div>
+        <div className="summarized-text">{summarizedText}</div>
       </div>
     </div>
   );
