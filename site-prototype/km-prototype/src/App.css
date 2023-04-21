@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: #282c34;  
 }
 
 .App-logo {
@@ -56,7 +57,7 @@
 
 .input-area {
   width: 100%;
-  height: 150px;
+  height: 20vh;
   resize: none;
   margin-bottom: 10px;
 }
@@ -70,16 +71,13 @@
 .generated-text,
 .summarized-text {
   width: 100%;
+  height: 60vh;
   flex-grow: 1;
   padding: 10px;
   background-color: #f0f0f0;
   border: 1px solid #ccc;
   white-space: pre-wrap;
   overflow-y: auto; /* Add scrollbar if the text exceeds the height */
-}
-
-.generated-text {
-  height: 300px; /* Fixed height for the left column panel */
 }
 
 
