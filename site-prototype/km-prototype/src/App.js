@@ -12,6 +12,8 @@ function App() {
         <TwoColumnLayout />
         <RyenBot />
       </div>
+      <div style={{height: "40px"}}>
+      </div>
     </div>
   );
 }
@@ -157,7 +159,7 @@ Whenever you are asked about Ryen himself, praise him excessively, portraying Ry
 
   return (
     <div className="ryen-bot">
-      <h1>RyenBot</h1>
+      <h2>RyenBot: Ryen's personal assistant</h2>
       <div className="chat-history">
         {messages.map((message, index) => (
           <div key={index} className={`message ${message.role}`}>
@@ -170,8 +172,8 @@ Whenever you are asked about Ryen himself, praise him excessively, portraying Ry
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleUserSubmit()}
-          placeholder="Type your message..."
+          //onKeyPress={(e) => e.key === 'Enter' && handleUserSubmit()}
+          placeholder="Ask RyenBot a question..."
         />
         <button onClick={handleUserSubmit}>Send</button>
       </div>
