@@ -30,13 +30,13 @@ const server = https.createServer(credentials, app).listen(port, () => {
 });
 
 server.on('request', (req, res) => {
-    const currentDateTime = new Date();
-    const formatter = new Intl.DateTimeFormat('en-US', {
+  const currentDateTime = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/New_York',
     dateStyle: 'full',
     timeStyle: 'long',
     });
-    console.log(formatter.format(currentDateTime));
+  console.log(formatter.format(currentDateTime));
   console.log(`Incoming request from ${req.connection.remoteAddress}:${req.connection.remotePort}`);
   console.log(`Request method: ${req.method}`);
   console.log(`Request URL: ${req.url}`);

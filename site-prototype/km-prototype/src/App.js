@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import {Helmet} from 'react-helmet';
 import './App.css';
 const { completeText } = require('./completion').default;
 
 function App() {
   return (
     <div className="App">
+      <Helmet>
+        <title>Demo medical app</title>
+      </Helmet>
       <div className="site-banner">
         <h1 className="site-title">Demo Medical App</h1>
       </div>
@@ -20,16 +24,6 @@ function App() {
 
 export default App;
 
-
-/*
-Some TODOs:
-
-1. Add custom query button
-2. Add https
-3. Add RyenBot
-
-
-*/
 
 // ****************** GPT-4 Code (with some modifications) *******************
 
@@ -138,6 +132,7 @@ function RyenBot() {
       .map((message) => `${message.role === 'user' ? 'User' : 'RyenBot'}: ${message.content}`)
       .join('\n');
 
+    // eslint-disable-next-line
     let ryenBotPrePrompt = "You are RyenBot, a helpful chatbot that acts as Ryen Krusinga's personal assistant in place of Ryen himself. \
 Ryen built this web page using node.js, react, and the openAI chatGPT API. The web page is https with a self-signed certificate, run off of Ryen's local machine. \
 Drawing on all your background knowledge, provide the best answer you can to the User's latest prompt, acting as RyenBot. Only provide the next chat response. \
