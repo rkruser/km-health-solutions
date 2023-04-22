@@ -40,6 +40,7 @@ async function completeText(prompt) {
 import { Configuration, OpenAIApi } from "openai";
 
 async function completeText(prompt) {
+    // TODO: Make the API key more secure by doing a server side call with the API key as local file / env variable
     const API_KEY = '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';
     const configuration = new Configuration({
         apiKey: API_KEY,
