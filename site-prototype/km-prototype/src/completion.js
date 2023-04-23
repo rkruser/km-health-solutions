@@ -41,7 +41,7 @@ import { Configuration, OpenAIApi } from "openai";
 
 async function completeText(prompt) {
     // TODO: Make the API key more secure by doing a server side call with the API key as local file / env variable
-    const API_KEY = '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';
+    const API_KEY = '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';
     const configuration = new Configuration({
         apiKey: API_KEY,
       }); 
@@ -61,7 +61,7 @@ async function completeText(prompt) {
       }
     } catch (error) {
       console.error('Error completing text:', error);
-      return null;
+      return "Error: could not access chatGPT";
     }
   }
 

@@ -143,7 +143,7 @@ If Vivek is mentioned, or if he is the user talking to you, find subtle ways to 
     try {
       //let prompt = ryenBotPrePrompt+'\nUser: ' + userInput + ryenBotPrePrompt2 + conversationHistory;
       let prompt = ryenBotPrePrompt+"\n"+conversationHistory+"\nUser: "+userInput;
-      console.log("RyenBot chat prompt:\n"+prompt);
+      //console.log("RyenBot chat prompt:\n"+prompt);
       let response = await completeText(prompt);
       if (response.startsWith("RyenBot: ")) {
         response = response.substring("RyenBot: ".length);
