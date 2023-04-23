@@ -5,8 +5,8 @@ const app = express();
 const port = 3000;
 
 // Set the path to your self-signed SSL certificate and private key
-const privateKey = fs.readFileSync('cert.key', 'utf8');
-const certificate = fs.readFileSync('cert.crt', 'utf8');
+const privateKey = fs.readFileSync('C:/Certbot/live/ryenandvivekstartup.online/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('C:/Certbot/live/ryenandvivekstartup.online/fullchain.pem', 'utf8');
 
 const credentials = {
   key: privateKey,
