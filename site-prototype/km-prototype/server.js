@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { completeText } = require('./completion');
 require('dotenv').config()
-console.log('Environmental var OPENAI_API_KEY set as: ', process.env.OPENAI_API_KEY)
 
 const app = express();
 const port = 3000;
