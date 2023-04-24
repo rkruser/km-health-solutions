@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {Helmet} from 'react-helmet';
 import './App.css';
-const { completeText } = require('./completion').default;
 
 function App() {
   return (
@@ -27,6 +26,31 @@ export default App;
 
 // ****************** GPT-4 Code (with some modifications) *******************
 
+async function callCompleteText(prompt) {
+  try {
+    // Need to find a better way to switch between local and production fetch urls. Separate servers?
+    // https://localhost:3000/complete-text
+    const response = await fetch('https://ryenandvivekstartup.online/complete-text', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error completing text');
+    }
+
+    const data = await response.json();
+    return data.completion;
+  } catch (error) {
+    console.error('Error completing text:', error);
+    return 'Error: could not access chatGPT';
+  }
+}
+
+
 
 function TwoColumnLayout() {
   let patientExampleText = "John Doe is a 64-year-old male who is recovering from heart surgery in the ICU.";  
@@ -40,7 +64,7 @@ function TwoColumnLayout() {
     let generatePrePrompt = "Given the following description of a hypothetical medical patient, generate a realistic and detailed set of hourly nurse's notes, including vital signs, for that patient spanning 48 hours of a hospital stay (unless otherwise specified). Patient description:\n\n";
 
     setIsLoading({ ...isLoading, generate: true });
-    completeText(generatePrePrompt+inputText).then((completion) => {
+    callCompleteText(generatePrePrompt+inputText).then((completion) => {
       setGeneratedText(completion);
       setIsLoading({ ...isLoading, generate: false });
     });
@@ -50,7 +74,7 @@ function TwoColumnLayout() {
     let summarizePrePrompt = "Given the following set of nurse's notes, write a compact and succint summary of the major medically relevant events described therein. Notes:\n\n";
 
     setIsLoading({ ...isLoading, summarize: true });
-    completeText(summarizePrePrompt+generatedText).then((completion) => {
+    callCompleteText(summarizePrePrompt+generatedText).then((completion) => {
       setSummarizedText(completion);
       setIsLoading({ ...isLoading, summarize: false });
     });
@@ -61,7 +85,7 @@ function TwoColumnLayout() {
     let customPrompt2 = "\n\nNurse's notes:\n";
 
     setIsLoading({ ...isLoading, summarize: true });
-    completeText(customPrompt+customText+customPrompt2+generatedText).then((completion) => {
+    callCompleteText(customPrompt+customText+customPrompt2+generatedText).then((completion) => {
       setSummarizedText(completion);
       setIsLoading({ ...isLoading, summarize: false });
     });
@@ -144,7 +168,7 @@ If Vivek is mentioned, or if he is the user talking to you, find subtle ways to 
       //let prompt = ryenBotPrePrompt+'\nUser: ' + userInput + ryenBotPrePrompt2 + conversationHistory;
       let prompt = ryenBotPrePrompt+"\n"+conversationHistory+"\nUser: "+userInput;
       //console.log("RyenBot chat prompt:\n"+prompt);
-      let response = await completeText(prompt);
+      let response = await callCompleteText(prompt);
       if (response.startsWith("RyenBot: ")) {
         response = response.substring("RyenBot: ".length);
       }
