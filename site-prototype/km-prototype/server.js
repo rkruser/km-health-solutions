@@ -1,8 +1,6 @@
 const fs = require('fs');
 const https = require('https');
 const express = require('express');
-
-// New lines
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { completeText } = require('./completion');
@@ -30,14 +28,11 @@ app.use(basicAuth({
   unauthorizedResponse: 'Unauthorized',
 }));
 
-// New lines
 app.use(bodyParser.json());
 app.use(cors());
 
 app.use(express.static('build')); // Replace 'build' with the path to your React app's build directory
 
-
-// New lines
 app.post('/complete-text', async (req, res) => {
     try {
       const prompt = req.body.prompt;
@@ -48,9 +43,6 @@ app.post('/complete-text', async (req, res) => {
       res.status(500).send('Error: could not access chatGPT');
     }
   });
-  
-  
-
 
 const server = https.createServer(credentials, app).listen(port, () => {
   console.log(`Server running at https://localhost:${port}`);
