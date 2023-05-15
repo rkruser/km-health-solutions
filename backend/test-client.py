@@ -1,7 +1,7 @@
 import requests
 
 # Define the URL for the Flask server
-url = "http://localhost:5000/process"
+url = "https://localhost:5000/process"
 
 # Data to be sent in the request
 data = {
@@ -9,7 +9,7 @@ data = {
 }
 
 # Send a POST request with JSON data to the Flask server
-response = requests.post(url, json=data)
+response = requests.post(url, json=data, verify=False)
 
 # Print the status code and the response JSON
 print(f"Status Code: {response.status_code}")

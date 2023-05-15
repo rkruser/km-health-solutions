@@ -1,6 +1,7 @@
 # Import required libraries
 from flask import Flask, request, jsonify
 import string
+import ssl
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -34,4 +35,7 @@ def process_data():
 
 # Run the Flask server
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)  # Make sure to use different server in production, and to turn off debug if it's there
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+    context.load_cert_chain('cert.pem', 'key.pem')
+
+    app.run(debug=True, host='0.0.0.0', port=5000, ssl_context=context)  # Make sure to use different server in production, and to turn off debug if it's there
