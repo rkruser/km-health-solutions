@@ -9,7 +9,7 @@ data = {
 }
 
 # Send a POST request with JSON data to the Flask server
-response = requests.post(url, json=data, verify=False)
+response = requests.post(url, json=data, verify=False) #GET RID OF verify=False IN ORDER TO SECURE THE SERVER IN PRODUCTION
 
 # Print the status code and the response JSON
 print(f"Status Code: {response.status_code}")
