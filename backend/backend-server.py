@@ -34,4 +34,4 @@ def process_data():
 
 # Run the Flask server
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)  # Make sure to use different server in production, and to turn off debug if it's there
