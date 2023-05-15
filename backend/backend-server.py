@@ -3,14 +3,18 @@ from flask import Flask, request, jsonify
 import string
 import ssl
 
+import time
+from app import chatGPTRequest
+
+
 # Initialize Flask app
 app = Flask(__name__)
+
 
 # Function to process the data string
 def process_string(data):
     # Add your custom string processing logic here
-    processed_data = data.upper().translate(str.maketrans("", "", string.punctuation))
-    return processed_data
+    return chatGPTRequest(data)
 
 # Route to accept POST requests containing a data string
 @app.route('/process', methods=['POST'])

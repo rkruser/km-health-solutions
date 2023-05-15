@@ -95,26 +95,24 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
 
 
 
+def chatGPTRequest(prompt_text="Say this is a test!"):
+    messages=[{"role":"user", "content":prompt_text}]
+    print("Num tokens for prompt:", num_tokens_from_messages(messages))
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        temperature=0.0,
+        #max_tokens=25,
+        #n=1
+        #stream=True,
+    )
+    #print(response)
+    return response.choices[0].message.content
 
-prompt_text = "Write a one paragraph short story about a spider and a puppy who are friends."
-messages=[{"role":"user", "content":prompt_text}]
-print("Num tokens for prompt:", num_tokens_from_messages(messages))
-response = openai.ChatCompletion.create(
-  model="gpt-3.5-turbo",
-  messages=messages,
-  temperature=0.0,
-  #max_tokens=25,
-  #n=1
-  #stream=True,
-)
-
-
-## The following for loop is for when 'stream' is set to true above
-# for chunk in response:
-#     if 'content' in chunk.choices[0].delta:
-#         print(chunk.choices[0].delta.content, end="")
+    ## The following for loop is for when 'stream' is set to true above
+    # for chunk in response:
+    #     if 'content' in chunk.choices[0].delta:
+    #         print(chunk.choices[0].delta.content, end="")
 
 
 
-#print(response)
-print(response.choices[0].message.content)

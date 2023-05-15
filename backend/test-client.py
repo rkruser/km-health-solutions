@@ -5,7 +5,7 @@ url = "https://localhost:5000/process"
 
 # Data to be sent in the request
 data = {
-    "data": "This is a test string! uwwwwwuuuuuuuuuuu"
+    "data": "Hello, chatGPT! What is your favorite color and scary movie? I know you are a language model, but make something up anyway."
 }
 
 # Send a POST request with JSON data to the Flask server
