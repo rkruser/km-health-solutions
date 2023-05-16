@@ -49,15 +49,13 @@ https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server
 
 '''
 
-import os
+#import os
 import openai
 
 with open('.env', 'r') as file:
     openai.api_key = file.read()
 
-
 import tiktoken # openAI's token counting utility
-
 
 
 
@@ -94,7 +92,6 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
 
 
 
-
 def chatGPTRequest(prompt_text="Say this is a test!"):
     messages=[{"role":"user", "content":prompt_text}]
     print("Num tokens for prompt:", num_tokens_from_messages(messages))
@@ -113,6 +110,142 @@ def chatGPTRequest(prompt_text="Say this is a test!"):
     # for chunk in response:
     #     if 'content' in chunk.choices[0].delta:
     #         print(chunk.choices[0].delta.content, end="")
+
+
+
+
+
+'''
+chatGPT request interface
+
+aiRequest - basic call to AI model
+generatePatient - get the model to invent example patients for you
+generateNotes - given an example patient, generate nurse's notes for the given patient
+summaryRequest - Summarize patient notes
+summaryCheck - make sure summary doesn't make things up
+keywordRequest - Have chatGPT extract keywords
+informationRequest - get relevant information on different topics based on keyword, medical knowledge, and patient history
+'''
+
+def aiRequest(messages, model='gpt-3.5-turbo', temperature=0.0):
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=temperature,
+    )    
+
+    return response.choices[0].message  #this contains 'role' and 'content'
+
+
+
+def generatePatient():
+    user_prompt = "Generate a short description of a fictional patient who has been admitted to a hospital. Your description should be formatted as follows.\n\
+Name. Age. List of attributes. List of symptoms. List of past and ongoing treatments. Short description of current condition.\n\
+For example:\nJohn Doe. 35. Caucasian, mildly obese, pre-diabetic, smoker. Acute abdominal pain. Surgery for appendicitis. Patient is recovering in the ICU."
+
+    messages = [
+        {
+            'role':'user',
+            'content':user_prompt
+        }
+    ]
+
+    response = aiRequest(messages, temperature=0.8)
+    return response.content
+
+
+def generateNotes(patient_notes):
+    system_prompt = "Given a short description of a fictional patient who has been admitted to a hospital, generate a plausible set of nurse's notes for \
+the patient's stay in the hospital so far. Assume the patient has stayed for at least 24 hours in the hospital, and possibly longer. Depending on the patient's condition, \
+nurses check on the patient every hour or every several hours. The nurse's notes may include vitals monitored, medications administered, patient symptoms and complaints, \
+changes in the patient's condition, emergency treatments given, and so forth. Each entry in the nurse's notes should give a time followed by a list of things noted by the nurse."
+
+    messages = [
+        {
+            'role':'system',
+            'content':system_prompt
+        },
+        {
+            'role':'user',
+            'content':patient_notes
+        }
+    ]
+
+    response = aiRequest(messages, temperature=0.8)
+    return response.content
+
+
+
+def summaryRequest(patient_data):
+    system_prompt = "You are a medical assistant AI tasked with summarizing patient data. Given nurse's notes for a particular patient, \
+your job is to write a condensed summary of the notes. Your summary should be a succint description of all medically relevant information, \
+including all medically significant events. Do not leave out any significant events. Make note of information most relevant to patient treatment, \
+including any deviations from typical or expected outcomes. Without leaving out significant information, the summary should be short and easily readable."
+
+    messages = [
+        {
+            'role':'system',
+            'content':system_prompt
+        },
+        {
+            'role':'user',
+            'content':patient_data
+        }
+    ]
+
+    response = aiRequest(messages, model='gpt-4')
+    return response.content
+
+
+def keywordRequest(patient_data):
+    system_prompt = "You are a medical assistant AI tasked with extracting key words and concepts from patient data. Given nurse's notes for a particular patient, \
+your job is to make a short list of the relevant treatments, tests, medications, and medical concepts contained in the notes. Only include those items relevant to the \
+patient's actual history and treatment. Examples of treatments include: IV line insertion, intubation, and so on. Examples of tests include: EKG, EEG, X-ray, MRI, blood work, and so on. \
+Examples of medical concepts include: symptoms, effects and side effects of particular medications, function and dysfunction of particular organs, and so on. Use specific terms in your summaries. \
+For example, specify chest X-ray, versus leg X-ray, and so forth. Format the extracted terms as follows.\nTreatments:\n  Treatment 1\n  Treatment 2\nMedications:\n  Medication 1\n  Medication 2\n\
+Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to the patient, leave the section blank."
+
+    messages = [
+        {
+            'role':'system',
+            'content':system_prompt
+        },
+        {
+            'role':'user',
+            'content':patient_data
+        }
+    ]
+
+    response = aiRequest(messages, model='gpt-4')
+    return response.content
+
+
+
+if __name__=="__main__":
+    print("Generating patient")
+    example_patient = generatePatient()
+    print("Example patient:\n", example_patient)
+
+    print("\n\nGenerating notes")
+    example_notes = generateNotes(example_patient)
+    print("Example notes:\n", example_notes)
+
+    print("\n\nGenerating summary")
+    example_summary = summaryRequest(example_notes)
+    print("Summary:\n", example_summary)
+
+    print("\n\nGenerating keywords")
+    example_keywords = keywordRequest(example_notes)
+    print("Keywords:\n", example_keywords)
+
+
+
+
+
+
+
+
+
 
 
 
