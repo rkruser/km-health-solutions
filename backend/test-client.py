@@ -1,7 +1,7 @@
 import requests
 
 # Define the URL for the Flask server
-url = "https://localhost:5000/process"
+url = "http://localhost:5000/process"
 
 # Data to be sent in the request
 data = {

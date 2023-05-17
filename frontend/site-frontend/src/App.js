@@ -13,7 +13,7 @@ function App() {
       <div className="site-banner">
         <h1 className="site-title">Demo Medical App</h1>
       </div>
-      <div>
+      <div className="site-body">
         <PatientInput />
         <AIchat />
       </div>
@@ -26,8 +26,29 @@ function App() {
 export default App;
 
 
-function generateData(text) {
-  return text.toUpperCase() + " hello";
+async function generateData(prompt) {
+  try {
+    // Need to find a better way to switch between local and production fetch urls. Separate servers?
+    // https://localhost:3000/complete-text
+    const response = await fetch('http://localhost:3000/generate-data', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error completing text');
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data.completion;
+  } catch (error) {
+    console.error('Error completing text:', error);
+    return 'Error: could not access chatGPT';
+  }
 }
 
 
@@ -41,7 +62,10 @@ function PatientInput() {
   };
 
   const handleSubmit = () => {
-    setDisplayText(generateData(inputText));
+    // setDisplayText(generateData(inputText));
+    generateData(inputText).then((completion) => {
+      setDisplayText(completion);
+    });
   };
 
   return (
