@@ -150,18 +150,21 @@ function PatientInput() {
 
   return (
     <div className="PatientInput">
-      <div className="input-pane">
-        <textarea
-          value={generatorInputText}
-          onChange={handleInputChange}
-          className="text-entry"
-        />
-        <button onClick={handleSubmit} className="generate-button">
-          Generate
-        </button>
-      </div>
-      <div className="display-pane">
-        <p>{displayText}</p>
+      <div className='left-input-column'></div>
+      <div className='patient-input-container'>
+        <div className="input-pane">
+          <textarea
+            value={generatorInputText}
+            onChange={handleInputChange}
+            className="text-entry"
+          />
+          <button onClick={handleSubmit} className="generate-button">
+            Generate
+          </button>
+        </div>
+        <div className="display-pane">
+          <p>{displayText}</p>
+        </div>
       </div>
     </div>
   );
@@ -193,6 +196,12 @@ function AIchat() {
     addMessageToChat(`User: ${chatInputText}`);
     addMessageToChat(`AI: ${reply}`);
     setChatInputText('');
+  };
+
+  const handleKeyDown = async (e) => {
+    if (e.code === 'Enter') {
+      handleSubmit();
+    }
   };
 
   const addMessageToChat = (message) => {
@@ -228,6 +237,7 @@ function AIchat() {
             type="text"
             value={chatInputText}
             onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
             placeholder="Custom query..."
           />
           <button onClick={handleSubmit}>Send</button>
