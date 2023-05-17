@@ -185,13 +185,23 @@ button {
 
 
 /* loading animation */
-.loader {
+.chat-loader {
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid #3498db;
+  width: 15px;
+  height: 15px;
+  animation: spin 2s linear infinite;
+}
+
+.patient-input-loader {
   border: 4px solid #f3f3f3;
   border-radius: 50%;
   border-top: 4px solid #3498db;
   width: 30px;
   height: 30px;
   animation: spin 2s linear infinite;
+  margin: 85px auto 0px auto;
 }
 
 @keyframes spin {

@@ -136,6 +136,7 @@ function useShared() {
 
 function PatientInput() {
   const {generatorInputText, setGeneratorInputText, displayText, setDisplayText } = useShared();
+  const [isLoading, setIsLoading] = useState(false);  
 
   const handleInputChange = (event) => {
     setGeneratorInputText(event.target.value);
@@ -143,7 +144,9 @@ function PatientInput() {
 
   const handleSubmit = () => {
     // setDisplayText(generateData(inputText));
+    setIsLoading(true);
     generateData(generatorInputText).then((completion) => {
+      setIsLoading(false);
       setDisplayText(completion);
     });
   };
@@ -163,7 +166,7 @@ function PatientInput() {
           </button>
         </div>
         <div className="display-pane">
-          <p>{displayText}</p>
+          {isLoading ? <div className='patient-input-loader'></div> : <p>{displayText}</p>}
         </div>
       </div>
     </div>
@@ -204,7 +207,7 @@ function AIchat() {
       setIsLoading(false);
       addMessageToChat(`AI: ${reply}`);
       setChatInputText('');
-    })
+    });
   };
 
   const handleKeyDown = async (e) => {
@@ -218,8 +221,11 @@ function AIchat() {
   };
 
   const handleButtonClick = async (action) => {
-    const query_result = await queryAPI(action, {'patient_notes': displayText});
-    addMessageToChat(`AI: ${query_result}`);
+    setIsLoading(true);
+    queryAPI(action, {'patient_notes': displayText}).then( (query_result) => {
+      setIsLoading(false);
+      addMessageToChat(`AI: ${query_result}`);
+    });
   };
 
   const scrollToBottom = () => {
@@ -240,7 +246,7 @@ function AIchat() {
           {chatHistory.map((message, index) => (
             <p key={index}>{message}</p>
           ))}
-            {isLoading ? <div className='loader'></div> : <div></div>}
+            {isLoading ? <div className='chat-loader'></div> : <div></div>}
         </div>
         <div className="chat-input">
           <input
