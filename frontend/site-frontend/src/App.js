@@ -133,7 +133,7 @@ function performAction(action) {
 }
 
 function AIchat() {
-  const {chatInputText, setChatInputText, chatHistory, setChatHistory, displayText, setDisplayText} = useShared();
+  const {chatInputText, setChatInputText, chatHistory, setChatHistory, displayText} = useShared();
 
   const chatWindowRef = useRef(null);
 
