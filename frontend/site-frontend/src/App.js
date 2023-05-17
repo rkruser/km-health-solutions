@@ -170,16 +170,22 @@ function PatientInput() {
   );
 }
 
-function chatWithAI(text) {
-  return "placeholder text!!"
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function chatWithAI(text) {
+  await sleep(2000);
+  return "sleep? placeholder text!!";
 }
 
 function performAction(action) {
-  return "placeholder text! 2222"
+  return "placeholder text! 2222";
 }
 
 function AIchat() {
   const {chatInputText, setChatInputText, chatHistory, setChatHistory, displayText} = useShared();
+  const [isLoading, setIsLoading] = useState(false);
 
   const chatWindowRef = useRef(null);
 
@@ -191,11 +197,14 @@ function AIchat() {
     setChatInputText(event.target.value);
   };
 
-  const handleSubmit = async () => {
-    const reply = await chatWithAI(chatInputText);
+  const handleSubmit = () => {
     addMessageToChat(`User: ${chatInputText}`);
-    addMessageToChat(`AI: ${reply}`);
-    setChatInputText('');
+    setIsLoading(true);
+    chatWithAI(chatInputText).then( (reply) => {
+      setIsLoading(false);
+      addMessageToChat(`AI: ${reply}`);
+      setChatInputText('');
+    })
   };
 
   const handleKeyDown = async (e) => {
@@ -231,6 +240,7 @@ function AIchat() {
           {chatHistory.map((message, index) => (
             <p key={index}>{message}</p>
           ))}
+            {isLoading ? <div className='loader'></div> : <div></div>}
         </div>
         <div className="chat-input">
           <input
