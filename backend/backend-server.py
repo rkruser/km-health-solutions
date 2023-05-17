@@ -4,7 +4,7 @@ import string
 import ssl
 
 import time
-from app import chatGPTRequest
+from app import chatGPTRequest, pythonServerAPIquery
 
 
 # Initialize Flask app
@@ -64,7 +64,31 @@ def generate_data():
             return jsonify({'status': 'error', 'message': 'Invalid input, please provide a "data" key.'})
     
     else:
-        return jsonify({'status': 'error', 'message': 'Invalid input, please send a JSON request.'})    
+        return jsonify({'status': 'error', 'message': 'Invalid input, please send a JSON request.'})
+    
+@app.route('/api-query', methods=['POST'])
+def apiQuery():
+    # Check if the request contains a JSON body
+    if request.is_json:
+        try:
+            # Extract the data string from the JSON body
+            json_data = request.get_json()
+            print("json data:\n", json_data)
+            print(type(json_data))
+
+            command, argument_dict = json_data['command'], json_data['argument_dict']
+            
+            # Process the data string
+            query_result = pythonServerAPIquery(command, argument_dict)
+            
+            # Return the processed data as JSON
+            return jsonify({'status': 'success', 'query_result': query_result})
+        
+        except KeyError:
+            return jsonify({'status': 'error', 'message': 'Invalid input, please provide a "data" key.'})
+    
+    else:
+        return jsonify({'status': 'error', 'message': 'Invalid input, please send a JSON request.'})
 
 # Run the Flask server
 if __name__ == '__main__':

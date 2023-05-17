@@ -22,9 +22,38 @@ async function generateData(prompt) {
   }
 }
 
+async function serverAPIquery(body_json) {
+  try {
+    const response = await fetch('http://127.0.0.1:5000/api-query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body_json),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error completing text');
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+    if (data.status !== 'success') {
+      throw new Error('Problem completing request in python server');
+    }
+
+    return data.query_result;
+
+  } catch (error) {
+    console.error('Error completing text:', error);
+    return 'Error: could not access API';
+  }  
+}
 
 const exportedFuncs = {
     generateData,
+    serverAPIquery,
   };
 
 module.exports = exportedFuncs;

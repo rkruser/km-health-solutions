@@ -10,6 +10,21 @@ import { Helmet } from 'react-helmet-async';
   </Helmet>   
 */
 
+
+/*
+Next steps:
+1. Improve the API logic
+2. Add button to generate random patient in addition to generating notes
+3. Add button functionality to AIChat
+4. Add ability to click on keywords if possible
+5. Make interface prettier
+6. Put back on web with https for Vivek to see
+
+*/
+
+
+
+
 function App() {
   return (
     <div className="App">   
@@ -31,7 +46,7 @@ function App() {
 export default App;
 
 
-/*
+
 async function generateData(prompt) {
   try {
     // Need to find a better way to switch between local and production fetch urls. Separate servers?
@@ -56,11 +71,39 @@ async function generateData(prompt) {
     return 'Error: could not access chatGPT';
   }
 }
-*/
 
+/*
+Makes a POST request to the API on the server which takes a command and a dictionary of arguments
+*/
+async function queryAPI(command, argument_dict) {
+  try {
+    const response = await fetch('http://localhost:3000/api-query', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ command, argument_dict }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Error completing text');
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data.query_result;
+  } catch (error) {
+    console.error('Error completing text:', error);
+    return 'Error: could not access the API';
+  }
+}
+
+
+/*
 async function generateData(prompt) {
   return prompt + " This is a test"
 }
+*/
 
 
 const SharedContext = createContext();
@@ -157,15 +200,8 @@ function AIchat() {
   };
 
   const handleButtonClick = async (action) => {
-    if (action == 'summarize') {
-      console.log("Summarizing!");
-      addMessageToChat(`AI: ${displayText}`);
-    }
-    else {
-      console.log(action);
-      const result = await performAction(action);
-      addMessageToChat(`AI: ${result}`);
-    }
+    const query_result = await queryAPI(action, {'patient_notes': displayText});
+    addMessageToChat(`AI: ${query_result}`);
   };
 
   const scrollToBottom = () => {
@@ -179,7 +215,7 @@ function AIchat() {
       <div className="left-column">
         <button onClick={() => handleButtonClick('summarize')}>Summarize</button>
         <button onClick={() => handleButtonClick('keywords')}>Keywords</button>
-        <button onClick={() => handleButtonClick('format as')}>Format As</button>
+        <button onClick={() => handleButtonClick('organize')}>Organize</button>
       </div>
       <div className="chat-container">
         <div className="chat-window" ref={chatWindowRef}>

@@ -3,8 +3,14 @@ const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const { generateData } = require('./completion');
+const { generateData, serverAPIquery } = require('./completion');
 require('dotenv').config();
+
+/*
+console.log(process.argv);
+console.log(typeof process.argv[2])
+process.exit(0);
+*/
 
 const app = express();
 const port = 3000;
@@ -22,6 +28,16 @@ app.post('/generate-data', async (req, res) => {
     res.status(500).send('Error: could not access chatGPT');
   }
 });
+
+app.post('/api-query', async (req, res) => {
+  try {
+    const query_result = await serverAPIquery(req.body);
+    res.json({query_result});
+  } catch (error) {
+    console.error('Error completing API query', error);
+    res.status(500).send('Error: could not access API');
+  }
+})
 
 const server = http.createServer(app).listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

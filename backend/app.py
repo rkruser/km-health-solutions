@@ -221,6 +221,12 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
 
 
 
+
+def pythonServerAPIquery(command, argument_dict):
+    return "Boy, this {0} command sure is {1}".format(command, str(argument_dict))
+
+
+
 if __name__=="__main__":
     print("Generating patient")
     example_patient = generatePatient()
