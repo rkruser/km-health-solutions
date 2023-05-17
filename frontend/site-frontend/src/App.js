@@ -1,21 +1,26 @@
 import './App.css';
 
-import React, { useState, useRef, useEffect } from 'react';
-import {Helmet} from 'react-helmet';
+import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
 
+/*
+React helmet says there are security errors, and react-helmet-async will not compile
+import { Helmet } from 'react-helmet-async';
+  <Helmet>
+  <title>Demo medical app</title>
+  </Helmet>   
+*/
 
 function App() {
   return (
-    <div className="App">
-      <Helmet>
-        <title>Demo medical app</title>
-      </Helmet>
+    <div className="App">   
       <div className="site-banner">
         <h1 className="site-title">Demo Medical App</h1>
       </div>
       <div className="site-body">
-        <PatientInput />
-        <AIchat />
+        <SharedProvider>
+          <PatientInput />
+          <AIchat />
+        </SharedProvider>
       </div>
       <div style={{height: "40px"}}>
       </div>
@@ -26,6 +31,7 @@ function App() {
 export default App;
 
 
+/*
 async function generateData(prompt) {
   try {
     // Need to find a better way to switch between local and production fetch urls. Separate servers?
@@ -50,20 +56,51 @@ async function generateData(prompt) {
     return 'Error: could not access chatGPT';
   }
 }
+*/
+
+async function generateData(prompt) {
+  return prompt + " This is a test"
+}
+
+
+const SharedContext = createContext();
+
+function SharedProvider({ children }) {
+  const [generatorInputText, setGeneratorInputText] = useState('');
+  const [chatInputText, setChatInputText] = useState('');
+  const [displayText, setDisplayText] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
+
+  const value = {
+    generatorInputText,
+    setGeneratorInputText,
+    chatInputText,
+    setChatInputText,
+    displayText,
+    setDisplayText,
+    chatHistory,
+    setChatHistory,
+  };
+
+  return <SharedContext.Provider value={value}>{children}</SharedContext.Provider>;
+}
+
+function useShared() {
+  return useContext(SharedContext);
+}
 
 
 
 function PatientInput() {
-  const [inputText, setInputText] = useState('');
-  const [displayText, setDisplayText] = useState('');
+  const {generatorInputText, setGeneratorInputText, displayText, setDisplayText } = useShared();
 
   const handleInputChange = (event) => {
-    setInputText(event.target.value);
+    setGeneratorInputText(event.target.value);
   };
 
   const handleSubmit = () => {
     // setDisplayText(generateData(inputText));
-    generateData(inputText).then((completion) => {
+    generateData(generatorInputText).then((completion) => {
       setDisplayText(completion);
     });
   };
@@ -72,7 +109,7 @@ function PatientInput() {
     <div className="PatientInput">
       <div className="input-pane">
         <textarea
-          value={inputText}
+          value={generatorInputText}
           onChange={handleInputChange}
           className="text-entry"
         />
@@ -96,8 +133,8 @@ function performAction(action) {
 }
 
 function AIchat() {
-  const [inputText, setInputText] = useState('');
-  const [chatHistory, setChatHistory] = useState([]);
+  const {chatInputText, setChatInputText, chatHistory, setChatHistory, displayText, setDisplayText} = useShared();
+
   const chatWindowRef = useRef(null);
 
   useEffect(() => {
@@ -105,14 +142,14 @@ function AIchat() {
   }, [chatHistory]);
 
   const handleInputChange = (event) => {
-    setInputText(event.target.value);
+    setChatInputText(event.target.value);
   };
 
   const handleSubmit = async () => {
-    const reply = await chatWithAI(inputText);
-    addMessageToChat(`User: ${inputText}`);
+    const reply = await chatWithAI(chatInputText);
+    addMessageToChat(`User: ${chatInputText}`);
     addMessageToChat(`AI: ${reply}`);
-    setInputText('');
+    setChatInputText('');
   };
 
   const addMessageToChat = (message) => {
@@ -120,8 +157,15 @@ function AIchat() {
   };
 
   const handleButtonClick = async (action) => {
-    const result = await performAction(action);
-    addMessageToChat(`AI: ${result}`);
+    if (action == 'summarize') {
+      console.log("Summarizing!");
+      addMessageToChat(`AI: ${displayText}`);
+    }
+    else {
+      console.log(action);
+      const result = await performAction(action);
+      addMessageToChat(`AI: ${result}`);
+    }
   };
 
   const scrollToBottom = () => {
@@ -146,9 +190,9 @@ function AIchat() {
         <div className="chat-input">
           <input
             type="text"
-            value={inputText}
+            value={chatInputText}
             onChange={handleInputChange}
-            placeholder="Type your message..."
+            placeholder="Custom query..."
           />
           <button onClick={handleSubmit}>Send</button>
         </div>
