@@ -35,7 +35,7 @@ app.post('/api-query', async (req, res) => {
     res.json({query_result});
   } catch (error) {
     console.error('Error completing API query', error);
-    res.status(500).send('Error: could not access API');
+    res.status(500).send('Error: could not access python API from server; '+error);
   }
 })
 

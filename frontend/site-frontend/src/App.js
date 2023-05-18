@@ -22,8 +22,10 @@ Next steps:
 
 */
 
-
-
+// window.location.href should return either http://localhost:3000 or https://ryenandvivekstartup.online/
+//   depending on deployment.
+//  Is this safe? I don't see why not.
+const API_FETCH_LOCATION = window.location.href + 'api-query';
 
 function App() {
   return (
@@ -46,38 +48,12 @@ function App() {
 export default App;
 
 
-
-async function generateData(prompt) {
-  try {
-    // Need to find a better way to switch between local and production fetch urls. Separate servers?
-    // https://localhost:3000/complete-text
-    const response = await fetch('http://localhost:3000/generate-data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Error completing text');
-    }
-
-    const data = await response.json();
-    console.log(data);
-    return data.completion;
-  } catch (error) {
-    console.error('Error completing text:', error);
-    return 'Error: could not access chatGPT';
-  }
-}
-
 /*
 Makes a POST request to the API on the server which takes a command and a dictionary of arguments
 */
 async function queryAPI(command, argument_dict) {
   try {
-    const response = await fetch('http://localhost:3000/api-query', {
+    const response = await fetch(API_FETCH_LOCATION, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -137,10 +113,19 @@ function useShared() {
 function PatientInput() {
   const {generatorInputText, setGeneratorInputText, displayText, setDisplayText } = useShared();
   const [isLoading, setIsLoading] = useState(false);  
+  const [patientIsLoading, setPatientIsLoading] = useState(false);
 
   const handleInputChange = (event) => {
     setGeneratorInputText(event.target.value);
   };
+
+  const handleRandomPatientSubmit = () => {
+    setPatientIsLoading(true);
+    queryAPI('generate-patient', {}).then((patient_description) => {
+      setPatientIsLoading(false);
+      setGeneratorInputText(patient_description);
+    })
+  }
 
   const handleSubmit = () => {
     // setDisplayText(generateData(inputText));
@@ -157,13 +142,18 @@ function PatientInput() {
       <div className='patient-input-container'>
         <div className="input-pane">
           <textarea
-            value={generatorInputText}
+            value={patientIsLoading ? "Generating patient..." : generatorInputText}
             onChange={handleInputChange}
             className="text-entry"
           />
-          <button onClick={handleSubmit} className="generate-button">
-            Generate
-          </button>
+          <div className='patient-button-container'>
+            <button onClick={handleRandomPatientSubmit} className="generate-button">
+              Random Patient
+            </button>
+            <button onClick={handleSubmit} className="generate-button">
+              Generate Notes
+            </button>
+          </div>
         </div>
         <div className="display-pane">
           {isLoading ? <div className='patient-input-loader'></div> : <p>{displayText}</p>}

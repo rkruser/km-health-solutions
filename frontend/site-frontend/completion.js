@@ -40,14 +40,14 @@ async function serverAPIquery(body_json) {
     console.log(data);
 
     if (data.status !== 'success') {
-      throw new Error('Problem completing request in python server');
+      throw new Error('Python server query yielded error status');
     }
 
     return data.query_result;
 
   } catch (error) {
     console.error('Error completing text:', error);
-    return 'Error: could not access API';
+    return 'Error: could not access API; '+error;
   }  
 }
 

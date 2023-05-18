@@ -79,10 +79,10 @@ def apiQuery():
             command, argument_dict = json_data['command'], json_data['argument_dict']
             
             # Process the data string
-            query_result = pythonServerAPIquery(command, argument_dict)
+            status, query_result = pythonServerAPIquery(command, argument_dict)
             
             # Return the processed data as JSON
-            return jsonify({'status': 'success', 'query_result': query_result})
+            return jsonify({'status': status, 'query_result': query_result})
         
         except KeyError:
             return jsonify({'status': 'error', 'message': 'Invalid input, please provide a "data" key.'})

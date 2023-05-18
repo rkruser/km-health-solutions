@@ -242,16 +242,17 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
 
 def pythonServerAPIquery(command, argument_dict):
     #return "Boy, this {0} command sure is {1}".format(command, str(argument_dict))
+    status = "success" # Right now this doesn't change
     if command not in API_FUNCS:
-        return "API command {0} does not exist".format(command)
+        return status, "API command {0} does not exist".format(command)
     
     try:
         result = API_FUNCS[command](argument_dict)
 
     except KeyError as e:
-        return "API call to {0} encountered a KeyError when run with {1}. {2}".format(command, str(argument_dict), str(e))
+        return status, "API call to {0} encountered a KeyError when run with {1}. {2}".format(command, str(argument_dict), str(e))
 
-    return result
+    return status, result
 
 
 if __name__=="__main__":
