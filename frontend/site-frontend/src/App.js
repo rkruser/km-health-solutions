@@ -26,6 +26,7 @@ Next steps:
 //   depending on deployment.
 //  Is this safe? I don't see why not.
 const API_FETCH_LOCATION = window.location.href + 'api-query';
+console.log(API_FETCH_LOCATION);
 
 function App() {
   return (
