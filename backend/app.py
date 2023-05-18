@@ -208,7 +208,7 @@ including any deviations from typical or expected outcomes. Without leaving out 
         }
     ]
 
-    response = aiRequest(messages, model='gpt-4')
+    response = aiRequest(messages, model='gpt-3.5-turbo')
     return response.content
 
 
@@ -234,7 +234,7 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
         }
     ]
 
-    response = aiRequest(messages, model='gpt-4')
+    response = aiRequest(messages, model='gpt-3.5-turbo')
     return response.content
 
 

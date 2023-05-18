@@ -191,11 +191,11 @@ function AIchat() {
   };
 
   const handleSubmit = () => {
-    addMessageToChat(`User: ${chatInputText}`);
+    addMessageToChat('User', chatInputText);
     setIsLoading(true);
     chatWithAI(chatInputText).then( (reply) => {
       setIsLoading(false);
-      addMessageToChat(`AI: ${reply}`);
+      addMessageToChat('AI', reply);
       setChatInputText('');
     });
   };
@@ -206,15 +206,15 @@ function AIchat() {
     }
   };
 
-  const addMessageToChat = (message) => {
-    setChatHistory((prevChatHistory) => [...prevChatHistory, message]);
+  const addMessageToChat = (role, message) => {
+    setChatHistory((prevChatHistory) => [...prevChatHistory, {'role':role, 'content':message}]);
   };
 
   const handleButtonClick = async (action) => {
     setIsLoading(true);
     queryAPI(action, {'patient_data': displayText}).then( (query_result) => {
       setIsLoading(false);
-      addMessageToChat(`AI: ${query_result}`);
+      addMessageToChat('AI', query_result);
     });
   };
 
@@ -233,9 +233,11 @@ function AIchat() {
       </div>
       <div className="chat-container">
         <div className="chat-window" ref={chatWindowRef}>
-          {chatHistory.map((message, index) => (
-            <p key={index}>{message}</p>
-          ))}
+            {chatHistory.map((message, index) => (
+              <ChatEntry key={index} role={message.role}>
+                {message.content}
+              </ChatEntry>
+            ))}
             {isLoading ? <div className='chat-loader'></div> : <div></div>}
         </div>
         <div className="chat-input">
@@ -252,7 +254,27 @@ function AIchat() {
     </div>
   );
 }
+/*
+          {chatHistory.map((message, index) => (
+            <p key={index}>{message}</p>
+          ))}
+*/
 
+
+function ChatEntry({role, children}) {
+  const textClass = role === 'AI' ? 'chat-entry-ai' : 'chat-entry-user';
+
+  return (
+    <div className={textClass}>
+      <div className='chat-role'>
+        <strong>{role}:</strong>
+      </div>
+      <div className='chat-entry-content'>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 
 
