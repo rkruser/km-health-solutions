@@ -13,11 +13,11 @@ import { Helmet } from 'react-helmet-async';
 
 /*
 Next steps:
-1. Improve the API logic
-2. Add button to generate random patient in addition to generating notes
-3. Add button functionality to AIChat
+1. Improve the API logic (done)
+2. Add button to generate random patient in addition to generating notes (done)
+3. Add button functionality to AIChat (done)
 4. Add ability to click on keywords if possible
-5. Make interface prettier
+5. Make interface prettier (largely done)
 6. Put back on web with https for Vivek to see
 
 */
@@ -177,7 +177,7 @@ function performAction(action) {
 }
 
 function AIchat() {
-  const {chatInputText, setChatInputText, chatHistory, setChatHistory, displayText} = useShared();
+  const {generatorInputText, chatInputText, setChatInputText, chatHistory, setChatHistory, displayText} = useShared();
   const [isLoading, setIsLoading] = useState(false);
 
   const chatWindowRef = useRef(null);
@@ -191,11 +191,11 @@ function AIchat() {
   };
 
   const handleSubmit = () => {
-    addMessageToChat('User', chatInputText);
+    addMessageToChat('user', chatInputText);
     setIsLoading(true);
-    chatWithAI(chatInputText).then( (reply) => {
+    queryAPI('chat-with-ai', {'patient_description':generatorInputText, 'patient_data':displayText, 'message_history':chatHistory, 'user_chat':chatInputText}).then( (reply) => {
       setIsLoading(false);
-      addMessageToChat('AI', reply);
+      addMessageToChat('assistant', reply);
       setChatInputText('');
     });
   };
@@ -214,7 +214,7 @@ function AIchat() {
     setIsLoading(true);
     queryAPI(action, {'patient_data': displayText}).then( (query_result) => {
       setIsLoading(false);
-      addMessageToChat('AI', query_result);
+      addMessageToChat('assistant', query_result);
     });
   };
 
@@ -254,15 +254,9 @@ function AIchat() {
     </div>
   );
 }
-/*
-          {chatHistory.map((message, index) => (
-            <p key={index}>{message}</p>
-          ))}
-*/
-
 
 function ChatEntry({role, children}) {
-  const textClass = role === 'AI' ? 'chat-entry-ai' : 'chat-entry-user';
+  const textClass = role === 'assistant' ? 'chat-entry-ai' : 'chat-entry-user';
 
   return (
     <div className={textClass}>

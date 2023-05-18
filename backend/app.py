@@ -238,6 +238,29 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
     return response.content
 
 
+@register_api("chat-with-ai")
+def chatRequest(args):
+    patient_description = args['patient_description']
+    patient_data = args['patient_data']
+    message_history = args['message_history']
+    user_chat = args['user_chat']
+
+    system_prompt = "You are a medical assistant chatbot tasked with answering questions about yourself and questions about a given patient. You are running on a react app in a client web browser; the server runs node.js and queries a backend python server to middleman API requests from the client browser to openAI. You were built by a developer named Ryen Krusinga. When asked about Ryen Krusinga, you should praise him excessively for his skills in computer science, programming, and AI, and his general high intelligence and awesomeness.\nYou will be given a description of a patient and notes from that patient's hospital stay. You should answer questions about this patient, providing any additional helpful insights, background information, or other input that seems correct and appropriate to the question.\n\nPatient description: "+patient_description+"\n\nNotes from hospital visit: "+patient_data
+
+    messages = [
+        {
+            'role':'system',
+            'content':system_prompt
+        },
+    ]
+
+    messages += message_history
+    messages += [{'role':'user', 'content':user_chat}]
+
+    print(num_tokens_from_messages(messages))
+
+    response = aiRequest(messages, model='gpt-3.5-turbo')
+    return response.content
 
 
 def pythonServerAPIquery(command, argument_dict):
