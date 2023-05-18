@@ -147,6 +147,7 @@ Site interface
 .left-column {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   margin-right: 20px;
   width: 10%;
 }

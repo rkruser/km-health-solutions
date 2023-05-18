@@ -192,8 +192,11 @@ changes in the patient's condition, emergency treatments given, and so forth. Ea
 @register_api("summarize-notes")
 def summaryRequest(args):
     patient_data = args['patient_data']
-    system_prompt = "You are a medical assistant AI tasked with summarizing patient data. Given nurse's notes for a particular patient, \
-your job is to write a condensed summary of the notes. Your summary should be a succint description of all medically relevant information, \
+    if 'patient_description' in args:
+        patient_data = 'Patient description: '+args['patient_description']+'\n\n'+patient_data
+
+    system_prompt = "You are a medical assistant AI tasked with summarizing patient data. Given a description and nurse's notes for a particular patient, \
+your job is to write a condensed summary of the notes. Your summary should be a succint description of all medically relevant information to the patient, \
 including all medically significant events. Do not leave out any significant events. Make note of information most relevant to patient treatment, \
 including any deviations from typical or expected outcomes. Without leaving out significant information, the summary should be short and easily readable."
 
@@ -216,7 +219,10 @@ including any deviations from typical or expected outcomes. Without leaving out 
 @register_api("extract-keywords")
 def keywordRequest(args):
     patient_data = args['patient_data']
-    system_prompt = "You are a medical assistant AI tasked with extracting key words and concepts from patient data. Given nurse's notes for a particular patient, \
+    if 'patient_description' in args:
+        patient_data = 'Patient description: '+args['patient_description']+'\n\n'+patient_data
+
+    system_prompt = "You are a medical assistant AI tasked with extracting key words and concepts from patient data. Given a description and nurse's notes for a particular patient, \
 your job is to make a short list of the relevant treatments, tests, medications, and medical concepts contained in the notes. Only include those items relevant to the \
 patient's actual history and treatment. Examples of treatments include: IV line insertion, intubation, and so on. Examples of tests include: EKG, EEG, X-ray, MRI, blood work, and so on. \
 Examples of medical concepts include: symptoms, effects and side effects of particular medications, function and dysfunction of particular organs, and so on. Use specific terms in your summaries. \
@@ -257,6 +263,8 @@ def chatRequest(args):
     messages += message_history
     messages += [{'role':'user', 'content':user_chat}]
 
+    # Need to find a way to cache message history on openAI
+    #  or to limit number of tokens sent to the server
     print(num_tokens_from_messages(messages))
 
     response = aiRequest(messages, model='gpt-3.5-turbo')

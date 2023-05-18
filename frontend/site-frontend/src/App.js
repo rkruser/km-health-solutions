@@ -176,6 +176,13 @@ function performAction(action) {
   return "placeholder text! 2222";
 }
 
+function removeLastElement(list) {
+  if (list.length > 0) {
+    list.pop();
+  }
+  return list;
+}
+
 function AIchat() {
   const {generatorInputText, chatInputText, setChatInputText, chatHistory, setChatHistory, displayText} = useShared();
   const [isLoading, setIsLoading] = useState(false);
@@ -193,9 +200,10 @@ function AIchat() {
   const handleSubmit = () => {
     addMessageToChat('user', chatInputText);
     setIsLoading(true);
+    addMessageToChat('assistant','')
     queryAPI('chat-with-ai', {'patient_description':generatorInputText, 'patient_data':displayText, 'message_history':chatHistory, 'user_chat':chatInputText}).then( (reply) => {
+      setLastChatMessage(reply);
       setIsLoading(false);
-      addMessageToChat('assistant', reply);
       setChatInputText('');
     });
   };
@@ -210,11 +218,26 @@ function AIchat() {
     setChatHistory((prevChatHistory) => [...prevChatHistory, {'role':role, 'content':message}]);
   };
 
+  const removeMessageFromChat = () => {
+    setChatHistory((prevChatHistory) => removeLastElement(prevChatHistory));
+  };
+  
+  const setLastChatMessage = (content) => {
+    setChatHistory((prevChatHistory) => {
+      const newChatHistory = [...prevChatHistory];
+      newChatHistory[newChatHistory.length - 1].content = content;
+      return newChatHistory;
+    });
+  };
+
+  /*Not good if generatorInputText is modified, but works for now*/
   const handleButtonClick = async (action) => {
+    addMessageToChat('user', '/'+action)
     setIsLoading(true);
-    queryAPI(action, {'patient_data': displayText}).then( (query_result) => {
+    addMessageToChat('assistant','');
+    queryAPI(action, {'patient_description':generatorInputText, 'patient_data':displayText}).then( (query_result) => {
+      setLastChatMessage(query_result);
       setIsLoading(false);
-      addMessageToChat('assistant', query_result);
     });
   };
 
@@ -235,10 +258,9 @@ function AIchat() {
         <div className="chat-window" ref={chatWindowRef}>
             {chatHistory.map((message, index) => (
               <ChatEntry key={index} role={message.role}>
-                {message.content}
+                { isLoading&&(index===chatHistory.length-1) ? <div className='chat-loader'></div> : message.content}
               </ChatEntry>
             ))}
-            {isLoading ? <div className='chat-loader'></div> : <div></div>}
         </div>
         <div className="chat-input">
           <input
