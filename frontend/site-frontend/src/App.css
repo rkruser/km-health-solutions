@@ -1,9 +1,12 @@
 /* App interface */
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-image: linear-gradient(rgba(40, 44, 52, 0.801), rgba(40, 44, 52, 0.7)), url('stock_photo_2.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
   min-height: 100vh;
 }
+
 
 .App-logo {
   height: 40vmin;
@@ -44,6 +47,14 @@
 /*
 Site interface
 */
+
+.site-logo {
+  height: 40px;
+  width: 40px;
+  background-image: url('logo.jpg');
+  margin-right: 40px;
+}
+
 .site-banner {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -250,6 +261,7 @@ button {
   box-sizing: border-box;
   padding: 5px;
   text-align: right;
+  min-width: 80px;
 }
 
 .chat-entry-content {

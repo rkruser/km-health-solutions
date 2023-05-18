@@ -31,6 +31,7 @@ function App() {
   return (
     <div className="App">   
       <div className="site-banner">
+        <div className='site-logo'></div>
         <h1 className="site-title">Demo Medical App</h1>
       </div>
       <div className="site-body">
