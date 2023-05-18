@@ -145,9 +145,9 @@ function PatientInput() {
   const handleSubmit = () => {
     // setDisplayText(generateData(inputText));
     setIsLoading(true);
-    generateData(generatorInputText).then((completion) => {
+    queryAPI('generate-notes', {'patient_description':generatorInputText}).then((notes) => {
       setIsLoading(false);
-      setDisplayText(completion);
+      setDisplayText(notes);
     });
   };
 
@@ -222,7 +222,7 @@ function AIchat() {
 
   const handleButtonClick = async (action) => {
     setIsLoading(true);
-    queryAPI(action, {'patient_notes': displayText}).then( (query_result) => {
+    queryAPI(action, {'patient_data': displayText}).then( (query_result) => {
       setIsLoading(false);
       addMessageToChat(`AI: ${query_result}`);
     });
@@ -237,9 +237,9 @@ function AIchat() {
   return (
     <div className="AIchat">
       <div className="left-column">
-        <button onClick={() => handleButtonClick('summarize')}>Summarize</button>
-        <button onClick={() => handleButtonClick('keywords')}>Keywords</button>
-        <button onClick={() => handleButtonClick('organize')}>Organize</button>
+        <button onClick={() => handleButtonClick('summarize-notes')}>Summarize</button>
+        <button onClick={() => handleButtonClick('extract-keywords')}>Keywords</button>
+        <button onClick={() => handleButtonClick('organize-notes')}>Organize</button>
       </div>
       <div className="chat-container">
         <div className="chat-window" ref={chatWindowRef}>

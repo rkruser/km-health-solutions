@@ -57,6 +57,13 @@ with open('.env', 'r') as file:
 
 import tiktoken # openAI's token counting utility
 
+API_FUNCS = {}
+# Decorator that adds API functions to the global dictionary
+def register_api(name):
+    def registration_decorator(func):
+        API_FUNCS[name] = func
+        return func
+    return registration_decorator
 
 
 def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
@@ -138,7 +145,13 @@ def aiRequest(messages, model='gpt-3.5-turbo', temperature=0.0):
 
 
 
-def generatePatient():
+
+# Convention: all API functions take a single argument consisting of a dictionary
+#  of all the API arguments sent by the user
+
+@register_api("generate-patient")
+def generatePatient(args):
+    # arg unused but present for consistency
     user_prompt = "Generate a short description of a fictional patient who has been admitted to a hospital. Your description should be formatted as follows.\n\
 Name. Age. List of attributes. List of symptoms. List of past and ongoing treatments. Short description of current condition.\n\
 For example:\nJohn Doe. 35. Caucasian, mildly obese, pre-diabetic, smoker. Acute abdominal pain. Surgery for appendicitis. Patient is recovering in the ICU."
@@ -153,8 +166,9 @@ For example:\nJohn Doe. 35. Caucasian, mildly obese, pre-diabetic, smoker. Acute
     response = aiRequest(messages, temperature=0.8)
     return response.content
 
-
-def generateNotes(patient_notes):
+@register_api("generate-notes")
+def generateNotes(args):
+    patient_description = args['patient_description']
     system_prompt = "Given a short description of a fictional patient who has been admitted to a hospital, generate a plausible set of nurse's notes for \
 the patient's stay in the hospital so far. Assume the patient has stayed for at least 24 hours in the hospital, and possibly longer. Depending on the patient's condition, \
 nurses check on the patient every hour or every several hours. The nurse's notes may include vitals monitored, medications administered, patient symptoms and complaints, \
@@ -167,7 +181,7 @@ changes in the patient's condition, emergency treatments given, and so forth. Ea
         },
         {
             'role':'user',
-            'content':patient_notes
+            'content':patient_description
         }
     ]
 
@@ -175,8 +189,9 @@ changes in the patient's condition, emergency treatments given, and so forth. Ea
     return response.content
 
 
-
-def summaryRequest(patient_data):
+@register_api("summarize-notes")
+def summaryRequest(args):
+    patient_data = args['patient_data']
     system_prompt = "You are a medical assistant AI tasked with summarizing patient data. Given nurse's notes for a particular patient, \
 your job is to write a condensed summary of the notes. Your summary should be a succint description of all medically relevant information, \
 including all medically significant events. Do not leave out any significant events. Make note of information most relevant to patient treatment, \
@@ -197,7 +212,10 @@ including any deviations from typical or expected outcomes. Without leaving out 
     return response.content
 
 
-def keywordRequest(patient_data):
+
+@register_api("extract-keywords")
+def keywordRequest(args):
+    patient_data = args['patient_data']
     system_prompt = "You are a medical assistant AI tasked with extracting key words and concepts from patient data. Given nurse's notes for a particular patient, \
 your job is to make a short list of the relevant treatments, tests, medications, and medical concepts contained in the notes. Only include those items relevant to the \
 patient's actual history and treatment. Examples of treatments include: IV line insertion, intubation, and so on. Examples of tests include: EKG, EEG, X-ray, MRI, blood work, and so on. \
@@ -223,25 +241,37 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
 
 
 def pythonServerAPIquery(command, argument_dict):
-    return "Boy, this {0} command sure is {1}".format(command, str(argument_dict))
+    #return "Boy, this {0} command sure is {1}".format(command, str(argument_dict))
+    if command not in API_FUNCS:
+        return "API command {0} does not exist".format(command)
+    
+    try:
+        result = API_FUNCS[command](argument_dict)
 
+    except KeyError as e:
+        return "API call to {0} encountered a KeyError when run with {1}. {2}".format(command, str(argument_dict), str(e))
+
+    return result
 
 
 if __name__=="__main__":
+    print("All API functions:")
+    print(API_FUNCS.keys())
+
     print("Generating patient")
-    example_patient = generatePatient()
+    example_patient = API_FUNCS['generate-patient']({})
     print("Example patient:\n", example_patient)
 
     print("\n\nGenerating notes")
-    example_notes = generateNotes(example_patient)
+    example_notes = API_FUNCS['generate-notes']({'patient_description': example_patient})
     print("Example notes:\n", example_notes)
 
     print("\n\nGenerating summary")
-    example_summary = summaryRequest(example_notes)
+    example_summary = API_FUNCS['summarize-notes']({'patient_data':example_notes})
     print("Summary:\n", example_summary)
 
     print("\n\nGenerating keywords")
-    example_keywords = keywordRequest(example_notes)
+    example_keywords = API_FUNCS['extract-keywords']({'patient_data':example_notes})
     print("Keywords:\n", example_keywords)
 
 
