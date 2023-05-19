@@ -81,6 +81,14 @@ Site interface
   padding: 40px;
 }
 
+.instructions {
+  width: 60%;
+  background-color: #ffffffc7;
+  margin-bottom: 40px;
+  padding: 10px;
+  text-align: left;
+}
+
 /* Patient generation interface */
 .PatientInput {
   display: flex;

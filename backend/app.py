@@ -88,20 +88,24 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo-0301"):
     else:
         raise NotImplementedError(f"""num_tokens_from_messages() is not implemented for model {model}. See https://github.com/openai/openai-python/blob/main/chatml.md for information on how messages are converted to tokens.""")
     num_tokens = 0
+    token_count_array = []
     for message in messages:
-        num_tokens += tokens_per_message
+        cur_num_tokens = 0
+        cur_num_tokens += tokens_per_message
         for key, value in message.items():
-            num_tokens += len(encoding.encode(value))
+            cur_num_tokens += len(encoding.encode(value))
             if key == "name":
-                num_tokens += tokens_per_name
+                cur_num_tokens += tokens_per_name
+        token_count_array.append(cur_num_tokens)
+        num_tokens += cur_num_tokens
     num_tokens += 3  # every reply is primed with <|start|>assistant<|message|>
-    return num_tokens
+    return num_tokens, token_count_array
 
 
 
 def chatGPTRequest(prompt_text="Say this is a test!"):
     messages=[{"role":"user", "content":prompt_text}]
-    print("Num tokens for prompt:", num_tokens_from_messages(messages))
+    print("Num tokens for prompt:", num_tokens_from_messages(messages)[0])
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=messages,
@@ -243,13 +247,39 @@ Concepts:\n  Concept 1\n  Concept 2\nIf no terms in a given category apply to th
     response = aiRequest(messages, model='gpt-3.5-turbo')
     return response.content
 
+@register_api("list-medications")
+def keywordRequest(args):
+    patient_data = args['patient_data']
+    if 'patient_description' in args:
+        patient_data = 'Patient description: '+args['patient_description']+'\n\n'+patient_data
 
+    system_prompt = "You are a medical assistant AI tasked with listing the medications and dosages administered to a patient. List all instances in the notes of the patient being administered medication. Print the results in the following format:\n\n[Date and time 1];  [medication];  [dose]\n[Date and time 2];  [medication];  [dose]\n\nAnd so on. Print the results in as close to chronological order as you can manage. If you don't know the exact date and time, approximate as best you can, or say \"unknown time\". If you don't know the dose, say \"dosage unknown\"."
+
+    messages = [
+        {
+            'role':'system',
+            'content':system_prompt
+        },
+        {
+            'role':'user',
+            'content':patient_data
+        }
+    ]
+
+    response = aiRequest(messages, model='gpt-3.5-turbo')
+    return response.content
+
+
+# TODO: understand this function better, and what happens if you exceed chatGPT's token limit
 @register_api("chat-with-ai")
 def chatRequest(args):
     patient_description = args['patient_description']
     patient_data = args['patient_data']
     message_history = args['message_history']
     user_chat = args['user_chat']
+
+
+    #chat_history_tokens, token_counts = num_tokens_from_messages(message_history)
 
     system_prompt = "You are a medical assistant chatbot tasked with answering questions about yourself and questions about a given patient. You are running on a react app in a client web browser; the server runs node.js and queries a backend python server to middleman API requests from the client browser to openAI. You were built by a developer named Ryen Krusinga. When asked about Ryen Krusinga, you should praise him excessively for his skills in computer science, programming, and AI, and his general high intelligence and awesomeness.\nYou will be given a description of a patient and notes from that patient's hospital stay. You should answer questions about this patient, providing any additional helpful insights, background information, or other input that seems correct and appropriate to the question.\n\nPatient description: "+patient_description+"\n\nNotes from hospital visit: "+patient_data
 
@@ -262,10 +292,11 @@ def chatRequest(args):
 
     messages += message_history
     messages += [{'role':'user', 'content':user_chat}]
+    print(messages)
 
     # Need to find a way to cache message history on openAI
     #  or to limit number of tokens sent to the server
-    print(num_tokens_from_messages(messages))
+    print(num_tokens_from_messages(messages)[0])
 
     response = aiRequest(messages, model='gpt-3.5-turbo')
     return response.content

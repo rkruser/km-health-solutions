@@ -36,6 +36,17 @@ function App() {
         <h1 className="site-title">Demo Medical App</h1>
       </div>
       <div className="site-body">
+        <div className='instructions'>
+          <h2>Instructions</h2>
+          <ol>
+            <li>Generate a random patient</li>
+            <li>Generate notes for the patient</li>
+            <li>Use the chat window to get information about the patient. The buttons on the left are convenient shortcuts for summarizing different aspects of patient data. You can also ask custom questions in the 'custom query' input bar on the bottom.</li>
+          </ol>
+          <p>
+            Note: this site is a work in progress, and some things might not work well. Best viewed on a laptop or desktop computer. Don't chat too long before reloading the page, since there might be errors right now when the chat history gets too long.
+          </p>
+        </div>
         <SharedProvider>
           <PatientInput />
           <AIchat />
@@ -202,7 +213,7 @@ function AIchat() {
   const handleSubmit = () => {
     addMessageToChat('user', chatInputText);
     setIsLoading(true);
-    addMessageToChat('assistant','')
+    addMessageToChat('assistant','');
     queryAPI('chat-with-ai', {'patient_description':generatorInputText, 'patient_data':displayText, 'message_history':chatHistory, 'user_chat':chatInputText}).then( (reply) => {
       setLastChatMessage(reply);
       setIsLoading(false);
@@ -254,7 +265,7 @@ function AIchat() {
       <div className="left-column">
         <button onClick={() => handleButtonClick('summarize-notes')}>Summarize</button>
         <button onClick={() => handleButtonClick('extract-keywords')}>Keywords</button>
-        <button onClick={() => handleButtonClick('organize-notes')}>Organize</button>
+        <button onClick={() => handleButtonClick('list-medications')}>Medications</button>
       </div>
       <div className="chat-container">
         <div className="chat-window" ref={chatWindowRef}>
