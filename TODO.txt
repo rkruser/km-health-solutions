@@ -1,0 +1,22 @@
+GENERAL (as of 6/15/23):
+
+- Looks like Electron is the way to go for the desktop GUI
+- Docker might be good for use in the backend cloud services, further research needed
+- TODO: devise work pipeline on cloud server
+
+DETAILED TODO (as of 6/15/23):
+- Transplant web interface to electron app
+- Make sure it works in a minimal sense
+- Package it and see if Vivek can install it on his laptop
+
+
+- Figure out EMR API and database scheme
+
+- Figure out which free cloud server to use and pricing
+- See if I can use chatGPT for patient data
+
+- Tree summarizing scheme plus info verification protocol (plus estimates of API calls per patient)
+- Decision matrices + causal trees + formal verification schemes to integrate with AI (wolfram alpha as tool to help?)
+
+
+
