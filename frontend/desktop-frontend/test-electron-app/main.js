@@ -7,29 +7,30 @@ https://mmazzarolo.com/blog/2021-08-12-building-an-electron-application-using-cr
 
 */
 
-const {app, BrowserWindow } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
+const url = require('url');
 
-const createWindow = () => {
-    const win = new BrowserWindow({
-        width:800,
-        height: 600,
-        webPreferences: {
-            preload: path.join(__dirname, 'preload.js')
-          }
-    });
-    win.loadFile('index.html');
+let mainWindow;
+
+function createWindow () {
+  mainWindow = new BrowserWindow({
+      width: 800, height: 1000,
+      webPreferences: { nodeIntegration: true }
+  });
+
+  const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:3000';
+
+  mainWindow.loadURL(startUrl);
+
+  mainWindow.on('closed', function () {
+      mainWindow = null
+  });
 }
 
-app.whenReady().then(() => {
-    createWindow();
 
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow()
-      });
+app.on('ready', createWindow);
 
-      app.on('window-all-closed', () => {
-        if (process.platform !== 'darwin') app.quit()
-      }); 
-});
 
+
+// Notes as of Tuesday 7/11: this only works if electron is run separately after react. Need to fix.
