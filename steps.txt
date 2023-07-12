@@ -1,0 +1,21 @@
+Steps
+
+
+- Document code
+- Backend API
+- Backend internal code infrastructure
+- Frontend site
+- Sketch out beautiful interface for frontend site
+- Backend interface bridge with EHR companies
+- Internal notes database?
+- Get business license/name/location
+- Establish proper startup website to show the public
+- Sign up for Epic and later other EHR services
+- Ask representative about how to build the sort of thing you're building
+- Desktop version of app
+- Make icons
+- Make micro-task sticky note pipeline
+- Research how secretive startups should be (maybe get license first)
+- Better cost estimates
+- Theoretical program design
+- Better organization of asset list and business partner options
