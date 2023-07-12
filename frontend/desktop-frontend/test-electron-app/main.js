@@ -7,30 +7,28 @@ https://mmazzarolo.com/blog/2021-08-12-building-an-electron-application-using-cr
 
 */
 
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const url = require('url');
 
-let mainWindow;
-
-function createWindow () {
-  mainWindow = new BrowserWindow({
-      width: 800, height: 1000,
-      webPreferences: { nodeIntegration: true }
+function createWindow() {
+  const mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: true
+    }
   });
 
-  const startUrl = process.env.ELECTRON_START_URL || 'http://localhost:3000';
+  mainWindow.loadURL('http://localhost:3000');
 
-  mainWindow.loadURL(startUrl);
-
-  mainWindow.on('closed', function () {
-      mainWindow = null
+  ipcMain.on('myEvent', (event, arg) => {
+    console.log(arg);  // prints "Hello, main process!"
+    event.reply('myEventResponse', 'Hello, renderer process!');
   });
 }
 
-
-app.on('ready', createWindow);
-
+app.whenReady().then(createWindow);
 
 
 // Notes as of Tuesday 7/11: this only works if electron is run separately after react. Need to fix.
