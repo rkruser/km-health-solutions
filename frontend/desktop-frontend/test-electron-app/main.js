@@ -20,7 +20,13 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadURL('http://localhost:3000');
+  //mainWindow.loadURL('http://localhost:3000');
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, './desktop-app/build/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
+
 
   ipcMain.on('myEvent', (event, arg) => {
     console.log(arg);  // prints "Hello, main process!"

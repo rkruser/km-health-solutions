@@ -1,6 +1,6 @@
 const { Configuration, OpenAIApi } = require('openai');
 
-async function completeText(prompt) {
+export async function completeText(prompt) {
     const API_KEY = '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';
     const configuration = new Configuration({
         apiKey: API_KEY,
@@ -26,9 +26,9 @@ async function completeText(prompt) {
   }
 
 
-const exportedFuncs = {
-    completeText,
-  };
+// const exportedFuncs = {
+//     completeText,
+//   };
 
-module.exports = exportedFuncs;
+// module.exports = exportedFuncs;
   
