@@ -2,6 +2,7 @@
   "name": "test-electron-app",
   "version": "1.0.0",
   "description": "Test electron desktop app",
+  "homepage": "./",
   "main": "main.js",
   "build": {
     "appId": "Ryen app",

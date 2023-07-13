@@ -20,12 +20,16 @@ function createWindow() {
     }
   });
 
-  //mainWindow.loadURL('http://localhost:3000');
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, './desktop-app/build/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+
+  const appURL = app.isPackaged
+    ? url.format({
+        pathname: path.join(__dirname, "./desktop-app/build/index.html"),
+        protocol: "file:",
+        slashes: true,
+      })
+    : "http://localhost:3000";
+
+  mainWindow.loadURL(appURL);
 
 
   ipcMain.on('myEvent', (event, arg) => {

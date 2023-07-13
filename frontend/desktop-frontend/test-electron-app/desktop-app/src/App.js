@@ -16,7 +16,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>Hello, pre-text</p>
+      <p>Hello, pre-text with eeeeextra</p>
       <button onClick={handleClick}>Send message to main process</button>
       <p>Post text</p>
       <div>
