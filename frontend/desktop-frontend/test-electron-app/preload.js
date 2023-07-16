@@ -1,10 +1,18 @@
-window.addEventListener('DOMContentLoaded', () => {
-    const replaceText = (selector, text) => {
-      const element = document.getElementById(selector)
-      if (element) element.innerText = text
+const { contextBridge, ipcRenderer } = require('electron');
+
+contextBridge.exposeInMainWorld(
+  'electron', {
+    send: (channel, data) => {
+      let validChannels = ['myEvent'];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.send(channel, data);
+      }
+    },
+    receive: (channel, func) => {
+      let validChannels = ['myEventResponse'];
+      if (validChannels.includes(channel)) {
+        ipcRenderer.on(channel, (event, ...args) => func(...args));
+      }
     }
-  
-    for (const dependency of ['chrome', 'node', 'electron']) {
-      replaceText(`${dependency}-version`, process.versions[dependency])
-    }
-  })
+  }
+);
