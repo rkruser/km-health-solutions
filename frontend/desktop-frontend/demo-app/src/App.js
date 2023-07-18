@@ -5,7 +5,7 @@ import { completeText } from './completion.js';
 
 function App() {
   
-  /*
+  
   useEffect(() => {
     window.electron.receive('myEventResponse', (data) => {
       console.log(data); // prints "Hello, renderer process!"
@@ -16,14 +16,14 @@ function App() {
     window.electron.send('myEvent', 'Hello, main process!');
   };
 
-      <button onClick={handleClick}>Send message to main process</button>
+      
 
-  */
+  
 
   return (
     <div className="App">
       <p>Hello, pre-text with eeeeextra</p>
-
+      <button onClick={handleClick}>Send message to main process</button>
       <p>Post text</p>
       <div>
         <TwoColumnLayout />

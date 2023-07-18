@@ -24,13 +24,13 @@ const url = require('node:url'); //important!
 function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600
-    /*
+    height: 600,
+    
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true
     }
-    */
+    
   });
 
   // Hypothesis: the relative directories in the built app follow the structure of your package.json build files fields. If you use the default '**/*' then it probably puts all files in one flat directory
