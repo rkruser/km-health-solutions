@@ -36,12 +36,12 @@ function createWindow() {
   
   const appURL = app.isPackaged
     ? url.format({
-        pathname: path.join(__dirname, "index.html"),
+        pathname: path.join(__dirname, "./build/index.html"),
         protocol: "file:",
         slashes: true,
         })
     : url.format({
-      pathname: path.join(__dirname, "../build/index.html"), // "../build/index.html"
+      pathname: path.join(__dirname, "./build/index.html"), // "../build/index.html"
       protocol: "file:",
       slashes: true,
       }); //http://localhost:3000

@@ -37,7 +37,7 @@ function createWindow() {
   
   const appURL = app.isPackaged
     ? url.format({
-        pathname: path.join(__dirname, "index.html"),
+        pathname: "index.html",
         protocol: "file:",
         slashes: true,
         })
