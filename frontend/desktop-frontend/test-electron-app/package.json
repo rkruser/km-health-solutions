@@ -5,11 +5,10 @@
   "homepage": "./",
   "main": "main.js",
   "build": {
-    "appId": "Ryen app",
+    "appId": "com.app.ryen",
     "mac": {
-        "category": "Ryen app category"
-    },
-    "extraResources": ["./desktop-app/build"]
+        "category": "com.app.ryenapp"
+    }
 },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

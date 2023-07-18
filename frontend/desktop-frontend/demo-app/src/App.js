@@ -4,6 +4,7 @@ import './completion.js'
 import { completeText } from './completion.js';
 
 function App() {
+  
   /*
   useEffect(() => {
     window.electron.receive('myEventResponse', (data) => {
@@ -15,7 +16,8 @@ function App() {
     window.electron.send('myEvent', 'Hello, main process!');
   };
 
-        <button onClick={handleClick}>Send message to main process</button>
+      <button onClick={handleClick}>Send message to main process</button>
+
   */
 
   return (

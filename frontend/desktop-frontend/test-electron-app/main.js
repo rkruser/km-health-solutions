@@ -39,6 +39,3 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
-
-
-// Notes as of Tuesday 7/11: this only works if electron is run separately after react. Need to fix.
