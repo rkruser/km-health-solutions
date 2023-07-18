@@ -20,6 +20,7 @@ OKAY SO: THE PROJECT WON'T COMPILE UNLESS THERE IS PUBLIC/ELECTRON.JS BUT THE EX
 // ==========================================================
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const url = require('node:url'); //important!
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -33,20 +34,32 @@ function createWindow() {
     */
   });
 
-  /*
+  
   const appURL = app.isPackaged
     ? url.format({
-        pathname: "./build/index.html",
+        pathname: path.join(__dirname, "index.html"),
         protocol: "file:",
         slashes: true,
         })
-    : "http://localhost:3000"; //http://localhost:3000
+    : url.format({
+      pathname: path.join(__dirname, "../build/index.html"), // "../build/index.html"
+      protocol: "file:",
+      slashes: true,
+      }); //http://localhost:3000
 
+
+  /*
+  const appURL = app.isPackaged ? "https://www.reddit.com/" : "https://www.wikipedia.com";
+  console.log(app.isPackaged);
+  console.log(appURL);
+  */
+  console.log(appURL);
   mainWindow.loadURL(appURL);
-*/
+
+  console.log("test");
 
   // This line works, above doesn't
-  mainWindow.loadFile('./build/index.html');
+  //mainWindow.loadFile('./build/index.html');
 
   
   ipcMain.on('myEvent', (event, arg) => {
