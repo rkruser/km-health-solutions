@@ -33,6 +33,7 @@ function createWindow() {
     */
   });
 
+  // Hypothesis: the relative directories in the built app follow the structure of your package.json build files fields. If you use the default '**/*' then it probably puts all files in one flat directory
   
   const appURL = app.isPackaged
     ? url.format({
