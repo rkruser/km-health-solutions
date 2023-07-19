@@ -1,3 +1,34 @@
+# demo-app Readme
+
+This app combines electron and react to create a portable desktop app.
+Folders: 
+  build: React's build folder. Stores the static website built by react from the website skeleton in 'public' and the react code in 'src'.
+  public: The basic website skeleton minus any fancy react code. Can edit the website header and format here.
+  src: React's source code, including App.js (for the react app) and index.js (which modifies index.html from public to add the react app)
+  node_modules: The node.js libraries used in this project. Managed by npm, no need for manual editing
+  dist: Electron's build folder. Contains packaged versions of all relevant files, plus compiled executables and installer scripts and so forth. Managed by electron-builder
+
+Files:
+  .gitignore: ignores build, dist, and node_modules, among other things
+  main.js: Entry script for Electron (as pointed to by package.json)
+  package.json: contains importants config info. Manually edit this script to do different things
+  package-lock.json: A utility file for npm. Managed automatically.
+  preload.js: The bridging script that gets preloaded by Electron's renderer processes, allowing them to talk to the main process. React code can use its features, just be careful about imports
+  README.md: this file
+
+## Notes on editing package.json and making electron compile properly
+
+The three big fields to set are "main", "homepage", and "build". The "main" field should point to your electron entry script, in this case main.js. The "homepage" field should point to "./" if you want project paths relative and not absolute in your built react site. Important for Electron (I think), or if your web root is not the site folder. The "build" field is very important. In the "files" list subentry, include all of your electron app scripts, plus the build folder and any other necessary resources, as written in file paths relative to the project root. If you don't use this, it defaults to "**/*", which takes all files in all subdirectories and (I think) flattens them out into one packaged directory, which ruins your include structure in the code.
+
+TODO:
+ - Investigate using typescript for development
+ - Improve design of index.html (figure out how best to show things in beta version)
+ - Figure out public medical APIs and find test datasets you can use to demonstrate the app
+
+
+(Below this are the original contents of create-react-app's readme).
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
