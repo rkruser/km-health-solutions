@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "outDir": "electron_build"
+    },
+    "include": [
+      "electron_src"
+    ]
+}
+  

@@ -2,25 +2,17 @@
   "name": "demo-app",
   "version": "0.1.0",
   "private": true,
-  "main": "main.js",
+  "main": "./electron_build/main.js",
   "homepage": "./",
   "build": {
     "extends": null,
     "files": [
-      "main.js",
-      "preload.js",
+      "electron_build/**/*",
       "build/**/*"
     ]
   },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "openai": "^3.3.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",    
-    "web-vitals": "^2.1.4"
+    "openai": "^3.3.0"
   },
   "scripts": {
     "react-start": "cross-env BROWSER=none react-scripts start",
@@ -28,13 +20,14 @@
     "react-build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-build-pack": "electron-builder --dir",
+    "electron-pack": "electron-builder --dir",
     "electron-build": "electron-builder",
-    "build-pack": "npm run react-build && npm run electron-build-pack",
-    "build-release": "npm run react-build && npm run electron-build",
-    "start": "concurrently \"npm run react-start\" \"wait-on http://127.0.0.1:3000 && npm run electron-start\"",
+    "build": "npm run react-build && npm run tsbuild && npm run electron-pack",
+    "build-release": "npm run react-build && npm run tsbuild && npm run electron-build",
+    "start": "npm run tsbuild && concurrently \"npm run react-start\" \"wait-on http://127.0.0.1:3000 && npm run electron-start\"",
     "electron-start": "electron .",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "tsbuild": "tsc -p ./tsconfig_electron.json"
   },
   "eslintConfig": {
     "extends": [
@@ -55,10 +48,23 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object":"",   
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",   
+    "@types/jest": "^29.5.3",
+    "@types/node": "^20.4.2",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
     "concurrently": "^8.2.0",
     "cross-env": "^7.0.3",
     "electron": "^25.3.0",
     "electron-builder": "^24.4.0",
-    "wait-on": "^7.0.1"  
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^5.1.6",
+    "wait-on": "^7.0.1",
+    "web-vitals": "^2.1.4"
   }
 }

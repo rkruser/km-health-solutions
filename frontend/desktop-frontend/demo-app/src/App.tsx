@@ -1,19 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css'
-import './completion.js'
-import { completeText } from './completion.js';
+import './App.css';
+import { completeText } from './completion';
+
+
+declare global {
+  interface Window {
+    electron:any;
+  }
+}
 
 function App() {
   
   
   useEffect(() => {
-    window.electron.receive('myEventResponse', (data) => {
+    window.electron.receive('myEventResponse', (data:string) => {
       console.log(data); // prints "Hello, renderer process!"
     });
   }, []);
 
   const handleClick = () => {
-    window.electron.send('myEvent', 'Hello, main process!');
+    window.electron.send('myEvent', 'Hello, main process! Ooooor not');
   };
 
       
@@ -22,7 +28,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>Hello, pre-text with eeeeextra</p>
+      <p>Hello, pre-text with eee</p>
       <button onClick={handleClick}>Send message to main process</button>
       <p>Post text</p>
       <div>
@@ -34,7 +40,7 @@ function App() {
 
 export default App;
 
-function callCompleteText(prompt) {
+function callCompleteText(prompt:string) {
   return completeText(prompt);
 }
 
