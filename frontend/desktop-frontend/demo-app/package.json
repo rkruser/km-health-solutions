@@ -24,10 +24,11 @@
     "electron-build": "electron-builder",
     "build": "npm run react-build && npm run tsbuild && npm run electron-pack",
     "build-release": "npm run react-build && npm run tsbuild && npm run electron-build",
-    "start": "npm run tsbuild && concurrently \"npm run react-start\" \"wait-on http://127.0.0.1:3000 && npm run electron-start\"",
+    "start": "concurrently \"npm run online-tsbuild\" \"npm run react-start\" \"wait-on http://127.0.0.1:3000 && npm run electron-start\"",
     "electron-start": "electron .",
     "pack": "electron-builder --dir",
-    "tsbuild": "tsc -p ./tsconfig_electron.json"
+    "tsbuild": "tsc -p ./tsconfig_electron.json",
+    "online-tsbuild": "tsc -w -p ./tsconfig_electron.json"
   },
   "eslintConfig": {
     "extends": [

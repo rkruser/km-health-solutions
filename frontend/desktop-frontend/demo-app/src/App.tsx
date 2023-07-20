@@ -2,18 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { completeText } from './completion';
 
-/*
+
 declare global {
   interface Window {
     electron:any;
   }
 }
-*/
+
 
 function App() {
   const [clickCount, setClickCount] = useState(0);
   
-  /*
+  
   useEffect(() => {
     window.electron.receive('myEventResponse', (data:string) => {
       console.log(data); // prints "Hello, renderer process!"
@@ -32,19 +32,19 @@ function App() {
 
 
   const handleClick = () => {
-    window.electron.send('myEvent', 'Hello, main process! Clicks: ' + String(clickCount));
+    window.electron.send('myEvent', 'Hello, main process lel! Clicks: ' + String(clickCount));
     setClickCount(clickCount+1);
   };
 
-      <button onClick={handleClick}>Send message to main process</button>
 
-*/
+
+
   
 
   return (
     <div className="App">
       <p id="main_process_message_display">Hello, pre-text with eee</p>
-
+      <button onClick={handleClick}>Send message to main process</button>
       <p>Post text</p>
       <div>
         <TwoColumnLayout />
