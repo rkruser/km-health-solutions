@@ -26,6 +26,13 @@ TODO:
  - Figure out public medical APIs and find test datasets you can use to demonstrate the app
  - (Slack goals)
  - Tidy up project: figure out digital signatures, copywrite and insert spec details, and so forth
+ - Boilerplate to look at and take inspiration from: https://github.com/electron-react-boilerplate/electron-react-boilerplate/blob/main/package.json 
+ - Check out ESlint and other code productivity tools
+ - *Schedule time to brush up on "code smells" and other design best practices (https://refactoring.guru/smells/primitive-obsession and other sites)
+ - Schedule time to develop *Organizational Standards* of coding (look at those of other organizations, e.g., the prof who emailed you)
+ - Schedule time to read and try to develop for c/c++ open source projects just to refresh your C skillz
+ - Figure out how to use code analysis tools (make list of tools to learn and spend 5 mins a day reading about them and slowly integrating them into workflow)
+ - https://fsharpforfunandprofit.com/fppatterns/    EXCELLENT presentation
 
 
 (Below this are the original contents of create-react-app's readme).
