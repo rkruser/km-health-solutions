@@ -24,6 +24,8 @@ TODO:
  - Investigate using typescript for development
  - Improve design of index.html (figure out how best to show things in beta version)
  - Figure out public medical APIs and find test datasets you can use to demonstrate the app
+ - (Slack goals)
+ - Tidy up project: figure out digital signatures, copywrite and insert spec details, and so forth
 
 
 (Below this are the original contents of create-react-app's readme).
