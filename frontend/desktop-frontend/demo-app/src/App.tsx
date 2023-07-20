@@ -10,7 +10,7 @@ declare global {
 }
 
 function App() {
-  
+  const [clickCount, setClickCount] = useState(0);
   
   useEffect(() => {
     window.electron.receive('myEventResponse', (data:string) => {
@@ -18,8 +18,20 @@ function App() {
     });
   }, []);
 
+  useEffect( () => {
+    window.electron.receive('displayMessage', (message:string) => {
+      const displayWindow = document.getElementById("main_process_message_display");
+      if (displayWindow !== null) {
+        displayWindow.innerHTML = message;
+      }
+    })
+  }
+  )
+
+
   const handleClick = () => {
-    window.electron.send('myEvent', 'Hello, main process! Ooooor not');
+    window.electron.send('myEvent', 'Hello, main process! Clicks: ' + String(clickCount));
+    setClickCount(clickCount+1);
   };
 
       
@@ -28,7 +40,7 @@ function App() {
 
   return (
     <div className="App">
-      <p>Hello, pre-text with eee</p>
+      <p id="main_process_message_display">Hello, pre-text with eee</p>
       <button onClick={handleClick}>Send message to main process</button>
       <p>Post text</p>
       <div>

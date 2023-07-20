@@ -43,9 +43,14 @@ function createWindow() {
   //mainWindow.loadFile('./build/index.html');
 
   
-  ipcMain.on('myEvent', (event, arg) => {
+  ipcMain.on('myEvent', (event, arg:string) => {
     console.log(arg);  // prints "Hello, main process!"
     event.reply('myEventResponse', 'Hello, renderer process!');
+    event.reply('displayMessage', "Hello, this is Main, we heard you say: " + arg);
+  });
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.webContents.send('displayMessage', "Hello, this is the main process speaking");
   });
 }
 

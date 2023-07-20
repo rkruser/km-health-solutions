@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld(
       }
     },
     receive: (channel, func) => {
-      let validChannels = ['myEventResponse'];
+      let validChannels = ['myEventResponse', 'displayMessage'];
       if (validChannels.includes(channel)) {
         ipcRenderer.on(channel, (event, ...args) => func(...args));
       }
