@@ -1,11 +1,19 @@
 {
   "name": "demo-app",
-  "version": "0.1.0",
+  "description": "Beta version of Ampere Health Assistant",
+  "author":"Ryen Krusinga",
+  "version": "0.9.0",
   "private": true,
   "main": "./electron_build/main.js",
   "homepage": "./",
   "build": {
-    "extends": null,
+    "productName": "Ampere Assistant",
+    "appId": "com.amperehealth.assistant",
+    "releaseInfo": {
+      "releaseName": "Beta",
+      "releaseNotes": "Minimal app version"
+    },
+    "extends": null,    
     "files": [
       "electron_build/**/*",
       "build/**/*"
