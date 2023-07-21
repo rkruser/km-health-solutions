@@ -25,6 +25,17 @@ Tools:
 
 The three big fields to set are "main", "homepage", and "build". The "main" field should point to your electron entry script, in this case main.js. The "homepage" field should point to "./" if you want project paths relative and not absolute in your built react site. Important for Electron (I think), or if your web root is not the site folder. The "build" field is very important. In the "files" list subentry, include all of your electron app scripts, plus the build folder and any other necessary resources, as written in file paths relative to the project root. If you don't use this, it defaults to "**/*", which takes all files in all subdirectories and (I think) flattens them out into one packaged directory, which ruins your include structure in the code.
 
+
+API Stuff:
+- http://www.hl7.org/fhir/
+- https://confluence.hl7.org/display/FHIR/Public+Test+Servers   (public servers for testing)
+- https://github.com/fhir-fuel/awesome-FHIR
+- https://www.npmjs.com/package/fhir-kit-client  (Might be promising library)
+- Actually, this library slaps: https://github.com/FHIR/fhir.js
+- https://asymmetrik.medium.com/building-fhir-apps-with-a-production-mindset-1bfefba7b913 (Possibly useful tutorial)
+- There's this thing called "Smart" which I don't quite understand, but might be good?? https://smarthealthit.org/about-smart-2/ , http://www.hl7.org/fhir/smart-app-launch/app-launch.html
+- https://topflightapps.com/ideas/how-integrate-health-app-with-epic-ehr-emr/
+
 TODO:
  - Research automated documentation methods
  - Figure out how to deal with API key distribution for local installs
