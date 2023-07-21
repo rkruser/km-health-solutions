@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "amp_assistant",
+  "name": "Ampere Assistant: Beta",
   "icons": [
     {
       "src": "favicon.ico",

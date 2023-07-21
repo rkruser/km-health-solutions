@@ -2,17 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { completeText } from './completion';
 
-
 declare global {
   interface Window {
     electron:any;
   }
 }
 
-
 function App() {
   const [clickCount, setClickCount] = useState(0);
-  
+
+  // Define dummy electron object with placeholders for development without Electron
+  if (!window.electron) {
+    window.electron = {
+      receive: (channel: string, func: (arg: any) => void) => {
+        console.log(`Electron functionality "${channel}" is not available`);
+      },
+      send: (channel: string, message: any) => {
+        console.log(`Electron functionality "${channel}" with message "${message}" is not available`);
+      },
+    };
+  }
   
   useEffect(() => {
     window.electron.receive('myEventResponse', (data:string) => {
@@ -20,26 +29,19 @@ function App() {
     });
   }, []);
 
-  useEffect( () => {
+  useEffect(() => {
     window.electron.receive('displayMessage', (message:string) => {
       const displayWindow = document.getElementById("main_process_message_display");
       if (displayWindow !== null) {
         displayWindow.innerHTML = message;
       }
-    })
-  }
-  )
-
+    });
+  }, []);
 
   const handleClick = () => {
     window.electron.send('myEvent', 'Hello, main process lel! Clicks: ' + String(clickCount));
     setClickCount(clickCount+1);
   };
-
-
-
-
-  
 
   return (
     <div className="App">
@@ -54,6 +56,7 @@ function App() {
 }
 
 export default App;
+
 
 function callCompleteText(prompt:string) {
   return completeText(prompt);
