@@ -16,24 +16,32 @@ Files:
   preload.js: The bridging script that gets preloaded by Electron's renderer processes, allowing them to talk to the main process. React code can use its features, just be careful about imports
   README.md: this file
 
+Tools:
+  - jest, ts-jest, jest-environment-jsdom, identity-obj-proxy: Automated testing software. The latter two libraries add typescript support and document object model support to jest. Very convenient library.
+  - (eslint: a code quality checking library, seems to automatically exist in vscode, so not explicitly in devDependencies)
+
+
 ## Notes on editing package.json and making electron compile properly
 
 The three big fields to set are "main", "homepage", and "build". The "main" field should point to your electron entry script, in this case main.js. The "homepage" field should point to "./" if you want project paths relative and not absolute in your built react site. Important for Electron (I think), or if your web root is not the site folder. The "build" field is very important. In the "files" list subentry, include all of your electron app scripts, plus the build folder and any other necessary resources, as written in file paths relative to the project root. If you don't use this, it defaults to "**/*", which takes all files in all subdirectories and (I think) flattens them out into one packaged directory, which ruins your include structure in the code.
 
 TODO:
- - Investigate using typescript for development
+ - Research automated documentation methods
+ - Figure out how to deal with API key distribution for local installs
+ - Investigate using typescript for development (done)
  - Improve design of index.html (figure out how best to show things in beta version)
  - Figure out public medical APIs and find test datasets you can use to demonstrate the app
  - (Slack goals)
  - Tidy up project: figure out digital signatures, copywrite and insert spec details, and so forth
  - Boilerplate to look at and take inspiration from: https://github.com/electron-react-boilerplate/electron-react-boilerplate/blob/main/package.json 
- - Check out ESlint and other code productivity tools
+ - Check out ESlint and other code productivity tools (looked into, seems to already be in vscode)
  - *Schedule time to brush up on "code smells" and other design best practices (https://refactoring.guru/smells/primitive-obsession and other sites)
  - Schedule time to develop *Organizational Standards* of coding (look at those of other organizations, e.g., the prof who emailed you)
  - Schedule time to read and try to develop for c/c++ open source projects just to refresh your C skillz
  - Figure out how to use code analysis tools (make list of tools to learn and spend 5 mins a day reading about them and slowly integrating them into workflow)
  - https://fsharpforfunandprofit.com/fppatterns/    EXCELLENT presentation
-
+- Stuff about using a python application as a windows service: https://www.mssqltips.com/sqlservertip/7318/python-as-a-windows-service/#comments
+- https://learn.microsoft.com/en-us/windows/msix/app-installer/how-to-create-appinstaller-file
 
 (Below this are the original contents of create-react-app's readme).
 
