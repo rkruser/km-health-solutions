@@ -28,6 +28,7 @@ The three big fields to set are "main", "homepage", and "build". The "main" fiel
 
 API Stuff:
 - http://www.hl7.org/fhir/
+- *** Highly useful! Reasoning and standard protocols!: http://www.hl7.org/fhir/clinicalreasoning-knowledge-artifact-representation.html#order-set
 - https://confluence.hl7.org/display/FHIR/Public+Test+Servers   (public servers for testing)
 - https://github.com/fhir-fuel/awesome-FHIR
 - https://www.npmjs.com/package/fhir-kit-client  (Might be promising library)
