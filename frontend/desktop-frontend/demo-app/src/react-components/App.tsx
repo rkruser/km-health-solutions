@@ -22,10 +22,28 @@ if (!window.electron) {
 }
 
 function App() {
-  
+  const [inputText, setInputText] = useState('Input Text Default');
+  const [displayText, setDisplayText] = useState('Initial display text');
+
+  async function handleButton(command:string) {
+    setDisplayText(command);      
+    const result = await completeText(inputText);
+    setDisplayText(result);
+  }
+
   return (
-    <div>
-      <p>Hello, I am app entity</p>
+    <div className='App'>
+      <textarea
+        value={inputText}
+        onChange={(e)=>setInputText(e.target.value)}
+      />
+      <div>{displayText}</div>
+      <div>
+        <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
+        <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>
+        <button onClick={()=>{handleButton("checkOrders")}}>Check Orders</button>
+        <button onClick={()=>{handleButton("getRecommendations")}}>Get Recommendations</button>
+      </div>
     </div>
   );
 }
