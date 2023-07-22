@@ -54,6 +54,25 @@ TODO:
 - Stuff about using a python application as a windows service: https://www.mssqltips.com/sqlservertip/7318/python-as-a-windows-service/#comments
 - https://learn.microsoft.com/en-us/windows/msix/app-installer/how-to-create-appinstaller-file
 
+
+Structure:
+Folder + file structure:
+
+- Render/router scripts (those that call the render function to insert into doc
+	- index.js (and css?)
+- React components (jsx, etc.)
+	- Formatting wrapper and css
+	- Main app and css
+	- Components in main app and their css files
+- API components (libraries for querying FHIR and such)
+	- Caching/formatting utilities
+	- Double-checking utilities
+	- Main interface to the AIs / backend server
+	- Main (FHIR) interface to EHR server
+	- App-facing interface that abstracts away details of calls to other APIs
+- [Other important things, maybe app secrets or whatever]
+
+
 (Below this are the original contents of create-react-app's readme).
 
 
