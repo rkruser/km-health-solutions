@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './App.css';
-import { completeText } from './completion';
+import '../css/App_old.css';
+import { completeText } from '../api/completion';
 
 declare global {
   interface Window {
@@ -8,20 +8,20 @@ declare global {
   }
 }
 
+// Define dummy electron object with placeholders for development without Electron
+if (!window.electron) {
+  window.electron = {
+    receive: (channel:string, func: (arg:any)=>void) => {
+      console.log(`Electron functionality "${channel}" is not available`);
+    },
+    send: (channel:string, message:any) => {
+      console.log(`Electron functionality "${channel}" with message "${message}" is not available`);
+    },
+  };
+}
+
 function App() {
   const [clickCount, setClickCount] = useState(0);
-
-  // Define dummy electron object with placeholders for development without Electron
-  if (!window.electron) {
-    window.electron = {
-      receive: (channel: string, func: (arg: any) => void) => {
-        console.log(`Electron functionality "${channel}" is not available`);
-      },
-      send: (channel: string, message: any) => {
-        console.log(`Electron functionality "${channel}" with message "${message}" is not available`);
-      },
-    };
-  }
   
   useEffect(() => {
     window.electron.receive('myEventResponse', (data:string) => {

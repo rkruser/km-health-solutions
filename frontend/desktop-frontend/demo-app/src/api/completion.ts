@@ -1,4 +1,4 @@
-const { Configuration, OpenAIApi } = require('openai');
+const { Configuration, OpenAIApi } = require('openai'); //I do not understand why this file needs to be commonJS
 
 export async function completeText(prompt:string) {
     const API_KEY = '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';
@@ -25,10 +25,3 @@ export async function completeText(prompt:string) {
     }
   }
 
-
-// const exportedFuncs = {
-//     completeText,
-//   };
-
-// module.exports = exportedFuncs;
-  
