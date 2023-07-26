@@ -1,4 +1,4 @@
-import '../css/search-area.css';
+import '../css/search-bar.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 
@@ -41,7 +41,7 @@ const SearchResult: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 }
 
 
-const SearchArea: React.FC = () => {
+const SearchBar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Result[]>([]);
 
@@ -65,7 +65,7 @@ const SearchArea: React.FC = () => {
   return (
     <div className='SearchArea'>
       <input
-        className='SearchBar'
+        className='InputBar'
         type="text"
         value={inputValue}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
@@ -81,6 +81,6 @@ const SearchArea: React.FC = () => {
   );
 };
 
-export default SearchArea;
+export default SearchBar;
 
 
