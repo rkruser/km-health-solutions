@@ -33,20 +33,20 @@ async function searchApi(value: string) {
   }
 
 type SearchResultProps = {
-    children: React.ReactNode,
+    value: string,
     isHighlighted: boolean,
     onClick: () => void
   };
 
 // A typescript React wrapper component for individual search results
-const SearchResult: React.FC<SearchResultProps> = ({ children, isHighlighted, onClick }) => {
+const SearchResult: React.FC<SearchResultProps> = ({ value, isHighlighted, onClick }) => {
     return (
     <div 
         className={`SearchResultOuter ${isHighlighted ? 'highlighted' : ''}`}
         onClick={onClick}
     >
         <div className='SearchResultInner'>
-            {children}
+            {value}
         </div>
     </div>
     );
@@ -127,9 +127,8 @@ const SearchBar: React.FC = () => {
                     setSelectedSearchValue(result);
                     setHighlightIndex(index);
                 }}
-            >
-                {result}
-            </SearchResult>
+                value = {result}
+            />
           ))}
         </div>
       )}

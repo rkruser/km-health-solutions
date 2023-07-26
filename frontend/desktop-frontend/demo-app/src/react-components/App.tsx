@@ -26,11 +26,25 @@ if (!window.electron) {
   };
 }
 
+const testPatient = {
+  "summary": "summary text",
+  "orders": "orders text",
+  "medications": "medications text",
+  "timeline": "timeline text",
+  "history": "history text",
+  "labs": "labs text",
+  "vitals": "vitals text",
+  "notes": "notes text",
+  "recommendations": "recommendations text",
+  "diagnoses": "diagnoses text",
+  "allergies": "allergies text",
+}
+
 function App() {
   const [inputText, setInputText] = useState('Input Text Default');
   const [displayText, setDisplayText] = useState('Initial display text');
   const [selectedSearchValue, setSelectedSearchValue] = useState('');
-  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>({"summary": "summary text", "orders": "orders text"});
+  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(testPatient);
 
   async function handleButton(command:string) {
     setDisplayText(command);      
@@ -39,7 +53,7 @@ function App() {
   }
 
   useEffect(() => {
-    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue}) );
+    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "history":selectedSearchValue+"dfasdf", "vitals":selectedSearchValue+"skarskarskarskar"}) );
   }, 
   [selectedSearchValue]
   );
