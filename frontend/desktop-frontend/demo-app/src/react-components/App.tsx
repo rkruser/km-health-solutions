@@ -27,6 +27,7 @@ if (!window.electron) {
 }
 
 const testPatient = {
+  "info": "Patient name and stuff",
   "summary": "summary text",
   "orders": "orders text",
   "medications": "medications text",
@@ -53,7 +54,7 @@ function App() {
   }
 
   useEffect(() => {
-    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "history":selectedSearchValue+"dfasdf", "vitals":selectedSearchValue+"skarskarskarskar"}) );
+    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
   }, 
   [selectedSearchValue]
   );

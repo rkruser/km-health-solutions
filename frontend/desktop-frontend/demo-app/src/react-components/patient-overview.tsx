@@ -8,15 +8,16 @@ type KeywordComponents = {
 }
 
 const COMPONENT_MAP: KeywordComponents = {
+    'info': ({data}) => {return <div>Info: {data}</div>},
     'summary': ({data}) => {return <div>Summary: {data}</div>},
     'orders': ({data}) => {return <div>Orders: {data}</div>},
-    'medications': ({}) => {return <div>Medications</div>},
+    'medications': ({data}) => {return <div>Medications: {data}</div>},
     'timeline': ({}) => {return <div>Timeline</div>},
     'history': ({data}) => {return <div>History: {data}</div>},
     'labs': ({}) => {return <div>Labs</div>},
     'vitals': ({data}) => {return <div>Vitals: {data}</div>},
     'notes': ({}) => {return <div>Notes</div>},
-    'recommendations': ({}) => {return <div>Recommendations</div>},
+    'recommendations': ({data}) => {return <div>Recommendations: {data}</div>},
     'diagnoses': ({}) => {return <div>Diagnoses</div>},
     'allergies': ({}) => {return <div>Allergies</div>},
 }
@@ -41,11 +42,17 @@ const DataPanel: React.FC<DataPanelProperties> = ({entry}) => {
 const PatientOverview: React.FC = () => {
     const {selectedPatient} = useContext(PatientContext);
 
+    const keywordsToInclude = new Set(['info', 'summary', 'orders', 'recommendations']);
+
     return (
         <div className='PatientOverview'>
-            {Object.entries(selectedPatient).map(([keyword, data], _) => (
-                <DataPanel key={keyword} entry={{ keyword, data }} />
-            ))}
+            {   
+                Object.entries(selectedPatient)
+                .filter(([keyword]) => keywordsToInclude.has(keyword))
+                .map(([keyword, data], _) => (
+                    <DataPanel key={keyword} entry={{ keyword, data }} />
+                ))
+            }
         </div>
     );
 }
