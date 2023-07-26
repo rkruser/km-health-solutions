@@ -48,21 +48,16 @@ const SearchResult: React.FC<SearchResultProps> = ({
   onMouseEnter,
   onMouseLeave,
  }) => {
-    const [cursor, setCursor] = useState('default');
-
     return (
     <div 
         className={`SearchResultOuter ${isHighlighted ? 'highlighted' : ''}`}
         onClick={onClick}
         onMouseEnter={()=>{
-          setCursor('pointer');
           onMouseEnter();
         }}
         onMouseLeave={()=>{
-          setCursor('default');
           onMouseLeave();
         }}
-        style={{cursor: cursor}}
     >
         <div className='SearchResultInner'>
             {value}
@@ -78,6 +73,7 @@ const SearchBar: React.FC = () => {
   const { setSelectedSearchValue } = useContext(SearchContext);
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [cursor, setCursor] = useState('default');
 
   // Debounce function to prevent immediate execution as user types
   const debouncedSearch = useCallback(
@@ -143,7 +139,15 @@ const SearchBar: React.FC = () => {
         }}
       />
       {searchResults.length > 0 && (
-        <div className="search-results">
+        <div className="search-results"
+          onMouseEnter={()=>{
+            setCursor('pointer');
+          }}
+          onMouseLeave={()=>{
+            setCursor('default');
+          }}
+          style={{cursor: cursor}}
+        >
           {searchResults.map((result: Result, index: number) => (
             <SearchResult
                 key={index}
