@@ -55,7 +55,7 @@ function App() {
 
   useEffect(() => {
     setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
-  }, 
+  },
   [selectedSearchValue]
   );
 
@@ -63,27 +63,37 @@ function App() {
     <div className='App'>
       <SearchContext.Provider 
         value={{selectedSearchValue, setSelectedSearchValue}}
-      >
+        >
         <p>{selectedSearchValue}</p>
         <SearchBar />
-        <textarea
-          value={inputText}
-          onChange={(e)=>setInputText(e.target.value)}
-        />
-        <div>{displayText}</div>
-        <PatientContext.Provider value={{selectedPatient, setSelectedPatient}}>
-          <PatientOverview />
-        </PatientContext.Provider>
-        <div>
-          <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
-          <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>
-          <button onClick={()=>{handleButton("checkOrders")}}>Check Orders</button>
-          <button onClick={()=>{handleButton("getRecommendations")}}>Get Recommendations</button>
-        </div>
       </SearchContext.Provider>
+
+      <PatientContext.Provider 
+        value={{selectedPatient, setSelectedPatient}}
+        >
+        <PatientOverview />
+      </PatientContext.Provider>
+
+
     </div>
   );
 }
 
 export default App;
 
+/*
+        <textarea
+          value={inputText}
+          onChange={(e)=>setInputText(e.target.value)}
+        />
+        <div>{displayText}</div>
+
+        <div>
+          <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
+          <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>
+          <button onClick={()=>{handleButton("checkOrders")}}>Check Orders</button>
+          <button onClick={()=>{handleButton("getRecommendations")}}>Get Recommendations</button>
+        </div>
+
+
+*/

@@ -1,14 +1,12 @@
-.SearchArea {
+.SearchBar {
     position: relative; /* add this */
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    width: 80%;
+    width: 90%;
+    min-width: 300px;
     height: auto;
     background-color: #f5f5f5;
     border-bottom: 1px solid #e5e5e5;
-    padding: 10px;
 }
 
 .InputBar { 

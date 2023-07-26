@@ -127,7 +127,7 @@ const SearchBar: React.FC = () => {
 
 
   return (
-    <div className='SearchArea'>
+    <div className='SearchBar'>
       <input
         ref={searchInputRef}
         className='InputBar'

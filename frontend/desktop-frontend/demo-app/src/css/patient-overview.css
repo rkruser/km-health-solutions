@@ -1,3 +1,24 @@
 .PatientOverview {
+    width: 90%;
+    min-width: 300px;
     margin-top: 10px;
+    padding: 5px;
+    background-color: rgb(70, 128, 52);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.PatientOverview > div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.DataPanel {
+    border: 2px solid black;
+    padding: 10px;
+    background-color: blanchedalmond;
+    width: 100%;
+    height: 100px;
+    overflow-wrap: break-word;
 }
