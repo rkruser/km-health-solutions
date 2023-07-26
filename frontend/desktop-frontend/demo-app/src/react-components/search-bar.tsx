@@ -1,5 +1,7 @@
 import '../css/search-bar.css';
-import React, { useState, useEffect, useCallback } from 'react';
+import SearchContext from './search-context';
+
+import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 
 // We're assuming the result to be an array of string.
@@ -29,10 +31,19 @@ async function searchApi(value: string) {
     return results;
   }
 
+type SearchResultProps = {
+    children: React.ReactNode,
+    isHighlighted: boolean,
+    onClick: () => void
+  };
+
 // A typescript React wrapper component for individual search results
-const SearchResult: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const SearchResult: React.FC<SearchResultProps> = ({ children, isHighlighted, onClick }) => {
     return (
-    <div className='SearchResultOuter'>
+    <div 
+        className={`SearchResultOuter ${isHighlighted ? 'highlighted' : ''}`}
+        onClick={onClick}
+    >
         <div className='SearchResultInner'>
             {children}
         </div>
@@ -44,6 +55,9 @@ const SearchResult: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 const SearchBar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Result[]>([]);
+  const { setSelectedSearchValue } = useContext(SearchContext);
+  const [highlightIndex, setHighlightIndex] = useState<number>(0);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Debounce function to prevent immediate execution as user types
   const debouncedSearch = useCallback(
@@ -59,21 +73,62 @@ const SearchBar: React.FC = () => {
 
   useEffect(() => {
     debouncedSearch(inputValue);
-  }, [inputValue]); // AI wants me to add debouncedSearch to the dependency array, but I don't see the purpose
+  }, [inputValue, debouncedSearch]); // AI wants me to add debouncedSearch to the dependency array, but I don't see the purpose
+
+
+    // Highlight the search result that is currently selected
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+        switch (event.key) {
+            case 'ArrowDown':
+                event.preventDefault();
+                setHighlightIndex((prev) => (prev + 1 >= searchResults.length ? 0 : prev + 1));
+                break;
+            case 'ArrowUp':
+                event.preventDefault();
+                setHighlightIndex((prev) => (prev - 1 < 0 ? searchResults.length - 1 : prev - 1));
+                break;
+            case 'Enter':
+                event.preventDefault();
+                setSelectedSearchValue(searchResults[highlightIndex]);
+                break;
+            default:
+                break;
+        }
+    };
+    searchInputRef.current?.addEventListener('keydown', handleKeyDown);
+    return () => {
+        searchInputRef.current?.removeEventListener('keydown', handleKeyDown);
+    };
+    }, [searchResults, highlightIndex, setSelectedSearchValue]);
+
 
 
   return (
     <div className='SearchArea'>
       <input
+        ref={searchInputRef}
         className='InputBar'
         type="text"
         value={inputValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setInputValue(e.target.value);
+            setHighlightIndex(0);
+        }}
       />
       {searchResults.length > 0 && (
         <div className="search-results">
           {searchResults.map((result: Result, index: number) => (
-            <SearchResult key={index}>{result}</SearchResult>
+            <SearchResult
+                key={index}
+                isHighlighted={index === highlightIndex}
+                onClick={() => {
+                    setSelectedSearchValue(result);
+                    setHighlightIndex(index);
+                }}
+            >
+                {result}
+            </SearchResult>
           ))}
         </div>
       )}

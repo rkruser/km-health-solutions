@@ -1,7 +1,8 @@
 .SearchArea {
+    position: relative; /* add this */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* add this */
+    justify-content: space-between;
     align-items: center;
     width: 80%;
     height: auto;
@@ -19,22 +20,27 @@
 
 .search-results {
     width: 100%;
-    font-size: 12pt;
-    display: flex; /* add this */
-    flex-direction: column; /* add this */
-    align-items: center; /* add this */
+    position: absolute; /* add this */
+    top: calc(100%); /* add this */
+    left: 0; /* add this */
+    z-index: 1; /* add this */
 }
 
 .SearchResultOuter {
-    width: 100%;
+    width: calc(100%-20px);
     padding: 2px;
     background-color: bisque;
     display: flex; /* add this */
     justify-content: flex-start; /* add this */
-    margin-bottom: 5px;
+    align-items: center; /* add this */
 }
+
+.highlighted {
+    background-color: #f0f0f0; /* Change to your preferred highlight color */
+}
+  
 
 .SearchResultInner {
     background-color: darkolivegreen;
-    padding: 5px; /* add this for some padding around the text */
+    padding: 5px;     
 }
