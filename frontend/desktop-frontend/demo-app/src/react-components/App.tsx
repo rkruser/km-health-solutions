@@ -1,5 +1,7 @@
 import '../css/app.css';
 import SearchContext from './search-context';
+import PatientContext from './patient-context';
+import PatientOverview from './patient-overview';
 
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { completeText } from '../api/completion';
@@ -28,12 +30,19 @@ function App() {
   const [inputText, setInputText] = useState('Input Text Default');
   const [displayText, setDisplayText] = useState('Initial display text');
   const [selectedSearchValue, setSelectedSearchValue] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>({"summary": "summary text", "orders": "orders text"});
 
   async function handleButton(command:string) {
     setDisplayText(command);      
     const result = await completeText(inputText);
     setDisplayText(result);
   }
+
+  useEffect(() => {
+    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue}) );
+  }, 
+  [selectedSearchValue]
+  );
 
   return (
     <div className='App'>
@@ -47,6 +56,9 @@ function App() {
           onChange={(e)=>setInputText(e.target.value)}
         />
         <div>{displayText}</div>
+        <PatientContext.Provider value={{selectedPatient, setSelectedPatient}}>
+          <PatientOverview />
+        </PatientContext.Provider>
         <div>
           <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
           <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>

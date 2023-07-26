@@ -9,6 +9,7 @@ import { debounce } from 'lodash';
 type Result = string;
 
 
+// Should put this in utilities
 function getRandomInteger(min: number, max: number) {
     min = Math.ceil(min); // Round up to the nearest whole number
     max = Math.floor(max); // Round down to the nearest whole number
