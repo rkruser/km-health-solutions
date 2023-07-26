@@ -1,10 +1,18 @@
-import '../css/search-bar.css';
+import '../css/search-area.css';
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 
 // We're assuming the result to be an array of string.
 // Change this type to fit the data structure of your actual search results
 type Result = string;
+
+
+function getRandomInteger(min: number, max: number) {
+    min = Math.ceil(min); // Round up to the nearest whole number
+    max = Math.floor(max); // Round down to the nearest whole number
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
 
   // Hypothetical API call
 async function searchApi(value: string) {
@@ -13,38 +21,51 @@ async function searchApi(value: string) {
     
     // Write a for-loop that takes the string value and produces an array of 10 strings that are the value + a random number
     let results=[];
-    for (let i = 0; i < 10; i++) {
+    let numResults = getRandomInteger(5, 15);
+    for (let i = 0; i < numResults; i++) {
         results.push(value + Math.random());
     }
 
     return results;
   }
 
+// A typescript React wrapper component for individual search results
+const SearchResult: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return (
+    <div className='SearchResultOuter'>
+        <div className='SearchResultInner'>
+            {children}
+        </div>
+    </div>
+    );
+}
 
-const SearchBar: React.FC = () => {
+
+const SearchArea: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Result[]>([]);
 
   // Debounce function to prevent immediate execution as user types
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      searchApi(value).then((results) => setSearchResults(results));
+        if (value === '') {
+            setSearchResults([]);
+            return;
+        }
+        searchApi(value).then((results) => setSearchResults(results));
     }, 300),
     [],
   );
 
   useEffect(() => {
-    if (inputValue === '') {
-      setSearchResults([]);
-      return;
-    }
     debouncedSearch(inputValue);
-  }, [inputValue, debouncedSearch]);
+  }, [inputValue]); // AI wants me to add debouncedSearch to the dependency array, but I don't see the purpose
 
 
   return (
-    <div>
+    <div className='SearchArea'>
       <input
+        className='SearchBar'
         type="text"
         value={inputValue}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
@@ -52,7 +73,7 @@ const SearchBar: React.FC = () => {
       {searchResults.length > 0 && (
         <div className="search-results">
           {searchResults.map((result: Result, index: number) => (
-            <div key={index}>{result}</div>
+            <SearchResult key={index}>{result}</SearchResult>
           ))}
         </div>
       )}
@@ -60,6 +81,6 @@ const SearchBar: React.FC = () => {
   );
 };
 
-export default SearchBar;
+export default SearchArea;
 
 

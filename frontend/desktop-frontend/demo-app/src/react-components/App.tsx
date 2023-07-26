@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css/app.css';
 import { completeText } from '../api/completion';
-import SearchBar from './search-bar';
+import SearchArea from './search-bar';
 // consider using the styled-components library for wrapper objects that style their contents
 
 declare global {
@@ -35,7 +35,7 @@ function App() {
   return (
     <div className='App'>
       <p>Testing text</p>
-      <SearchBar />
+      <SearchArea />
       <textarea
         value={inputText}
         onChange={(e)=>setInputText(e.target.value)}
