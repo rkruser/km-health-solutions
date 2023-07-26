@@ -2,7 +2,7 @@ import '../css/search-bar.css';
 import SearchContext from './search-context';
 
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 
 // We're assuming the result to be an array of string.
 // Change this type to fit the data structure of your actual search results
@@ -35,15 +35,34 @@ async function searchApi(value: string) {
 type SearchResultProps = {
     value: string,
     isHighlighted: boolean,
-    onClick: () => void
+    onClick: () => void,
+    onMouseEnter: () => void,
+    onMouseLeave: () => void,
   };
 
 // A typescript React wrapper component for individual search results
-const SearchResult: React.FC<SearchResultProps> = ({ value, isHighlighted, onClick }) => {
+const SearchResult: React.FC<SearchResultProps> = ({ 
+  value, 
+  isHighlighted, 
+  onClick, 
+  onMouseEnter,
+  onMouseLeave,
+ }) => {
+    const [cursor, setCursor] = useState('default');
+
     return (
     <div 
         className={`SearchResultOuter ${isHighlighted ? 'highlighted' : ''}`}
         onClick={onClick}
+        onMouseEnter={()=>{
+          setCursor('pointer');
+          onMouseEnter();
+        }}
+        onMouseLeave={()=>{
+          setCursor('default');
+          onMouseLeave();
+        }}
+        style={{cursor: cursor}}
     >
         <div className='SearchResultInner'>
             {value}
@@ -91,7 +110,13 @@ const SearchBar: React.FC = () => {
                 break;
             case 'Enter':
                 event.preventDefault();
-                setSelectedSearchValue(searchResults[highlightIndex]);
+                if (searchResults.length === 0) {
+                  debouncedSearch(inputValue);
+                }
+                else {
+                  setSelectedSearchValue(searchResults[highlightIndex]);
+                  setSearchResults([]);
+                }
                 break;
             default:
                 break;
@@ -101,7 +126,7 @@ const SearchBar: React.FC = () => {
     return () => {
         searchInputRef.current?.removeEventListener('keydown', handleKeyDown);
     };
-    }, [searchResults, highlightIndex, setSelectedSearchValue]);
+  }, [searchResults, highlightIndex, setHighlightIndex, setSelectedSearchValue]);
 
 
 
@@ -123,9 +148,13 @@ const SearchBar: React.FC = () => {
             <SearchResult
                 key={index}
                 isHighlighted={index === highlightIndex}
+                onMouseEnter={() => {
+                  setHighlightIndex(index);
+                }}
+                onMouseLeave={() => {}}
                 onClick={() => {
                     setSelectedSearchValue(result);
-                    setHighlightIndex(index);
+                    setSearchResults([]);
                 }}
                 value = {result}
             />
