@@ -14,6 +14,27 @@ declare global {
   }
 }
 
+/*
+TODO:
+- Move the electron code below to a separate file
+- Write a function that invokes chatGPT to generate fake patients for testing
+- Add various react modules, including: Header interface (wrapping search bar), display components for the different data categories, chat components, and medical database search/verification components
+- Make everything prettier and maximally intuitive
+- Design your API more thoroughly now that the interface is giving you a better idea
+- **Write test cases for every function!!**
+- Integrate FHIR query ability!
+- {Backend: local database, local background helper process to coordinate with server, server entry point, server database, server AI interface, server AI bridge to chatGPT and others, server bridge to FHIR}
+
+
+
+
+
+
+
+*/
+
+
+
 // Define dummy electron object with placeholders for development without Electron
 if (!window.electron) {
   window.electron = {

@@ -39,6 +39,7 @@ const DataPanel: React.FC<DataPanelProperties> = ({entry}) => {
     );
 }
 
+/*
 const PatientOverview: React.FC = () => {
     const {selectedPatient} = useContext(PatientContext);
 
@@ -56,5 +57,25 @@ const PatientOverview: React.FC = () => {
         </div>
     );
 }
+*/
+
+const PatientOverview: React.FC = () => {
+    const {selectedPatient} = useContext(PatientContext);
+
+    const keywordsToInclude = ['info', 'summary', 'orders', 'recommendations']; // Changed to an array to keep order
+
+    return (
+        <div className='PatientOverview'>
+            {   
+                keywordsToInclude
+                .filter(keyword => selectedPatient.hasOwnProperty(keyword)) // Ensure the keyword exists in the object
+                .map(keyword => (
+                    <DataPanel key={keyword} entry={{ keyword, data: selectedPatient[keyword] }} /> // Access data directly from the object
+                ))
+            }
+        </div>
+    );
+}
+
 
 export default PatientOverview;
