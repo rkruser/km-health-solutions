@@ -20,7 +20,8 @@ contextBridge.exposeInMainWorld(
       let validChannels = ['myEventResponse'];
       if (validChannels.includes(channel)) {
         console.log("Removing listener for channel: " + channel);
-        ipcRenderer.removeListener(channel, func);
+        //ipcRenderer.removeListener(channel, func);
+        ipcRenderer.removeAllListeners(channel); // removeListener doesn't work, this does
       }
     }
   }

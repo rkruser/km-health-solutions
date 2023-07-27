@@ -49,7 +49,7 @@ function App() {
   [selectedSearchValue]
   );
 
-  // Testing out sends and receives to main process
+  // Testing out sends and receives to main process 
   useEffect(() => {
     const responseFunc = (event:any, arg:any) => {
       console.log("Renderer received: " + arg.toString());
@@ -64,18 +64,15 @@ function App() {
   useEffect(() => {
     const intervalId = setInterval(() => {
       remote.bridge.send('myEvent', getRandomInteger(0,100).toString());
-      console.log('Periodic callback executed!');
     }, 2000);
-
+    console.log("Added periodic callback!");
     // The cleanup function returned by useEffect
     // will clear the interval when the component unmounts
     return () => {
+      console.log('Clearing periodic callback!');
       clearInterval(intervalId);
     };
   }, []); 
-
-
-
 
   return (
     <div className='App'>
