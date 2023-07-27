@@ -52,6 +52,21 @@ ipcMain.on('myEvent', (event, arg:any) => {
   console.log(arg);
   event.reply('myEventResponse', 'Main received: ' + arg.toString());
 });
-app.whenReady().then(createWindow);
+
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
 
 // Add the Apple if statement here or whatever later
