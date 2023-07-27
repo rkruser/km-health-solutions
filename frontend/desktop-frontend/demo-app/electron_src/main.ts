@@ -55,3 +55,5 @@ function createWindow() {
 }
 
 app.whenReady().then(createWindow);
+
+// Add the Apple if statement here or whatever later

@@ -1,5 +1,5 @@
 import '../css/search-bar.css';
-import SearchContext from './search-context';
+import PatientContext from './patient-context';
 
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, set } from 'lodash';
@@ -70,7 +70,7 @@ const SearchResult: React.FC<SearchResultProps> = ({
 const SearchBar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [searchResults, setSearchResults] = useState<Result[]>([]);
-  const { setSelectedSearchValue } = useContext(SearchContext);
+  const { setSelectedSearchValue } = useContext(PatientContext);
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState('default');

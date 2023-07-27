@@ -1,5 +1,4 @@
 import '../css/app.css';
-import SearchContext from './search-context';
 import PatientContext from './patient-context';
 import PatientOverview from './patient-overview';
 
@@ -82,17 +81,14 @@ function App() {
 
   return (
     <div className='App'>
-      <SearchContext.Provider 
-        value={{selectedSearchValue, setSelectedSearchValue}}
+        <PatientContext.Provider 
+        value={{selectedPatient, setSelectedPatient,
+          selectedSearchValue, setSelectedSearchValue}}
         >
-        <p>{selectedSearchValue}</p>
-        <SearchBar />
-      </SearchContext.Provider>
+          <SearchBar />
+          <p>{selectedSearchValue}</p>
+          <PatientOverview />
 
-      <PatientContext.Provider 
-        value={{selectedPatient, setSelectedPatient}}
-        >
-        <PatientOverview />
       </PatientContext.Provider>
 
 
