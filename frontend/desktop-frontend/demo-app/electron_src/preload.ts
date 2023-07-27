@@ -2,16 +2,25 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld(
   'electron', {
-    send: (channel, data) => {
+    send: (channel:string, arg:any) => {
       let validChannels = ['myEvent'];
       if (validChannels.includes(channel)) {
-        ipcRenderer.send(channel, data);
+        console.log("Sending message to channel: " + channel);
+        ipcRenderer.send(channel, arg);
       }
     },
-    receive: (channel, func) => {
-      let validChannels = ['myEventResponse', 'displayMessage'];
+    on_receive: (channel:string, func:(event:any,arg:any)=>void) => {
+      let validChannels = ['myEventResponse'];
       if (validChannels.includes(channel)) {
-        ipcRenderer.on(channel, (event, ...args) => func(...args));
+        console.log("Adding listener for channel: " + channel);
+        ipcRenderer.on(channel, func);
+      }
+    },
+    remove_listener: (channel:string, func:(event:any,arg:any)=>void) => {
+      let validChannels = ['myEventResponse'];
+      if (validChannels.includes(channel)) {
+        console.log("Removing listener for channel: " + channel);
+        ipcRenderer.removeListener(channel, func);
       }
     }
   }

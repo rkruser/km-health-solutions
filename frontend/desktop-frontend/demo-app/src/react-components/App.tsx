@@ -1,17 +1,15 @@
 import '../css/app.css';
 import PatientContext from './patient-context';
 import PatientOverview from './patient-overview';
+import remote from './remote-bridge';
+import { getTestPatient, getRandomInteger } from './utility';
 
-import React, { useState, useContext, useEffect, useRef } from 'react';
 import { completeText } from '../api/completion';
 import SearchBar from './search-bar';
+
+import React, { useState, useContext, useEffect, useRef } from 'react';
 // consider using the styled-components library for wrapper objects that style their contents
 
-declare global {
-  interface Window {
-    electron:any;
-  }
-}
 
 /*
 TODO:
@@ -24,48 +22,20 @@ TODO:
 - Integrate FHIR query ability!
 - {Backend: local database, local background helper process to coordinate with server, server entry point, server database, server AI interface, server AI bridge to chatGPT and others, server bridge to FHIR}
 
-
-
-
-
-
-
 */
 
 
 
-// Define dummy electron object with placeholders for development without Electron
-if (!window.electron) {
-  window.electron = {
-    receive: (channel:string, func: (arg:any)=>void) => {
-      console.log(`Electron functionality "${channel}" is not available`);
-    },
-    send: (channel:string, message:any) => {
-      console.log(`Electron functionality "${channel}" with message "${message}" is not available`);
-    },
-  };
-}
 
-const testPatient = {
-  "info": "Patient name and stuff",
-  "summary": "summary text",
-  "orders": "orders text",
-  "medications": "medications text",
-  "timeline": "timeline text",
-  "history": "history text",
-  "labs": "labs text",
-  "vitals": "vitals text",
-  "notes": "notes text",
-  "recommendations": "recommendations text",
-  "diagnoses": "diagnoses text",
-  "allergies": "allergies text",
-}
+
+
+
 
 function App() {
   const [inputText, setInputText] = useState('Input Text Default');
   const [displayText, setDisplayText] = useState('Initial display text');
   const [selectedSearchValue, setSelectedSearchValue] = useState('');
-  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(testPatient);
+  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
 
   async function handleButton(command:string) {
     setDisplayText(command);      
@@ -79,8 +49,37 @@ function App() {
   [selectedSearchValue]
   );
 
+  // Testing out sends and receives to main process
+  useEffect(() => {
+    const responseFunc = (event:any, arg:any) => {
+      console.log("Renderer received: " + arg.toString());
+      setDisplayText(arg.toString());
+    };
+    remote.bridge.on_receive('myEventResponse', responseFunc);
+    return () => {
+      remote.bridge.remove_listener('myEventResponse', responseFunc);
+    }
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      remote.bridge.send('myEvent', getRandomInteger(0,100).toString());
+      console.log('Periodic callback executed!');
+    }, 2000);
+
+    // The cleanup function returned by useEffect
+    // will clear the interval when the component unmounts
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []); 
+
+
+
+
   return (
     <div className='App'>
+        <p>{displayText}</p>
         <PatientContext.Provider 
         value={{selectedPatient, setSelectedPatient,
           selectedSearchValue, setSelectedSearchValue}}

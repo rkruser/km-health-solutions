@@ -40,20 +40,18 @@ function createWindow() {
 
 
   mainWindow.loadURL(appURL);
-  //mainWindow.loadFile('./build/index.html');
-
-  
-  ipcMain.on('myEvent', (event, arg:string) => {
-    console.log(arg);  // prints "Hello, main process!"
-    event.reply('myEventResponse', 'Hello, renderer process!');
-    event.reply('displayMessage', "EDIT Hello, this is Main, we heard you say: " + arg);
-  });
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.webContents.send('displayMessage', "Hello, this is the main process speaking");
   });
 }
 
+
+
+ipcMain.on('myEvent', (event, arg:any) => {
+  console.log(arg);
+  event.reply('myEventResponse', 'Main received: ' + arg.toString());
+});
 app.whenReady().then(createWindow);
 
 // Add the Apple if statement here or whatever later
