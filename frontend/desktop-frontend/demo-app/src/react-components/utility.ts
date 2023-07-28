@@ -2,7 +2,7 @@ import exp from "constants";
 
 function getTestPatient() {
     const testPatient = {
-        "info": "Patient name and stuff",
+        "info": {name: "Mister Ryen", dob: "3-19-1994", description: "The developer"},
         "summary": "summary text",
         "orders": "orders text",
         "medications": "medications text",

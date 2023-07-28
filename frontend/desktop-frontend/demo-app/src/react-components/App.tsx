@@ -25,12 +25,6 @@ TODO:
 */
 
 
-
-
-
-
-
-
 function App() {
   const [inputText, setInputText] = useState('Input Text Default');
   const [displayText, setDisplayText] = useState('Initial display text');
@@ -49,6 +43,7 @@ function App() {
   [selectedSearchValue]
   );
 
+  /*
   // Testing out sends and receives to main process 
   useEffect(() => {
     const responseFunc = (event:any, arg:any) => {
@@ -73,6 +68,7 @@ function App() {
       clearInterval(intervalId);
     };
   }, []); 
+  */
 
   return (
     <div className='App'>
