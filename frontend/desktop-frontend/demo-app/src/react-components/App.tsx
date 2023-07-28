@@ -6,6 +6,7 @@ import { getTestPatient, getRandomInteger } from './utility';
 
 import { completeText } from '../api/completion';
 import SearchBar from './search-bar';
+import AppHeader from './app-header';
 
 import React, { useState, useContext, useEffect, useRef } from 'react';
 // consider using the styled-components library for wrapper objects that style their contents
@@ -77,7 +78,7 @@ function App() {
         value={{selectedPatient, setSelectedPatient,
           selectedSearchValue, setSelectedSearchValue}}
         >
-          <SearchBar />
+          <AppHeader />
           <p>{selectedSearchValue}</p>
           <PatientOverview />
 

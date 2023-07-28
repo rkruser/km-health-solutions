@@ -51,7 +51,7 @@ const PatientInfoPanel: React.FC<PatientInfoInputType> = ({info}) => {
                 {info.name}
             </div>
             <div className='PatientDOB'>
-                D.O.B.: {info.dob}
+                D.O.B. {info.dob}
             </div>
             <div className='PatientDescription'>
                 {info.description}
