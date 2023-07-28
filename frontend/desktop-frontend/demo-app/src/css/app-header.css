@@ -28,4 +28,5 @@
 
 .IconWrapper:active {
     background-color: rgba(55, 67, 88, 0.699);
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
 }
