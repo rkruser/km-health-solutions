@@ -10,7 +10,15 @@
     justify-content: center;
 }
 
-.PatientOverview > div:not(:last-child) {
+.PatientHeader {
+    margin-bottom: 10px;
+}
+
+.PatientFields {
+    width: 100%;
+}
+
+.PatientFields > div:not(:last-child) {
     margin-bottom: 10px;
 }
 
@@ -35,12 +43,13 @@
 }
 
 .PatientName {
-    font-size: 1.5em;
+    font-size: 3em;
     font-weight: bold;
 }
 
 .PatientDOB {
     font-size: 1.2em;
+    font-weight: bold;
 }
 
 .PatientDescription {

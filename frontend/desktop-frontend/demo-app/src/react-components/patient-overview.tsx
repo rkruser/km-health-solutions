@@ -8,7 +8,6 @@ type KeywordComponents = {
 }
 
 const COMPONENT_MAP: KeywordComponents = {
-    'info': ({data}) => {return <div>Info: {data}</div>},
     'summary': ({data}) => {return <div>Summary: {data}</div>},
     'orders': ({data}) => {return <div>Orders: {data}</div>},
     'medications': ({data}) => {return <div>Medications: {data}</div>},
@@ -39,26 +38,6 @@ const DataPanel: React.FC<DataPanelInputType> = ({entry}) => {
     );
 }
 
-/*
-const PatientOverview: React.FC = () => {
-    const {selectedPatient} = useContext(PatientContext);
-
-    const keywordsToInclude = new Set(['info', 'summary', 'orders', 'recommendations']);
-
-    return (
-        <div className='PatientOverview'>
-            {   
-                Object.entries(selectedPatient)
-                .filter(([keyword]) => keywordsToInclude.has(keyword))
-                .map(([keyword, data], _) => (
-                    <DataPanel key={keyword} entry={{ keyword, data }} />
-                ))
-            }
-        </div>
-    );
-}
-*/
-
 
 // Put this in a different file under type 'patient'?
 type PatientInfoInputType = {
@@ -72,7 +51,7 @@ const PatientInfoPanel: React.FC<PatientInfoInputType> = ({info}) => {
                 {info.name}
             </div>
             <div className='PatientDOB'>
-                {info.dob}
+                D.O.B.: {info.dob}
             </div>
             <div className='PatientDescription'>
                 {info.description}
