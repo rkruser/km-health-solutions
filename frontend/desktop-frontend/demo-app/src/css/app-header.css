@@ -1,5 +1,6 @@
 .AppHeader {
-    font-size: 20pt;
+    display: flex;
+    flex-direction: row;
 }
 
 .SearchBarWrapper {
