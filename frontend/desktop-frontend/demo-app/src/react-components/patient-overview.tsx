@@ -64,7 +64,7 @@ const PatientInfoPanel: React.FC<PatientInfoInputType> = ({info}) => {
 const PatientOverview: React.FC = () => {
     const {selectedPatient} = useContext(PatientContext);
 
-    const keywordsToInclude = ['summary', 'orders', 'recommendations']; // Changed to an array to keep order
+    const keywordsToInclude = ['summary', 'orders', 'medications', 'recommendations']; // Changed to an array to keep order
 
     return (
         <div className='PatientOverview'>
