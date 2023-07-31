@@ -11,10 +11,12 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('node:url'); //important!
 
+const {completeText} = require('./completion');
+
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1200,
+    height: 800,
     
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -51,6 +53,13 @@ function createWindow() {
 ipcMain.on('myEvent', (event, arg:any) => {
   console.log(arg);
   event.reply('myEventResponse', 'Main received: ' + arg.toString());
+});
+
+ipcMain.on('completeTextRequest', async (event, arg:any) => {
+  console.log("Got: "+arg);
+  let result = await completeText(arg.toString());
+  console.log("ChatGPT response: " + result);
+  event.reply('completeTextResponse', result);
 });
 
 app.whenReady().then(() => {

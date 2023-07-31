@@ -8,6 +8,7 @@ import { completeText } from '../api/completion';
 import SearchBar from './search-bar';
 import AppHeader from './app-header';
 
+
 import React, { useState, useContext, useEffect, useRef } from 'react';
 // consider using the styled-components library for wrapper objects that style their contents
 
@@ -43,10 +44,9 @@ function App() {
   const [selectedSearchValue, setSelectedSearchValue] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
 
-  async function handleButton(command:string) {
+  function handleButton(command:string) {
     setDisplayText(command);      
-    const result = await completeText(inputText);
-    setDisplayText(result);
+    remote.bridge.send('completeTextRequest', inputText);
   }
 
   useEffect(() => {
@@ -54,6 +54,19 @@ function App() {
   },
   [selectedSearchValue]
   );
+
+
+  useEffect(() => {
+    const completeTextResponse = (event:any, arg:any) => {
+      console.log("Channel \"completeTextResponse\", renderer received: " + arg.toString());
+      setDisplayText(arg.toString());
+    };
+    remote.bridge.on_receive('completeTextResponse', completeTextResponse);
+    return () => {
+      remote.bridge.remove_listener('completeTextResponse', completeTextResponse);
+    }
+  }, []);
+
 
   /*
   // Testing out sends and receives to main process 
@@ -95,6 +108,13 @@ function App() {
 
       </PatientContext.Provider>
 
+
+      <textarea
+          value={inputText}
+          onChange={(e)=>setInputText(e.target.value)}
+        />
+      <div>{displayText}</div>
+      <button onClick={()=>{handleButton("completeText")}}>Send query to main process</button>
 
     </div>
   );
