@@ -13,6 +13,10 @@
 /electron_build
 /dist
 
+
+# Other built Javascript from Typescript
+/src/api/*.js
+
 # misc
 .DS_Store
 .env.local
