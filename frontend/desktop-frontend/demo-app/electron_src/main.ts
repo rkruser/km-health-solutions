@@ -11,6 +11,30 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const url = require('node:url'); //important!
 
+
+/*
+const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
+generateFakePatientsAndWriteToFile(2, './assets/patients.json');
+*/
+
+
+const {readJSONFromFile} = require('./main_filesystem_io');
+try{ 
+  readJSONFromFile('./assets/patients.json').then((patients) => {
+    console.log(patients);
+    console.log(typeof(patients[0]));
+    console.log(patients[0].patientInfo.firstName);
+  }).then(() => {
+    process.exit(0);
+  });
+}
+catch (error) {
+  console.error(`Error while reading data from file: ${error}`);
+  process.exit(1);
+}
+
+
+
 const {completeText} = require('./completion');
 
 function createWindow() {

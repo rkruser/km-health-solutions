@@ -16,7 +16,8 @@
     "extends": null,
     "files": [
       "electron_build/**/*",
-      "build/**/*"
+      "build/**/*",
+      "assets/**/*"
     ]
   },
   "dependencies": {
