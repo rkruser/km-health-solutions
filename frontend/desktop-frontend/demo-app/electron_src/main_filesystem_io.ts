@@ -23,8 +23,8 @@ async function readJSONFromFile(filePath: string): Promise<Array<Object>> {
     }
 }
 
-function generateFakePatientsAndWriteToFile(num: number, filePath: string): void {
-    generateFakePatients(num).then((patients) => {
+async function generateFakePatientsAndWriteToFile(num: number, filePath: string): Promise<void> {
+    await generateFakePatients(num).then((patients) => {
         writeJSONToFile(patients, filePath);
     });
 }

@@ -12,27 +12,29 @@ const path = require('path');
 const url = require('node:url'); //important!
 
 
-/*
 const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
-generateFakePatientsAndWriteToFile(2, './assets/patients.json');
-*/
-
-
 const {readJSONFromFile} = require('./main_filesystem_io');
-try{ 
-  readJSONFromFile('./assets/patients.json').then((patients) => {
-    console.log(patients);
-    console.log(typeof(patients[0]));
-    console.log(patients[0].patientInfo.firstName);
-  }).then(() => {
-    process.exit(0);
-  });
-}
-catch (error) {
-  console.error(`Error while reading data from file: ${error}`);
-  process.exit(1);
+
+async function readAndWrite() {
+  console.log("Writing");
+  await generateFakePatientsAndWriteToFile(20, './assets/patients.json');
+  try{ 
+    console.log("Reading");
+    await readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
+      console.log(patients);
+      console.log(typeof(patients[0]));
+      console.log(patients[0].patientInfo.firstName);
+    }).then(() => {
+      process.exit(0);
+    });
+  }
+  catch (error) {
+    console.error(`Error while reading data from file: ${error}`);
+    process.exit(1);
+  }
 }
 
+readAndWrite();
 
 
 const {completeText} = require('./completion');
