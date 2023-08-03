@@ -4,9 +4,6 @@
     align-items: center;
     width: 90%;
     min-width: 300px;
-    height: auto;
-    background-color: #f5f5f5;
-    border-bottom: 1px solid #e5e5e5;
 }
 
 .InputBar { 
@@ -41,4 +38,26 @@
 .SearchResultInner {
     background-color: darkolivegreen;
     padding: 5px;     
+}
+
+.SearchButton {
+    width: 100px;
+    font-size: 20pt;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(69, 118, 209, 0.699);
+    border: 2px rgb(38, 133, 150) solid;
+    height: 30pt;
+}
+
+.SearchButton:hover {
+    background-color: rgba(123, 151, 204, 0.699);
+    border: 2px rgb(78, 145, 156) solid;
+    cursor: pointer;
+}
+
+.SearchButton:active {
+    background-color: rgba(55, 67, 88, 0.699);
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
 }

@@ -2,6 +2,9 @@ import '../css/search-bar.css';
 import { getRandomInteger } from './utility';
 import PatientContext from './patient-context';
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, set } from 'lodash';
 
@@ -60,6 +63,14 @@ const SearchResult: React.FC<SearchResultProps> = ({
         </div>
     </div>
     );
+}
+
+const SearchButton: React.FC = () => {
+  return (
+    <button className='SearchButton'>
+      <FontAwesomeIcon icon={faMagnifyingGlass} />
+    </button>
+  );
 }
 
 
@@ -124,43 +135,46 @@ const SearchBar: React.FC = () => {
 
   return (
     <div className='SearchBar'>
-      <input
-        ref={searchInputRef}
-        className='InputBar'
-        type="text"
-        value={inputValue}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setInputValue(e.target.value);
-            setHighlightIndex(0);
-        }}
-      />
-      {searchResults.length > 0 && (
-        <div className="search-results"
-          onMouseEnter={()=>{
-            setCursor('pointer');
+      <div className='SearchBarInner'>
+        <input
+          ref={searchInputRef}
+          className='InputBar'
+          type="text"
+          value={inputValue}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setInputValue(e.target.value);
+              setHighlightIndex(0);
           }}
-          onMouseLeave={()=>{
-            setCursor('default');
-          }}
-          style={{cursor: cursor}}
-        >
-          {searchResults.map((result: Result, index: number) => (
-            <SearchResult
-                key={index}
-                isHighlighted={index === highlightIndex}
-                onMouseEnter={() => {
-                  setHighlightIndex(index);
-                }}
-                onMouseLeave={() => {}}
-                onClick={() => {
-                    setSelectedSearchValue(result);
-                    setSearchResults([]);
-                }}
-                value = {result}
-            />
-          ))}
-        </div>
-      )}
+        />
+        {searchResults.length > 0 && (
+          <div className="search-results"
+            onMouseEnter={()=>{
+              setCursor('pointer');
+            }}
+            onMouseLeave={()=>{
+              setCursor('default');
+            }}
+            style={{cursor: cursor}}
+          >
+            {searchResults.map((result: Result, index: number) => (
+              <SearchResult
+                  key={index}
+                  isHighlighted={index === highlightIndex}
+                  onMouseEnter={() => {
+                    setHighlightIndex(index);
+                  }}
+                  onMouseLeave={() => {}}
+                  onClick={() => {
+                      setSelectedSearchValue(result);
+                      setSearchResults([]);
+                  }}
+                  value = {result}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+      <SearchButton />
     </div>
   );
 };

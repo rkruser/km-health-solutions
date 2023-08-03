@@ -68,6 +68,45 @@ function App() {
   }, []);
 
 
+
+  return (
+    <div className='App'>
+        <PatientContext.Provider 
+        value={{selectedPatient, setSelectedPatient,
+          selectedSearchValue, setSelectedSearchValue}}
+        >
+          <AppHeader />
+          <p>{selectedSearchValue}</p>
+          <PatientOverview />
+
+      </PatientContext.Provider>
+
+
+
+    </div>
+  );
+}
+
+export default App;
+
+/*
+        <textarea
+          value={inputText}
+          onChange={(e)=>setInputText(e.target.value)}
+        />
+        <div>{displayText}</div>
+
+        <div>
+          <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
+          <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>
+          <button onClick={()=>{handleButton("checkOrders")}}>Check Orders</button>
+          <button onClick={()=>{handleButton("getRecommendations")}}>Get Recommendations</button>
+        </div>
+
+
+*/
+
+
   /*
   // Testing out sends and receives to main process 
   useEffect(() => {
@@ -93,20 +132,10 @@ function App() {
       clearInterval(intervalId);
     };
   }, []); 
-  */
 
-  return (
-    <div className='App'>
-        <p>{displayText}</p>
-        <PatientContext.Provider 
-        value={{selectedPatient, setSelectedPatient,
-          selectedSearchValue, setSelectedSearchValue}}
-        >
-          <AppHeader />
-          <p>{selectedSearchValue}</p>
-          <PatientOverview />
 
-      </PatientContext.Provider>
+
+
 
 
       <textarea
@@ -116,25 +145,4 @@ function App() {
       <div>{displayText}</div>
       <button onClick={()=>{handleButton("completeText")}}>Send query to main process</button>
 
-    </div>
-  );
-}
-
-export default App;
-
-/*
-        <textarea
-          value={inputText}
-          onChange={(e)=>setInputText(e.target.value)}
-        />
-        <div>{displayText}</div>
-
-        <div>
-          <button onClick={()=>{handleButton("loadPatient")}}>Load Patient</button>
-          <button onClick={()=>{handleButton("summarizeNotes")}}>Summarize Notes</button>
-          <button onClick={()=>{handleButton("checkOrders")}}>Check Orders</button>
-          <button onClick={()=>{handleButton("getRecommendations")}}>Get Recommendations</button>
-        </div>
-
-
-*/
+  */

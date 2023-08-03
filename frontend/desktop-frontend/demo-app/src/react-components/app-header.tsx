@@ -1,8 +1,8 @@
 import '../css/app-header.css';
 import SearchBar from './search-bar';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
+
+import DropdownMenu from './dropdown-menu';
 
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
@@ -22,12 +22,9 @@ const SuggestedPatients: React.FC = () => {
 const AppHeader: React.FC = () => {
     return (
         <div className='AppHeader'>
-            <SuggestedPatients />
+            <DropdownMenu />
             <div className='SearchBarWrapper'>
                 <SearchBar />
-                <button className='IconWrapper'>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                </button>
             </div>
         </div>
     );
