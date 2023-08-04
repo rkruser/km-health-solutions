@@ -15,6 +15,7 @@ const url = require('node:url'); //important!
 //const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
 const {readJSONFromFile} = require('./main_filesystem_io');
 const {completeText} = require('./completion');
+const {setEventHandlers} = require('./event_handlers');
 
 /*
 async function readAndWrite() {
@@ -74,27 +75,11 @@ function RunMainApp(patientData:Array<any>) {
     mainWindow.loadURL(appURL);
 
     mainWindow.on('ready-to-show', () => {
-      mainWindow.webContents.send('displayMessage', "Hello, this is the main process speaking");
+      console.log("Main window ready to show");
     });
   }
 
-
-  ipcMain.on('requestAllPatientData', (event, arg:any) => {
-    console.log("Got request for patient data");
-    event.reply('allPatientDataResponse', patientData);
-  });
-
-  ipcMain.on('myEvent', (event, arg:any) => {
-    console.log(arg);
-    event.reply('myEventResponse', 'Main received: ' + arg.toString());
-  });
-
-  ipcMain.on('completeTextRequest', async (event, arg:any) => {
-    console.log("Got: "+arg);
-    let result = await completeText(arg.toString());
-    console.log("ChatGPT response: " + result);
-    event.reply('completeTextResponse', result);
-  });
+  setEventHandlers(ipcMain, patientData, completeText);
 
   app.whenReady().then(() => {
     createWindow();
@@ -120,4 +105,3 @@ readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
   console.error(`Error while reading data from file: ${error}`);
 });
 
-// Add the Apple if statement here or whatever later
