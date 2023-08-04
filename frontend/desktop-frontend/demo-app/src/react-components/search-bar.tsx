@@ -31,6 +31,44 @@ async function searchApi(value: string) {
     return results;
   }
 
+  async function searchThroughData(value: string, data: Record<string, any>) {
+    try {
+      const { firstNames, lastNames } = data;
+      //console.log("firstNames: " + firstNames);
+
+      const results: [string, string, number][] = [];
+    
+      // Search through first names
+      firstNames.forEach((firstName:string, index:number) => {
+        if (firstName.includes(value)) {
+          const lastName = lastNames[index] || '';
+          results.push([lastName, firstName, index]);
+        }
+      });
+    
+      // Search through last names
+      lastNames.forEach((lastName:string, index:number) => {
+        if (lastName.includes(value)) {
+          const firstName = firstNames[index] || '';
+          // Check if this result is already added (avoid duplicates)
+          if (!results.some(([lname, fname, idx]) => lname === lastName && fname === firstName)) {
+            results.push([lastName, firstName, index]);
+          }
+        }
+      });
+      //console.log("results: " + results.toString());
+      return results;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+  }
+  
+
+
+
+
+
 type SearchResultProps = {
     value: string,
     isHighlighted: boolean,
@@ -76,8 +114,13 @@ const SearchButton: React.FC = () => {
 
 const SearchBar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<Result[]>([]);
+
+  type SearchResultItemType = [string, string, number];
+  const [searchResults, setSearchResults] = useState<SearchResultItemType[]>([]);
+
+
   const { setSelectedSearchValue } = useContext(PatientContext);
+  const {allPatientData} = useContext(PatientContext);
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState('default');
@@ -113,7 +156,11 @@ const SearchBar: React.FC = () => {
               setSearchResults([]);
               return;
           }
-          searchApi(value).then((results) => setSearchResults(results));
+          //searchApi(value).then((results) => setSearchResults(results));
+          searchThroughData(value, allPatientData).then((results) => {
+
+            setSearchResults(results);
+          });
       }, 300)(value);
    },
     [ ],
@@ -142,7 +189,7 @@ const SearchBar: React.FC = () => {
                   debouncedSearch(inputValue);
                 }
                 else {
-                  setSelectedSearchValue(searchResults[highlightIndex]);
+                  setSelectedSearchValue(searchResults[highlightIndex][0]);
                   setSearchResults([]);
                 }
                 break;
@@ -185,7 +232,7 @@ const SearchBar: React.FC = () => {
             }}
             style={{cursor: cursor}}
           >
-            {searchResults.map((result: Result, index: number) => (
+            {searchResults.map((result: SearchResultItemType, index: number) => (
               <SearchResult
                   key={index}
                   isHighlighted={index === highlightIndex}
@@ -194,10 +241,10 @@ const SearchBar: React.FC = () => {
                   }}
                   onMouseLeave={() => {}}
                   onClick={() => {
-                      setSelectedSearchValue(result);
+                      setSelectedSearchValue(result[0]);
                       setSearchResults([]);
                   }}
-                  value = {result}
+                  value = {result[0]+", "+result[1]}
               />
             ))}
           </div>

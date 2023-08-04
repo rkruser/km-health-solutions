@@ -13,7 +13,9 @@ export default {
             selectedPatient : {"info": {"name": "John Doe", "dob": "01/01/1970", "description": "A patient with a name and a date of birth."}, "summary":"here is a summary"},
             setSelectedPatient : (value: Record<string,any>) => {}, 
             selectedSearchValue : '', 
-            setSelectedSearchValue : (value:string)=>{} }}>
+            setSelectedSearchValue : (value:string)=>{},
+            allPatientData: {}
+             }}>,
             <Story />
         </PatientContext.Provider>
     ),

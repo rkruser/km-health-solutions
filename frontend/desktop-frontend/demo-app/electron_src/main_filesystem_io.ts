@@ -29,4 +29,35 @@ async function generateFakePatientsAndWriteToFile(num: number, filePath: string)
     });
 }
 
-export { writeJSONToFile, readJSONFromFile, generateFakePatientsAndWriteToFile };
+
+
+type OrganizedPatientDataType = {
+    firstNames: Array<string>,
+    lastNames: Array<string>,
+    records: Array<Record<string,object>>
+};
+type PatientType = {
+    patientInfo: {
+        firstName: string,
+        lastName: string
+    },
+}
+function processPatientData(patientData: Array<PatientType>): OrganizedPatientDataType {
+    const firstNames: Array<string> = [];
+    const lastNames: Array<string> = [];
+    const records: Array<PatientType> = [];
+    patientData.forEach((patient) => {
+        firstNames.push(patient.patientInfo.firstName);
+        lastNames.push(patient.patientInfo.lastName);
+        records.push(patient);
+    });
+    return {firstNames: firstNames, lastNames: lastNames, records: records};
+}
+
+
+export { writeJSONToFile, 
+    readJSONFromFile, 
+    generateFakePatientsAndWriteToFile, 
+    processPatientData,
+    OrganizedPatientDataType,
+};

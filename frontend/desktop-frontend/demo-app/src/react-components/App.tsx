@@ -4,13 +4,88 @@ import PatientOverview from './patient-overview';
 import remote from './remote-bridge';
 import { getTestPatient, getRandomInteger } from './utility';
 
-import { completeText } from '../api/completion';
-import SearchBar from './search-bar';
+//import { completeText } from '../api/completion';
+//import SearchBar from './search-bar';
 import AppHeader from './app-header';
 
 
 import React, { useState, useContext, useEffect, useRef } from 'react';
 // consider using the styled-components library for wrapper objects that style their contents
+
+
+function App() {
+  const [inputText, setInputText] = useState('Input Text Default');
+  const [displayText, setDisplayText] = useState('Initial display text');
+  const [selectedSearchValue, setSelectedSearchValue] = useState('');
+  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
+  const [allPatientData, setAllPatientData] = useState<Record<string,any>>({});
+
+  function handleButton(command:string) {
+    setDisplayText(command);      
+    remote.bridge.send('completeTextRequest', inputText);
+  }
+
+  
+  // Converts selected search result to selected patient
+  useEffect(() => {
+    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
+  },
+  [selectedSearchValue]
+  );
+
+  // Handles the restuls of a text completion request
+  useEffect(() => {
+    const completeTextResponse = (event:any, arg:any) => {
+      console.log("Channel \"completeTextResponse\", renderer received: " + arg.toString());
+      setDisplayText(arg.toString());
+    };
+    remote.bridge.on_receive('completeTextResponse', completeTextResponse);
+    return () => {
+      remote.bridge.remove_listener('completeTextResponse', completeTextResponse);
+    }
+  }, []);
+
+  // Handles the results of a request for all local patient data
+  useEffect(() => {
+    const handleAllPatientDataResponse = (event:any, arg:any) => {
+      setAllPatientData(arg);
+    };
+    remote.bridge.on_receive('allPatientDataResponse', handleAllPatientDataResponse);
+    return () => {
+      remote.bridge.remove_listener('handleAllPatientDataResponse', handleAllPatientDataResponse);
+    }
+  }, []);
+
+  // Sends a request for all local patient data once on load
+  useEffect(() => {
+    remote.bridge.send('requestAllPatientData', null);
+  }
+  , []);
+
+
+  return (
+    <div className='App'>
+        <PatientContext.Provider 
+        value={{selectedPatient, setSelectedPatient,
+          selectedSearchValue, setSelectedSearchValue,
+          allPatientData}}
+        >
+          <AppHeader />
+          <p>{selectedSearchValue}</p>
+          <PatientOverview />
+
+      </PatientContext.Provider>
+
+      <div>
+        {JSON.stringify(allPatientData, null, 2)}
+      </div>
+
+    </div>
+  );
+}
+
+export default App;
+
 
 
 /*
@@ -38,73 +113,6 @@ DESIGN:
 */
 
 
-function App() {
-  const [inputText, setInputText] = useState('Input Text Default');
-  const [displayText, setDisplayText] = useState('Initial display text');
-  const [selectedSearchValue, setSelectedSearchValue] = useState('');
-  const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
-  const [allPatientData, setAllPatientData] = useState<Array<any>>([]);
-
-  function handleButton(command:string) {
-    setDisplayText(command);      
-    remote.bridge.send('completeTextRequest', inputText);
-  }
-
-  useEffect(() => {
-    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
-  },
-  [selectedSearchValue]
-  );
-
-
-  useEffect(() => {
-    const completeTextResponse = (event:any, arg:any) => {
-      console.log("Channel \"completeTextResponse\", renderer received: " + arg.toString());
-      setDisplayText(arg.toString());
-    };
-    remote.bridge.on_receive('completeTextResponse', completeTextResponse);
-    return () => {
-      remote.bridge.remove_listener('completeTextResponse', completeTextResponse);
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleAllPatientDataResponse = (event:any, arg:any) => {
-      setAllPatientData(arg);
-    };
-    remote.bridge.on_receive('allPatientDataResponse', handleAllPatientDataResponse);
-    return () => {
-      remote.bridge.remove_listener('handleAllPatientDataResponse', handleAllPatientDataResponse);
-    }
-  }, []);
-
-  useEffect(() => {
-    remote.bridge.send('requestAllPatientData', null);
-  }
-  , []);
-
-
-  return (
-    <div className='App'>
-        <PatientContext.Provider 
-        value={{selectedPatient, setSelectedPatient,
-          selectedSearchValue, setSelectedSearchValue}}
-        >
-          <AppHeader />
-          <p>{selectedSearchValue}</p>
-          <PatientOverview />
-
-      </PatientContext.Provider>
-
-      <div>
-        {JSON.stringify(allPatientData, null, 2)}
-      </div>
-
-    </div>
-  );
-}
-
-export default App;
 
 /*
         <textarea

@@ -6,6 +6,8 @@ https://mmazzarolo.com/blog/2021-08-12-building-an-electron-application-using-cr
 
 */
 
+import { OrganizedPatientDataType } from "./main_filesystem_io";
+
 // ==========================================================
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
@@ -13,7 +15,7 @@ const url = require('node:url'); //important!
 
 
 //const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
-const {readJSONFromFile} = require('./main_filesystem_io');
+const {readJSONFromFile, processPatientData, OrganizedPatientDataType} = require('./main_filesystem_io');
 const {completeText} = require('./completion');
 const {setEventHandlers} = require('./event_handlers');
 
@@ -43,7 +45,7 @@ readAndWrite();
 
 
 
-function RunMainApp(patientData:Array<any>) {
+function RunMainApp(patientData:OrganizedPatientDataType) {
   function createWindow() {
     const mainWindow = new BrowserWindow({
       width: 1200,
@@ -99,9 +101,13 @@ function RunMainApp(patientData:Array<any>) {
 }
 
 console.log("Reading patient data");
-readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
-  RunMainApp(patients);
-}).catch((error) => {
-  console.error(`Error while reading data from file: ${error}`);
-});
+readJSONFromFile('./assets/patients.json')
+  .then((patients:Array<any>) => {
+    return processPatientData(patients);
+  })
+  .then((processedPatients:any) => {
+    RunMainApp(processedPatients);
+  }).catch((error) => {
+    console.error(`Error while reading data from file: ${error}`);
+  });
 
