@@ -8,25 +8,24 @@ import DropdownMenu from './dropdown-menu';
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
 
-const SuggestedPatients: React.FC = () => {
-
-    return (
-        <div className='SuggestedPatients'>
-            Here we will put suggested patients
-        </div>
-    )
-}
-
-
-
 
 const AppHeader: React.FC = () => {
     return (
         <div className='AppHeader'>
-            <Logo />
-            <DropdownMenu />
-            <div className='SearchBarWrapper'>
-                <SearchBar />
+            <div className='AppHeaderTitle'>
+                <div className='AppLogoWrapper'>
+                    <Logo />
+                </div>
+                <div className='AppTitleText'>
+                    <h1>Ampere Medical</h1>
+                </div>
+            </div>
+
+            <div className='AppHeaderInner'>
+                <DropdownMenu />
+                <div className='SearchBarWrapper'>
+                    <SearchBar />
+                </div>
             </div>
         </div>
     );

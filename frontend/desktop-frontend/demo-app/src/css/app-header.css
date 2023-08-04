@@ -1,6 +1,25 @@
 .AppHeader {
+    width:95%;
+    display: flex;
+    flex-direction: column;
+}
+
+.AppHeaderTitle {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.AppLogoWrapper {
+    width: 100px;
+}
+
+.AppHeaderInner {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
 }
 
 .SearchBarWrapper {

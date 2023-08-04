@@ -2,8 +2,12 @@
     position: relative; /* add this */
     display: flex;
     align-items: center;
-    width: 90%;
+    width: 100%;
     min-width: 300px;
+}
+
+.SearchBarInner {
+    width: 100%;
 }
 
 .InputBar { 

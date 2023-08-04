@@ -10,8 +10,7 @@ const DropdownMenu: React.FC = () => {
 
   return (
     <div>
-      <h2>Suggested Patients</h2>
-      <label htmlFor="dropdown">Select an option:</label>
+      <label htmlFor="dropdown">Suggested Patients</label>
       <select id="dropdown" value={selectedOption} onChange={handleDropdownChange}>
         <option value="">-- Select an option --</option>
         {optionsList.map((option, index) => (
@@ -20,7 +19,7 @@ const DropdownMenu: React.FC = () => {
           </option>
         ))}
       </select>
-      <p>Selected option: {selectedOption}</p>
+      <p>Selected patient: {selectedOption}</p>
     </div>
   );
 };
