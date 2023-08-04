@@ -12,9 +12,11 @@ const path = require('path');
 const url = require('node:url'); //important!
 
 
-const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
+//const {generateFakePatientsAndWriteToFile} = require('./main_filesystem_io');
 const {readJSONFromFile} = require('./main_filesystem_io');
+const {completeText} = require('./completion');
 
+/*
 async function readAndWrite() {
   console.log("Writing");
   await generateFakePatientsAndWriteToFile(20, './assets/patients.json');
@@ -35,73 +37,87 @@ async function readAndWrite() {
 }
 
 readAndWrite();
+*/
 
 
-const {completeText} = require('./completion');
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+
+function RunMainApp(patientData:Array<any>) {
+  function createWindow() {
+    const mainWindow = new BrowserWindow({
+      width: 1200,
+      height: 800,
+      
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js'),
+        contextIsolation: true
+      }
+      
+    });
+
+    // Hypothesis: the relative directories in the built app follow the structure of your package.json build files fields. If you use the default '**/*' then it probably puts all files in one flat directory
     
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true
-    }
     
+    const appURL = app.isPackaged
+      ? url.format({
+          pathname: path.join(__dirname, "../build/index.html"),
+          protocol: "file",
+          slashes: true,
+          })
+      : url.format({
+          protocol: 'http',
+          hostname: 'localhost',
+          port: 3000
+          });
+
+
+    mainWindow.loadURL(appURL);
+
+    mainWindow.on('ready-to-show', () => {
+      mainWindow.webContents.send('displayMessage', "Hello, this is the main process speaking");
+    });
+  }
+
+
+  ipcMain.on('requestAllPatientData', (event, arg:any) => {
+    console.log("Got request for patient data");
+    event.reply('allPatientDataResponse', patientData);
   });
 
-  // Hypothesis: the relative directories in the built app follow the structure of your package.json build files fields. If you use the default '**/*' then it probably puts all files in one flat directory
-  
-  
-  const appURL = app.isPackaged
-    ? url.format({
-        pathname: path.join(__dirname, "../build/index.html"),
-        protocol: "file",
-        slashes: true,
-        })
-    : url.format({
-        protocol: 'http',
-        hostname: 'localhost',
-        port: 3000
-        });
+  ipcMain.on('myEvent', (event, arg:any) => {
+    console.log(arg);
+    event.reply('myEventResponse', 'Main received: ' + arg.toString());
+  });
 
+  ipcMain.on('completeTextRequest', async (event, arg:any) => {
+    console.log("Got: "+arg);
+    let result = await completeText(arg.toString());
+    console.log("ChatGPT response: " + result);
+    event.reply('completeTextResponse', result);
+  });
 
-  mainWindow.loadURL(appURL);
+  app.whenReady().then(() => {
+    createWindow();
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.webContents.send('displayMessage', "Hello, this is the main process speaking");
+    app.on('activate', () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+      }
+    });
+  });
+
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
   });
 }
 
-
-
-ipcMain.on('myEvent', (event, arg:any) => {
-  console.log(arg);
-  event.reply('myEventResponse', 'Main received: ' + arg.toString());
-});
-
-ipcMain.on('completeTextRequest', async (event, arg:any) => {
-  console.log("Got: "+arg);
-  let result = await completeText(arg.toString());
-  console.log("ChatGPT response: " + result);
-  event.reply('completeTextResponse', result);
-});
-
-app.whenReady().then(() => {
-  createWindow();
-
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  });
-});
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+console.log("Reading patient data");
+readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
+  RunMainApp(patients);
+}).catch((error) => {
+  console.error(`Error while reading data from file: ${error}`);
 });
 
 // Add the Apple if statement here or whatever later

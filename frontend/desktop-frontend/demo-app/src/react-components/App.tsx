@@ -43,6 +43,7 @@ function App() {
   const [displayText, setDisplayText] = useState('Initial display text');
   const [selectedSearchValue, setSelectedSearchValue] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
+  const [allPatientData, setAllPatientData] = useState<Array<any>>([]);
 
   function handleButton(command:string) {
     setDisplayText(command);      
@@ -67,6 +68,20 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const handleAllPatientDataResponse = (event:any, arg:any) => {
+      setAllPatientData(arg);
+    };
+    remote.bridge.on_receive('allPatientDataResponse', handleAllPatientDataResponse);
+    return () => {
+      remote.bridge.remove_listener('handleAllPatientDataResponse', handleAllPatientDataResponse);
+    }
+  }, []);
+
+  useEffect(() => {
+    remote.bridge.send('requestAllPatientData', null);
+  }
+  , []);
 
 
   return (
@@ -81,7 +96,9 @@ function App() {
 
       </PatientContext.Provider>
 
-
+      <div>
+        {JSON.stringify(allPatientData, null, 2)}
+      </div>
 
     </div>
   );
