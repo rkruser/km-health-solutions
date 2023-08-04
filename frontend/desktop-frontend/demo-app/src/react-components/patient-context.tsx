@@ -9,7 +9,7 @@ type PatientContextType = {
 
 const PatientContext = React.createContext<PatientContextType>({
     selectedPatient: {},
-    setSelectedPatient: () => {},
+    setSelectedPatient: (value: Record<string, any>) => {},
     selectedSearchValue: '', 
     setSelectedSearchValue: (value: string) => {}     
 });
