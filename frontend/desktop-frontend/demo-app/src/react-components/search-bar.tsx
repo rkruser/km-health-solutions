@@ -81,17 +81,42 @@ const SearchBar: React.FC = () => {
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState('default');
+  
+  // For displaying search results when searchbar is in focus, and hiding them when it is not
+  const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
+  const searchRef = useRef<HTMLDivElement|null>(null);
+  const handleOutsideClick = (event: MouseEvent) => {
+    if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      setShowSearchResults(false);
+    }
+  };
+  useEffect(() => {
+    if (showSearchResults) {
+      document.addEventListener('click', handleOutsideClick);
+    } else {
+      document.removeEventListener('click', handleOutsideClick);
+    }
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [showSearchResults]);
+  const handleSearchBarFocus = () => {
+    setShowSearchResults(true);
+  };
+
 
   // Debounce function to prevent immediate execution as user types
   const debouncedSearch = useCallback(
-    debounce((value: string) => {
-        if (value === '') {
-            setSearchResults([]);
-            return;
-        }
-        searchApi(value).then((results) => setSearchResults(results));
-    }, 300),
-    [],
+    (value:string) => {
+      debounce((value: string) => {
+          if (value === '') {
+              setSearchResults([]);
+              return;
+          }
+          searchApi(value).then((results) => setSearchResults(results));
+      }, 300)(value);
+   },
+    [ ],
   );
 
   useEffect(() => {
@@ -125,28 +150,32 @@ const SearchBar: React.FC = () => {
                 break;
         }
     };
-    searchInputRef.current?.addEventListener('keydown', handleKeyDown);
+    const searchInputNode = searchInputRef.current;
+    searchInputNode?.addEventListener('keydown', handleKeyDown);
     return () => {
-        searchInputRef.current?.removeEventListener('keydown', handleKeyDown);
+        searchInputNode?.removeEventListener('keydown', handleKeyDown);
     };
-  }, [searchResults, highlightIndex, setHighlightIndex, setSelectedSearchValue]);
+  }, [searchResults, highlightIndex, setHighlightIndex, setSelectedSearchValue, debouncedSearch, inputValue]);
 
 
 
   return (
-    <div className='SearchBar'>
+    <div className='SearchBar' ref={searchRef}>
       <div className='SearchBarInner'>
         <input
           ref={searchInputRef}
           className='InputBar'
           type="text"
           value={inputValue}
+          onFocus={handleSearchBarFocus}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setInputValue(e.target.value);
               setHighlightIndex(0);
           }}
         />
-        {searchResults.length > 0 && (
+        {
+         showSearchResults &&
+         (searchResults.length > 0) && (
           <div className="search-results"
             onMouseEnter={()=>{
               setCursor('pointer');
