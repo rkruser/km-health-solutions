@@ -1,6 +1,7 @@
 import '../css/app-header.css';
 import SearchBar from './search-bar';
 
+import {ReactComponent as Logo} from '../graphics/medical_logo_dalle_v2.svg';
 
 import DropdownMenu from './dropdown-menu';
 
@@ -22,6 +23,7 @@ const SuggestedPatients: React.FC = () => {
 const AppHeader: React.FC = () => {
     return (
         <div className='AppHeader'>
+            <Logo />
             <DropdownMenu />
             <div className='SearchBarWrapper'>
                 <SearchBar />

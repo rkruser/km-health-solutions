@@ -16,15 +16,16 @@
 .search-results {
     width: 100%;
     position: absolute; /* add this */
-    top: calc(100%); /* add this */
+
     left: 0; /* add this */
     z-index: 1; /* add this */
 }
 
 .SearchResultOuter {
+    color: black;
     width: calc(100%-20px);
     padding: 2px;
-    background-color: bisque;
+    background-color: rgb(195, 223, 230);
     display: flex; /* add this */
     justify-content: flex-start; /* add this */
     align-items: center; /* add this */
@@ -36,7 +37,6 @@
   
 
 .SearchResultInner {
-    background-color: darkolivegreen;
     padding: 5px;     
 }
 
