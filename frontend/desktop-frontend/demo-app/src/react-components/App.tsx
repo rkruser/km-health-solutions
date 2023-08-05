@@ -29,7 +29,7 @@ function App() {
   // Converts selected search result to selected patient
   useEffect(() => {
     //setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
-    console.log("selectedSearchValue: " + JSON.stringify(selectedSearchValue));
+    //console.log("selectedSearchValue: " + JSON.stringify(selectedSearchValue));
     setSelectedPatient(selectedSearchValue);
   },
   [selectedSearchValue]
@@ -73,21 +73,26 @@ function App() {
           allPatientData}}
         >
           <AppHeader />
-          <p>{JSON.stringify(selectedSearchValue)}</p>
+
           <PatientOverview />
 
       </PatientContext.Provider>
 
-      <div>
-        {JSON.stringify(allPatientData, null, 2)}
-      </div>
 
     </div>
   );
 }
 
 export default App;
+/*
+          <p>{JSON.stringify(selectedSearchValue)}</p>
 
+      <div>
+        {JSON.stringify(allPatientData, null, 2)}
+      </div>
+
+
+*/
 
 
 /*

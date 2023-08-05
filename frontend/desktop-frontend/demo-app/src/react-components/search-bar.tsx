@@ -124,6 +124,7 @@ const SearchBar: React.FC = () => {
 
   const { setSelectedSearchValue } = useContext(PatientContext);
   const {allPatientData} = useContext(PatientContext);
+  
   const [highlightIndex, setHighlightIndex] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [cursor, setCursor] = useState('default');
