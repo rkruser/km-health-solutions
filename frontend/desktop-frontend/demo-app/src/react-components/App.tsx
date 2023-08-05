@@ -16,7 +16,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 function App() {
   const [inputText, setInputText] = useState('Input Text Default');
   const [displayText, setDisplayText] = useState('Initial display text');
-  const [selectedSearchValue, setSelectedSearchValue] = useState('');
+  const [selectedSearchValue, setSelectedSearchValue] = useState<Record<string,any>>({});
   const [selectedPatient, setSelectedPatient] = useState<Record<string,any>>(getTestPatient());
   const [allPatientData, setAllPatientData] = useState<Record<string,any>>({});
 
@@ -28,7 +28,9 @@ function App() {
   
   // Converts selected search result to selected patient
   useEffect(() => {
-    setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
+    //setSelectedPatient( currentPatient => ({...currentPatient, "summary": selectedSearchValue, "orders":selectedSearchValue+"dfasdf", "recommendations":selectedSearchValue+"skarskarskarskar"}) );
+    console.log("selectedSearchValue: " + JSON.stringify(selectedSearchValue));
+    setSelectedPatient(selectedSearchValue);
   },
   [selectedSearchValue]
   );
@@ -71,7 +73,7 @@ function App() {
           allPatientData}}
         >
           <AppHeader />
-          <p>{selectedSearchValue}</p>
+          <p>{JSON.stringify(selectedSearchValue)}</p>
           <PatientOverview />
 
       </PatientContext.Provider>

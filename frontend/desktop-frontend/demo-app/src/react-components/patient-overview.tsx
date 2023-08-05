@@ -60,6 +60,26 @@ const PatientInfoPanel: React.FC<PatientInfoInputType> = ({info}) => {
     )
 }
 
+type PatientInfoInputType2 = {
+    patientInfo: {firstName: string, lastName: string, dateOfBirth: string, overview: string}
+}
+
+const PatientInfoPanel2: React.FC<PatientInfoInputType2> = ({patientInfo}) => {
+    return (
+        <div className='PatientInfoPanel'>
+            <div className='PatientName'>
+                {patientInfo.lastName}, {patientInfo.firstName}
+            </div>
+            <div className='PatientDOB'>
+                Birthday: {patientInfo.dateOfBirth}
+            </div>
+            <div className='PatientDescription'>
+                {patientInfo.overview}
+            </div>
+        </div>
+    )
+}
+
 
 const PatientOverview: React.FC = () => {
     const {selectedPatient} = useContext(PatientContext);
@@ -69,14 +89,16 @@ const PatientOverview: React.FC = () => {
     return (
         <div className='PatientOverview'>
             <div className='PatientHeader'>
-                <PatientInfoPanel info={selectedPatient.info} />
+                {  selectedPatient.hasOwnProperty('patientInfo') ?
+                <PatientInfoPanel2 patientInfo={selectedPatient.patientInfo} /> : null
+                }
             </div>
             <div className='PatientFields'>
             {   
                 keywordsToInclude
                 .filter(keyword => selectedPatient.hasOwnProperty(keyword)) // Ensure the keyword exists in the object
                 .map(keyword => (
-                    <DataPanel key={keyword} entry={{ keyword, data: selectedPatient[keyword] }} /> // Access data directly from the object
+                    <DataPanel key={keyword} entry={{ keyword, data: JSON.stringify(selectedPatient[keyword]) }} /> // Access data directly from the object
                 ))
             }
             </div>

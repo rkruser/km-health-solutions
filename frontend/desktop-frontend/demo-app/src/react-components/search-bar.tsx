@@ -7,6 +7,7 @@ import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 
 import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { debounce, set } from 'lodash';
+import { S } from '@storybook/react/dist/types-0a347bb9';
 
 // We're assuming the result to be an array of string.
 // Change this type to fit the data structure of your actual search results
@@ -31,7 +32,9 @@ async function searchApi(value: string) {
     return results;
   }
 
-  async function searchThroughData(value: string, data: Record<string, any>) {
+  type SearchResultItemType = [string, string, number];
+
+  async function searchThroughData(value: string, data: Record<string, any>): Promise<SearchResultItemType[]> {
     try {
       const { firstNames, lastNames } = data;
       //console.log("firstNames: " + firstNames);
@@ -60,7 +63,7 @@ async function searchApi(value: string) {
       return results;
   } catch (error) {
     console.log(error);
-    return [];
+    return [["Error", "Error", 0]];
   }
   }
   
@@ -115,7 +118,7 @@ const SearchButton: React.FC = () => {
 const SearchBar: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
 
-  type SearchResultItemType = [string, string, number];
+
   const [searchResults, setSearchResults] = useState<SearchResultItemType[]>([]);
 
 
@@ -189,7 +192,7 @@ const SearchBar: React.FC = () => {
                   debouncedSearch(inputValue);
                 }
                 else {
-                  setSelectedSearchValue(searchResults[highlightIndex][0]);
+                  setSelectedSearchValue(allPatientData.records[searchResults[highlightIndex][2]]);
                   setSearchResults([]);
                 }
                 break;
@@ -241,7 +244,7 @@ const SearchBar: React.FC = () => {
                   }}
                   onMouseLeave={() => {}}
                   onClick={() => {
-                      setSelectedSearchValue(result[0]);
+                      setSelectedSearchValue(allPatientData.records[result[2]]);
                       setSearchResults([]);
                   }}
                   value = {result[0]+", "+result[1]}
