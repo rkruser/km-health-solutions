@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PatientContext from './patient-context';
 
 const DropdownMenu: React.FC = () => {
@@ -6,9 +6,16 @@ const DropdownMenu: React.FC = () => {
   const {allPatientData} = useContext(PatientContext);
   const { setSelectedPatient } = useContext(PatientContext);
   const [selectedOption, setSelectedOption] = useState<string>('');
+  const [optionsList, setOptionsList] = useState<[string,number][]>([]);
+
+  //const optionsList: [string,number][] = allPatientData.firstNames.map((name:string,index:number)=>[`${allPatientData.lastNames[index]}, ${name}`,index]); //[['Option 1',0]];
 
 
-  const optionsList: [string,number][] = allPatientData.firstNames.map((name:string,index:number)=>[`${allPatientData.lastNames[index]}, ${name}`,index]); //[['Option 1',0]];
+  useEffect(() => {
+    if (allPatientData && allPatientData.firstNames) {
+      setOptionsList(allPatientData.firstNames.map((name:string,index:number)=>[`${allPatientData.lastNames[index]}, ${name}`,index]));
+    }
+  }, [allPatientData]);
 
   const handleDropdownChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedOption = event.target.value;
