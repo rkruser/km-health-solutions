@@ -48,8 +48,8 @@ readAndWrite();
 function RunMainApp(patientData:OrganizedPatientDataType) {
   function createWindow() {
     const mainWindow = new BrowserWindow({
-      width: 1200,
-      height: 800,
+      width: 800,
+      height: 1200,
       
       webPreferences: {
         preload: path.join(__dirname, 'preload.js'),
@@ -100,8 +100,11 @@ function RunMainApp(patientData:OrganizedPatientDataType) {
   });
 }
 
+
+const patientsFile = app.isPackaged ? path.join(__dirname, "../assets/patients.json") :  "./assets/patients.json";
+
 console.log("Reading patient data");
-readJSONFromFile('./assets/patients.json')
+readJSONFromFile(patientsFile)
   .then((patients:Array<any>) => {
     return processPatientData(patients);
   })

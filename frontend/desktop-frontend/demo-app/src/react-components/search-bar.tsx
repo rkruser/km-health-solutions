@@ -167,7 +167,7 @@ const SearchBar: React.FC = () => {
           });
       }, 300)(value);
    },
-    [ ],
+    [ allPatientData ],
   );
 
   useEffect(() => {
