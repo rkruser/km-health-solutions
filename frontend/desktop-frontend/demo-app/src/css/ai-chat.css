@@ -1,0 +1,24 @@
+.AIChat {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.AIChatDisplay {
+    color: black;
+    height: 100%;
+    width: 100%;
+    min-height: 100px;
+    background-color: white;
+}
+
+
+.AIChatForm {
+    width: 100%;
+    display: flex;
+}
+
+.AIChatForm input {
+    flex-grow : 1;
+}

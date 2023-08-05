@@ -3,6 +3,7 @@ import PatientContext from './patient-context';
 import PatientOverview from './patient-overview';
 import remote from './remote-bridge';
 import { getTestPatient, getRandomInteger } from './utility';
+import AIChat from './ai-chat';
 
 //import { completeText } from '../api/completion';
 //import SearchBar from './search-bar';
@@ -75,7 +76,7 @@ function App() {
           <AppHeader />
 
           <PatientOverview />
-
+          <AIChat />
       </PatientContext.Provider>
 
 
