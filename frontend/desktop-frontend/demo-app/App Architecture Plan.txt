@@ -1,0 +1,13 @@
+App Architecture Plan
+
+1. FHIR bridge
+2. State model for app with fewest possible points of maintenance
+3. Server/database service
+4. Define patient types in extensible way
+5. Define functionality goals in detail
+6. Write this up as an official spec to send to Vivek (Microsoft Word is good enough, don't waste time with latex right now)
+
+
+
+
+
