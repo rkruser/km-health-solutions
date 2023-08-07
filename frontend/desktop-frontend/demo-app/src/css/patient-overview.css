@@ -1,0 +1,59 @@
+.PatientOverview {
+    color: black;
+    width: 95%;
+    min-width: 300px;
+    margin-top: 10px;
+    padding: 5px;
+    background-color: rgb(200, 200, 200);
+    border: 4px solid rgb(194, 86, 86);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.PatientHeader {
+    margin-bottom: 10px;
+}
+
+.PatientFields {
+    width: 100%;
+}
+
+.PatientFields > div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.DataPanel {
+    border: 2px solid rgb(86, 163, 194);
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100px;
+    overflow-wrap: break-word;
+}
+
+
+.PatientInfoPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.PatientInfoPanel > div:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.PatientName {
+    font-size: 3em;
+    font-weight: bold;
+}
+
+.PatientDOB {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.PatientDescription {
+    font-size: 1.2em;
+}
