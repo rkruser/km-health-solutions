@@ -48,18 +48,16 @@ export namespace Ampere {
     }
 
     export type GenderAndSexType = {
-        genderIdentity : GenderIdentityEnum | null,
-        birthSex : BirthSexIdentityEnum | null,
-        legalSex : LegalSexIdentityEnum | null,
+        genderIdentity : GenderIdentityEnum | null;
+        birthSex : BirthSexIdentityEnum | null;
+        legalSex : LegalSexIdentityEnum | null;
         notes: string | null;
     }
 
-
-
     export type DateType = {
-        year: Number,
-        month: Number,
-        day: Number
+        year: Number;
+        month: Number;
+        day: Number;
     }
 
 
@@ -71,7 +69,7 @@ export namespace Ampere {
         NATIVE_AMERICAN = "Native American",
         PACIFIC_ISLANDER = "Pacific Islander",
         OTHER = "Other",
-        UNKNOWN = "Unknown"
+        UNKNOWN = "Unknown",
     }
 
     export enum EthnicSubgroupEnum {
@@ -80,16 +78,16 @@ export namespace Ampere {
     }
 
     export type EthnicityInfoType = {
-        ethnicity : EthnicityEnum | null,
+        ethnicity : EthnicityEnum | null;
         subgroup: EthnicSubgroupEnum | string | null;
-        isHispanic : Boolean | null,
-        notes: string | null
+        isHispanic : Boolean | null;
+        notes: string | null;
     }
 
 
     export type PhysicalInfoType = {
-        heightInCentimeters : Number | null,
-        weightInKilograms : Number | null,
+        heightInCentimeters : Number | null;
+        weightInKilograms : Number | null;
         dateMeasured: DateType
     }
 
@@ -104,7 +102,7 @@ export namespace Ampere {
     export type InsuranceInfoType = { }
     export type PhysicianInfoType = { }
     export type MedicalOverviewType = {
-        physicalInfo: PhysicalInfoType | null,
+        physicalInfo: PhysicalInfoType | null;
         /*
             One line overview description
             Summaries for different time periods
@@ -119,19 +117,15 @@ export namespace Ampere {
 
 
     export type PatientInfoType = {
-        patientId: string, //Unique identifier for patient
-        recordId: string, //Identifier for record (patient records can point at each other like a tree/graph structure, allowing full histories to be tracked)
-        recordDate: DateType, //Date of current record (a patient is a collection of records under the same patientID)
-        notes: string | null,
-        nameInfo: NameType,
-        genderInfo: GenderAndSexType | null,
-        birthday: DateType | null,
-        ethnicityInfo: EthnicityInfoType | null,
-        legalInfo: LegalInfoType | null,
-        contactInfo: ContactInfoType | null,
-        insuranceInfo: InsuranceInfoType | null,
-        physicianInfo: PhysicalInfoType | null,
-        medicalOverview: MedicalOverviewType
+        nameInfo: NameType;
+        genderInfo: GenderAndSexType | null;
+        birthday: DateType | null;
+        ethnicityInfo: EthnicityInfoType | null;
+        legalInfo: LegalInfoType | null;
+        contactInfo: ContactInfoType | null;
+        insuranceInfo: InsuranceInfoType | null;
+        physicianInfo: PhysicalInfoType | null;
+        medicalOverview: MedicalOverviewType;
     }
 
 
