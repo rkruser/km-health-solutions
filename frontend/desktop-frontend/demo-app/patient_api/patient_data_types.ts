@@ -143,7 +143,10 @@ type PatientInfoType = {
 /*
 To improve this file:
  - Use "interface ... extends" pattern
- - Possibly make everything extend the "Record" interface, whose mandatory fields are "uniqueId", "recordId", and "dateOfRecord". Maybe also "history"
+ - Possibly make everything extend the "Record" interface, whose mandatory fields are "uniqueId", "recordId", and "dateOfRecord". Maybe also "history", "notes", "practitioner" (who added the record) and other extensible fields.
+ - Distinguish between "MedicalOverview" (which has the most up-to-date summaries of the patient in hierarchical structure) and "MedicalRecord" (which contains info for particular visits/encounters)
+ - Each patient should have a global class in the database that points to all their records. (Distinct from the PatientInfoType class used by the frontend containing only most recent stuff)
  - Have classes/functions for creating patients and populating the info fields
  - Have functions for representing this interface to ChatGPT
+ - Test the interface by having extensive files to create dummy data
 */
