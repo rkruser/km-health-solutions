@@ -43,6 +43,7 @@
     "electron-start": "electron .",
     "pack": "electron-builder --dir",
     "tsbuild": "tsc -p ./tsconfig_electron.json",
+    "tsbuild-patient": "tsc -p ./tsconfig_patient_api.json",
     "online-tsbuild": "tsc -w -p ./tsconfig_electron.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"

@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "outDir": "patient_api_build"
+    },
+    "include": [
+      "patient_api"
+    ]
+}
+  
