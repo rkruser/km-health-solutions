@@ -3,12 +3,16 @@ import * as _ from './patient_data_types';
 declare module './patient_data_types' {
     export namespace Ampere {
         export enum RecordTypeEnum {
-            GLOBAL = "global",
-            LOCAL = "local"
+            GLOBAL_PATIENT = "global",
+            LOCAL_PATIENT = "local",
+            PRACTITIONER = 'practitioner',
+            INSTITUTION = 'institution',
+            RESOURCE = 'resource'
         }
 
         export interface BaseRecord {
-            patientId: string;
+            uniqueId: string;
+            isPatient: Boolean;
             recordType: RecordTypeEnum;
             timestampAdded: Date;
             timestampUpdated: Date;
@@ -86,3 +90,15 @@ declare module './patient_data_types' {
 
     }
 }
+
+/*
+
+App may need to:
+- Store info about the practioners using the specific instance of the app, the institution it's in, the location, etc.
+- Support different languages (eventually)
+- Translate (eventually)
+
+
+
+
+*/
