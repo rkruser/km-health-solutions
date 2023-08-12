@@ -1,4 +1,4 @@
-import * as ptypes from './patient_data_types';
+import * as atypes from './patient_data_types';
 
 export enum RecordTypeEnum {
     GLOBAL_PATIENT = "global",
@@ -17,7 +17,7 @@ export interface BaseRecord {
 }
 
 export type RecordTypeToRecordIdList = {
-    [key: string]: string[];
+    [key: string]: string[]; //InfoTypeEnum as key?
 }
 
 export interface GlobalRecord extends BaseRecord {
@@ -54,7 +54,7 @@ export enum InfoTypeEnum {
 }
 
 export interface DataRecord extends BaseRecord {
-    recordId: string;
+    recordId: string; //should this be patient ID and BaseRecord contain recordID?
     infoType: InfoTypeEnum;
     timestampInfoCollected: Date | null; 
     recordSource: SourceType | null;
@@ -66,23 +66,23 @@ export interface DataRecord extends BaseRecord {
 
 
 export interface BasicPatientInfoRecord extends DataRecord {
-    nameInfo: ptypes.NameType;
-    genderInfo: ptypes.GenderAndSexType | null;
-    birthday: ptypes.DateType | null;
-    ethnicityInfo: ptypes.EthnicityInfoType | null;
+    nameInfo: atypes.NameType;
+    genderInfo: atypes.GenderAndSexType | null;
+    birthday: atypes.DateType | null;
+    ethnicityInfo: atypes.EthnicityInfoType | null;
 }
 
 
-type IdPair<T> = [string|null, T|null]; //pair of record ID and an object of that type, or null
+export type IdPair<T> = [string, T|null]; //pair of record ID and an object of that type, or null
 
 //Aggregated info to be displayed by frontend. Includes only some patient info, such as recent history
 export interface AggregateInfo {
     basicInfo: IdPair<BasicPatientInfoRecord>;
-    legalInfo: IdPair<ptypes.LegalInfoType>, //change types to record interfaces?
-    contactInfo: IdPair<ptypes.ContactInfoType>,
-    insuranceInfo: IdPair<ptypes.InsuranceInfoType>,
-    physicianInfo: IdPair<ptypes.PhysicalInfoType>,
-    medicalOverview: IdPair<ptypes.MedicalOverviewType>,
+    legalInfo: IdPair<atypes.LegalInfoType>|null, //change types to record interfaces?
+    contactInfo: IdPair<atypes.ContactInfoType>|null,
+    insuranceInfo: IdPair<atypes.InsuranceInfoType>|null,
+    physicianInfo: IdPair<atypes.PhysicalInfoType>|null,
+    medicalOverview: IdPair<atypes.MedicalOverviewType>|null,
     /* Have pointers to everything, cache, etc. */
 }
 

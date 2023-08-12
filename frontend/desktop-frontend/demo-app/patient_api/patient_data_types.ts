@@ -14,6 +14,8 @@ export enum PronounSetEnum {
     NEUTRAL = "they/them/their"
 }
 
+
+// Have a simpler nametype that this extends?
 export type NameType = {
     nameTitle: NameTitleEnum | null;
     namePrefix: string | null;
@@ -121,7 +123,7 @@ export type PatientInfoType = {
     birthday: DateType | null;
     ethnicityInfo: EthnicityInfoType | null;
     legalInfo: LegalInfoType | null;
-    contactInfo: ContactInfoType | null;
+    contactInfo: ContactInfoType | null; //Make all these arrays of the type?
     insuranceInfo: InsuranceInfoType | null;
     physicianInfo: PhysicalInfoType | null;
     medicalOverview: MedicalOverviewType;
