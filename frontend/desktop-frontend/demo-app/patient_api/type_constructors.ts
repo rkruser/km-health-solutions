@@ -137,6 +137,69 @@ Creation functions
 ==============================================================================
 */
 
+/*
+function applyDefault<T>(defaultObject: T, overrideObject: Partial<T>): T {
+    // Initialize an empty result object
+    const result: Partial<T> = {};
+
+    for (const key in defaultObject) {
+        if (defaultObject.hasOwnProperty(key)) {
+            if (
+                typeof defaultObject[key] === 'object' &&
+                defaultObject[key] !== null &&
+                !Array.isArray(defaultObject[key])
+            ) {
+                result[key] = applyDefault(
+                    defaultObject[key] as any,
+                    overrideObject[key] as any
+                );
+            } else {
+                result[key] = key in overrideObject ? overrideObject[key] : defaultObject[key];
+            }
+        }
+    }
+
+    return result as T;
+}
+
+// Usage
+const result = applyDefault(defaultNameType, {
+    firstName: "John"
+});
+console.log(result);
+
+
+Now, to further streamline your types and default creation:
+
+    Create a dictionary (or an object in JavaScript terms) of all default objects.
+    Create a function that, given a type key, will return the associated default object.
+
+This way, you won't need to create a separate creation function for each type. The function applyDefault will take care of all types, given the correct default object and override object.
+
+
+const DEFAULTS = {
+    NameType: defaultNameType,
+    GenderAndSexType: defaultGenderAndSexType,
+    DateType: defaultDateType,
+    // ... add all defaults here
+};
+
+type DefaultKeys = keyof typeof DEFAULTS;
+
+function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
+    return applyDefault(DEFAULTS[type], overrideObject);
+}
+
+// Usage
+const name = createObjectOfType('NameType', {
+    firstName: "John"
+});
+console.log(name);
+
+*/
+
+
+
 
 
 /*
