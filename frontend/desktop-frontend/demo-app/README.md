@@ -1,5 +1,23 @@
 # demo-app Readme
 
+Steps 8/16/23
+1. Initial data structure for summaries
+2. Be able to call basic summary functions
+3. Refactor app main code a bit to simplify state management and use the accessor functions
+    to get the data summaries rather than accessing state directly
+4. Write *basic* FHIR bridge that loads into your structures
+5. Write test files for everything
+6. Clean up all this code and send next version to Vivek (By this Friday, hopefully)
+
+
+
+
+
+
+
+
+
+
 This app combines electron and react to create a portable desktop app.
 Folders: 
   build: React's build folder. Stores the static website built by react from the website skeleton in 'public' and the react code in 'src'.
