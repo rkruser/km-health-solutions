@@ -172,7 +172,8 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
     const result: Partial<T> = {};
 
     for (const key in overrideObject) {
-        if (!Object.prototype.hasOwnProperty.call(defaultObject, key) ) {
+        if ( Object.prototype.hasOwnProperty.call(overrideObject, key) &&  // Can change to Object.keys(...).forEach(...)
+            !Object.prototype.hasOwnProperty.call(defaultObject, key) ) {
             throw new Error(`Invalid key "${key}" in overrideObject.`);
         }
     }
@@ -186,12 +187,6 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
                 defaultObject[key] !== null &&
                 !Array.isArray(defaultObject[key])
             ) {
-                console.log("Recursing into object");
-                console.log("Key is: " + key);
-                console.log("Original override");
-                console.log(overrideObject);
-                console.log("Key of override for recursive call");
-                console.log(overrideObject[key]);
                 result[key] = applyDefault(
                     defaultObject[key] as any,
                     overrideObject[key] !== undefined ? overrideObject[key] as any : {}
@@ -207,6 +202,10 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
 
 
 export function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
+    if (!(type in DEFAULTS)) {
+        throw new Error(`${type} is not a valid key of DEFAULTS.`);
+    }
+
     return applyDefault(DEFAULTS[type], overrideObject);
 }
 
