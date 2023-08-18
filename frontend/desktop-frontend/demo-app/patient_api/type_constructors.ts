@@ -5,6 +5,7 @@ import * as atypes from './ampere_types';
 Default Objects 
 ==============================================================================
 */
+
 const defaultNameType: atypes.NameType = {
     nameTitle: null,
     namePrefix: null,
@@ -131,19 +132,49 @@ const defaultAggregateInfo: atypes.AggregateInfo = {
 };
 
 
+
+const DEFAULTS: {[key:string]: any} = {
+    /* Types */
+    NameType: defaultNameType,
+    GenderAndSexType: defaultGenderAndSexType,
+    DateType: defaultDateType,
+    EthnicityInfoType: defaultEthnicityInfoType,
+    PhysicalInfoType: defaultPhysicalInfoType,
+    LegalInfoType: defaultLegalInfoType,
+    ContactInfoType: defaultContactInfoType,
+    InsuranceInfoType: defaultInsuranceInfoType,
+    PhysicianInfoType: defaultPhysicianInfoType,
+    MedicalOverviewType: defaultMedicalOverviewType,
+    PatientInfoType: defaultPatientInfoType,
+    /* Interfaces */
+    BaseRecord: defaultBaseRecord,
+    RecordTypeToRecordIdList: defaultRecordTypeToRecordIdList,
+    GlobalRecord: defaultGlobalRecord,
+    SourceType: defaultSourceType,
+    DataRecord: defaultDataRecord,
+    BasicPatientInfoRecord: defaultBasicPatientInfoRecord,
+    defaultBasicPatientInfoRecordPair: defaultBasicPatientInfoRecordPair,
+    AggregateInfo: defaultAggregateInfo,
+};
+
+type DefaultKeys = keyof typeof DEFAULTS;
+
+
 /*
 ==============================================================================
 Creation functions
 ==============================================================================
 */
 
-/*
-function applyDefault<T>(defaultObject: T, overrideObject: Partial<T>): T {
+
+function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partial<T>): T {
     // Initialize an empty result object
     const result: Partial<T> = {};
 
     for (const key in defaultObject) {
-        if (defaultObject.hasOwnProperty(key)) {
+        // This 'if' checks if the key is a direct property of the object instead of an inherited property through prototype chain
+        // This is for safety of behavior; things could get messy and unpredictable otherwise
+        if ( Object.prototype.hasOwnProperty.call(defaultObject, key) ) {
             if (
                 typeof defaultObject[key] === 'object' &&
                 defaultObject[key] !== null &&
@@ -162,6 +193,13 @@ function applyDefault<T>(defaultObject: T, overrideObject: Partial<T>): T {
     return result as T;
 }
 
+
+function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
+    return applyDefault(DEFAULTS[type], overrideObject);
+}
+
+
+/*
 // Usage
 const result = applyDefault(defaultNameType, {
     firstName: "John"
@@ -186,9 +224,7 @@ const DEFAULTS = {
 
 type DefaultKeys = keyof typeof DEFAULTS;
 
-function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
-    return applyDefault(DEFAULTS[type], overrideObject);
-}
+
 
 // Usage
 const name = createObjectOfType('NameType', {
