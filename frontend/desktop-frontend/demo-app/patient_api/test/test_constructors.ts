@@ -10,7 +10,7 @@ console.log("Name Object")
 console.log(nameObject);
 
 
-const emptyAggregateInfo = createObjectOfType('AggregateInfoType', {});
+const emptyAggregateInfo = createObjectOfType('AggregateInfo', {});
 console.log("Empty Aggregate Info");
 console.log(emptyAggregateInfo);
 
@@ -20,7 +20,8 @@ console.log("Basic Info");
 console.log(basicInfo);
 
 
-const aggregateInfo = createObjectOfType('AggregateInfo', {basicInfo: basicInfo});
+const basicInfoPair = createObjectOfType('RecordPair', {id: "123", record: basicInfo});
+
+const aggregateInfo = createObjectOfType('AggregateInfo', {basicInfoPair: basicInfoPair});
 console.log("Aggregate Info");
-console.log(Object.keys(aggregateInfo));
 console.log(aggregateInfo);

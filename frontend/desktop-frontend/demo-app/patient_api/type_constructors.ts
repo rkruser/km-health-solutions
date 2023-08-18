@@ -120,15 +120,15 @@ const defaultBasicPatientInfoRecord: atypes.BasicPatientInfoRecord = {
     ethnicityInfo: null,
 };
 
-const defaultBasicPatientInfoRecordPair: atypes.IdPair<atypes.BasicPatientInfoRecord> = ['', null];
+const defaultRecordPair: atypes.RecordPair<atypes.BasicPatientInfoRecord> = {id: null, record:null};
 
 const defaultAggregateInfo: atypes.AggregateInfo = {
-    basicInfo: defaultBasicPatientInfoRecordPair,
-    legalInfo: null,
-    contactInfo: null,
-    insuranceInfo: null,
-    physicianInfo: null,
-    medicalOverview: null,
+    basicInfoPair: defaultRecordPair,
+    legalInfoPair: null,
+    contactInfoPair: null,
+    insuranceInfoPair: null,
+    physicianInfoPair: null,
+    medicalOverviewPair: null,
 };
 
 
@@ -153,7 +153,7 @@ export const DEFAULTS: {[key:string]: any} = {
     SourceType: defaultSourceType,
     DataRecord: defaultDataRecord,
     BasicPatientInfoRecord: defaultBasicPatientInfoRecord,
-    defaultBasicPatientInfoRecordPair: defaultBasicPatientInfoRecordPair,
+    RecordPair: defaultRecordPair,
     AggregateInfo: defaultAggregateInfo,
 };
 

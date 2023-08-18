@@ -73,16 +73,19 @@ export interface BasicPatientInfoRecord extends DataRecord {
 }
 
 
-export type IdPair<T> = [string, T|null]; //pair of record ID and an object of that type, or null
+export type RecordPair<T> = {
+    id: string|null;
+    record: T|null;
+}; //pair of record ID and an object of that type, or null
 
 //Aggregated info to be displayed by frontend. Includes only some patient info, such as recent history
 export interface AggregateInfo {
-    basicInfo: IdPair<BasicPatientInfoRecord>;
-    legalInfo: IdPair<atypes.LegalInfoType>|null, //change types to record interfaces?
-    contactInfo: IdPair<atypes.ContactInfoType>|null,
-    insuranceInfo: IdPair<atypes.InsuranceInfoType>|null,
-    physicianInfo: IdPair<atypes.PhysicalInfoType>|null,
-    medicalOverview: IdPair<atypes.MedicalOverviewType>|null,
+    basicInfoPair: RecordPair<BasicPatientInfoRecord>;
+    legalInfoPair: RecordPair<atypes.LegalInfoType>|null, //change types to record interfaces?
+    contactInfoPair: RecordPair<atypes.ContactInfoType>|null,
+    insuranceInfoPair: RecordPair<atypes.InsuranceInfoType>|null,
+    physicianInfoPair: RecordPair<atypes.PhysicalInfoType>|null,
+    medicalOverviewPair: RecordPair<atypes.MedicalOverviewType>|null,
     /* Have pointers to everything, cache, etc. */
 }
 
