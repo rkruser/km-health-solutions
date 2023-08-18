@@ -133,7 +133,7 @@ const defaultAggregateInfo: atypes.AggregateInfo = {
 
 
 
-const DEFAULTS: {[key:string]: any} = {
+export const DEFAULTS: {[key:string]: any} = {
     /* Types */
     NameType: defaultNameType,
     GenderAndSexType: defaultGenderAndSexType,
@@ -171,6 +171,12 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
     // Initialize an empty result object
     const result: Partial<T> = {};
 
+    for (const key in overrideObject) {
+        if (!Object.prototype.hasOwnProperty.call(defaultObject, key) ) {
+            throw new Error(`Invalid key "${key}" in overrideObject.`);
+        }
+    }
+
     for (const key in defaultObject) {
         // This 'if' checks if the key is a direct property of the object instead of an inherited property through prototype chain
         // This is for safety of behavior; things could get messy and unpredictable otherwise
@@ -180,9 +186,15 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
                 defaultObject[key] !== null &&
                 !Array.isArray(defaultObject[key])
             ) {
+                console.log("Recursing into object");
+                console.log("Key is: " + key);
+                console.log("Original override");
+                console.log(overrideObject);
+                console.log("Key of override for recursive call");
+                console.log(overrideObject[key]);
                 result[key] = applyDefault(
                     defaultObject[key] as any,
-                    overrideObject[key] as any
+                    overrideObject[key] !== undefined ? overrideObject[key] as any : {}
                 );
             } else {
                 result[key] = key in overrideObject ? overrideObject[key] : defaultObject[key];
@@ -194,7 +206,7 @@ function applyDefault<T extends Object>(defaultObject: T, overrideObject: Partia
 }
 
 
-function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
+export function createObjectOfType<T extends DefaultKeys>(type: T, overrideObject: Partial<typeof DEFAULTS[T]>): typeof DEFAULTS[T] {
     return applyDefault(DEFAULTS[type], overrideObject);
 }
 
@@ -255,4 +267,10 @@ Formatting functions for AI printing
 ==============================================================================
 FHIR bridging functions
 ==============================================================================
+
+- Getting list of patients
+- Getting list of upcoming appointments
+- Getting list of inpatients
+- For a given patient, get all their EHR records, their entire history
+- Need a way to intake all of this information and convert it to the above interface
 */
