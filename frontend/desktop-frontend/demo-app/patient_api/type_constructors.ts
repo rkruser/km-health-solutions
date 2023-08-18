@@ -259,6 +259,12 @@ Formatting functions for printing
 ==============================================================================
 Formatting functions for AI printing
 ==============================================================================
+
+- Have different formatting options, such as "basic info only", "orders last week", etc.
+- Have the option to make server calls to obtain missing data, or just try to work around missing data, etc.
+- Abstract away where the data is in the database/server ecosystem
+- Eventually some kind of summary tree function
+- Need to write an official API spec
 */
 
 
