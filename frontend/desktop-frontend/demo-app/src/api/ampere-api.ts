@@ -1,6 +1,6 @@
-import { FrontendAPI, ReturnedList } from "../../patient_api/getter_and_setter_interface";
-import { AggregateInfo } from "../../patient_api/ampere_types";
-import { createObjectOfType } from "../../patient_api/type_constructors";
+import { FrontendAPI, ReturnedList } from "ampere_api/js/getter_and_setter_interface";
+import { AggregateInfo } from "ampere_api/js/ampere_types";
+import { createObjectOfType } from "ampere_api/js/type_constructors";
 
 class RendererAPIService implements FrontendAPI {
     async getPatientList(patientId: string, param: string): Promise<ReturnedList> {

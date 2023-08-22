@@ -7,7 +7,9 @@ import App from './react-components/App';
 import RendererAPIService from './api/ampere-api';
 
 const api = new RendererAPIService();
-console.log(api.getOrderSummary('', ''));
+api.getOrderSummary('', '').then((data) => {
+  console.log(data);
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('AppRoot') as HTMLElement
