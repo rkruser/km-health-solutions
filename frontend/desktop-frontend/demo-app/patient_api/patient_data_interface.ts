@@ -70,6 +70,7 @@ export interface BasicPatientInfoRecord extends DataRecord {
     genderInfo: atypes.GenderAndSexType | null;
     birthday: atypes.DateType | null;
     ethnicityInfo: atypes.EthnicityInfoType | null;
+    medicalOverview: atypes.MedicalOverviewType | null;
 }
 
 
@@ -81,11 +82,11 @@ export type RecordPair<T> = {
 //Aggregated info to be displayed by frontend. Includes only some patient info, such as recent history
 export interface AggregateInfo {
     basicInfoPair: RecordPair<BasicPatientInfoRecord>;
-    legalInfoPair: RecordPair<atypes.LegalInfoType>|null, //change types to record interfaces?
-    contactInfoPair: RecordPair<atypes.ContactInfoType>|null,
-    insuranceInfoPair: RecordPair<atypes.InsuranceInfoType>|null,
-    physicianInfoPair: RecordPair<atypes.PhysicalInfoType>|null,
-    medicalOverviewPair: RecordPair<atypes.MedicalOverviewType>|null,
+    //legalInfoPair: RecordPair<atypes.LegalInfoType>|null, //change types to record interfaces?
+    //contactInfoPair: RecordPair<atypes.ContactInfoType>|null,
+    //insuranceInfoPair: RecordPair<atypes.InsuranceInfoType>|null,
+    //physicianInfoPair: RecordPair<atypes.PhysicalInfoType>|null,
+    //medicalOverviewPair: RecordPair<atypes.MedicalOverviewType>|null,
     /* Have pointers to everything, cache, etc. */
 }
 

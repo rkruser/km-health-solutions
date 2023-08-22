@@ -118,17 +118,18 @@ const defaultBasicPatientInfoRecord: atypes.BasicPatientInfoRecord = {
     genderInfo: null,
     birthday: null,
     ethnicityInfo: null,
+    medicalOverview: null
 };
 
 const defaultRecordPair: atypes.RecordPair<atypes.BasicPatientInfoRecord> = {id: null, record:null};
 
 const defaultAggregateInfo: atypes.AggregateInfo = {
     basicInfoPair: defaultRecordPair,
-    legalInfoPair: null,
-    contactInfoPair: null,
-    insuranceInfoPair: null,
-    physicianInfoPair: null,
-    medicalOverviewPair: null,
+    //legalInfoPair: null,
+    //contactInfoPair: null,
+    //insuranceInfoPair: null,
+    //physicianInfoPair: null,
+    //medicalOverviewPair: null,
 };
 
 
