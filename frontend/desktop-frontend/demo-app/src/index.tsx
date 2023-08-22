@@ -4,6 +4,11 @@ import './css/index.css';
 import App from './react-components/App';
 // import reportWebVitals from './reportWebVitals';
 
+import RendererAPIService from './api/ampere-api';
+
+const api = new RendererAPIService();
+console.log(api.getOrderSummary('', ''));
+
 const root = ReactDOM.createRoot(
   document.getElementById('AppRoot') as HTMLElement
   );

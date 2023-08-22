@@ -1,12 +1,12 @@
 import { AggregateInfo } from "./ampere_types";
 
-type ListEntry = {
+export type ListEntry = {
     id: string;
     name: string;
     birthdate: string;
     description: string|null;
 }
-type ReturnedList = Array<ListEntry>;
+export type ReturnedList = Array<ListEntry>;
 
 export interface FrontendAPI {
     getPatientList(patientId:string, param:string): Promise<ReturnedList>;
