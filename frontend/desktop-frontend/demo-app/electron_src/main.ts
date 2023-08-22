@@ -17,6 +17,8 @@ const {readJSONFromFile} = require('./main_filesystem_io');
 const {completeText} = require('./completion');
 const {setEventHandlers} = require('./event_handlers');
 
+const {MainAPIService} = require('./main_ampere_api');
+
 /*
 async function readAndWrite() {
   console.log("Writing");
@@ -105,3 +107,8 @@ readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
   console.error(`Error while reading data from file: ${error}`);
 });
 
+const api=new MainAPIService();
+api.getOverallSummary("some_patient_id", "some_param").then((result:string) => {
+  console.log("called api");
+  console.log(result);
+});
