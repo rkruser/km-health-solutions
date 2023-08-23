@@ -56,11 +56,12 @@ function App() {
   [selectedSearchValue]
   );
 
+  // This actually works!
   useEffect(() => {
     console.log("Sending API request...");
     remote.bridge.send('apiRequest', 'getOverallSummary', 'testPatientId', 'param625');
   }, [selectedPatient]);
-  
+
   useEffect(() => {
     const apiResponseFunc = (event:any, arg:any) => {
       console.log("Channel \"apiRequestResponse\", renderer received: " + arg.toString());
