@@ -1,3 +1,4 @@
+//import '@testing-library/jest-dom';
 import { DEFAULTS, createObjectOfType } from "../type_constructors";
 
 const newname = {
@@ -25,3 +26,8 @@ const basicInfoPair = createObjectOfType('RecordPair', {id: "123", record: basic
 const aggregateInfo = createObjectOfType('AggregateInfo', {basicInfoPair: basicInfoPair});
 console.log("Aggregate Info");
 console.log(aggregateInfo);
+
+test('test_constructors', () => {
+    const result = (() => {return true})();
+    expect(result).toBe(true);
+});
