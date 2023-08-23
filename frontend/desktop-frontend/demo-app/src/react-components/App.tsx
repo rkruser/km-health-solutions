@@ -1,7 +1,7 @@
 import '../css/app.css';
 import PatientContext from './patient-context';
 import PatientOverview from './patient-overview';
-import remote from './remote-bridge';
+import remote from '../api/remote-bridge';
 import { getTestPatient, getRandomInteger } from './utility';
 
 import { completeText } from '../api/completion';
