@@ -23,13 +23,13 @@ const remote = {
 if (!remote.bridge) {
     console.log("Electron functionality is not available, using dummy interface");
     remote.bridge = {
-        send: (channel:string, arg:any) => {
-            console.log(`Electron functionality "${channel}" with message "${arg}" is not available`);
+        send: (channel:string, ...args:any[]) => {
+            console.log(`Electron functionality "${channel}" with message "${args}" is not available`);
           },        
-        on_receive: (channel:string, func: (event:any, arg:any)=>void) => {
+        on_receive: (channel:string, func: (event:any, ...args:any[])=>void) => {
             console.log(`Electron functionality "${channel}" is not available`);
           },
-        remove_listener: (channel:string, func: (event:any, arg:any)=>void) => {
+        remove_listener: (channel:string) => {
             console.log(`Electron functionality "${channel}" is not available`);
         }
     }

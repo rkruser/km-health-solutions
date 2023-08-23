@@ -43,7 +43,7 @@ readAndWrite();
 */
 
 
-
+const API=new MainAPIService();
 
 function RunMainApp(patientData:Array<any>) {
   function createWindow() {
@@ -81,7 +81,8 @@ function RunMainApp(patientData:Array<any>) {
     });
   }
 
-  setEventHandlers(ipcMain, patientData, completeText);
+
+  setEventHandlers(ipcMain, patientData, completeText, API);
 
   app.whenReady().then(() => {
     createWindow();
@@ -107,8 +108,8 @@ readJSONFromFile('./assets/patients.json').then((patients:Array<any>) => {
   console.error(`Error while reading data from file: ${error}`);
 });
 
-const api=new MainAPIService();
-api.getOverallSummary("some_patient_id", "some_param").then((result:string) => {
+
+API.getOverallSummary("some_patient_id", "some_param").then((result:string) => {
   console.log("called api");
   console.log(result);
 });

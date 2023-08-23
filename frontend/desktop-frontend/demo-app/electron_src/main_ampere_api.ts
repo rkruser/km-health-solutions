@@ -25,7 +25,7 @@ export class MainAPIService implements FrontendAPI {
 
     async getOverallSummary(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return "some_summary";
+        return "some_summary_"+param;
     }
 
     async getOrderSummary(patientId: string, param: string): Promise<string> {

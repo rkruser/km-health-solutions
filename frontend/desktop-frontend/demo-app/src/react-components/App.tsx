@@ -56,6 +56,22 @@ function App() {
   [selectedSearchValue]
   );
 
+  useEffect(() => {
+    console.log("Sending API request...");
+    remote.bridge.send('apiRequest', 'getOverallSummary', 'testPatientId', 'param625');
+  }, [selectedPatient]);
+  
+  useEffect(() => {
+    const apiResponseFunc = (event:any, arg:any) => {
+      console.log("Channel \"apiRequestResponse\", renderer received: " + arg.toString());
+      setDisplayText(arg.toString());
+    };
+    remote.bridge.on_receive('apiRequestResponse', apiResponseFunc);
+    return () => {
+      remote.bridge.remove_listener('apiRequestResponse');
+    }
+  }, []);
+
 
   useEffect(() => {
     const completeTextResponse = (event:any, arg:any) => {
@@ -64,7 +80,7 @@ function App() {
     };
     remote.bridge.on_receive('completeTextResponse', completeTextResponse);
     return () => {
-      remote.bridge.remove_listener('completeTextResponse', completeTextResponse);
+      remote.bridge.remove_listener('completeTextResponse');
     }
   }, []);
 
@@ -74,7 +90,7 @@ function App() {
     };
     remote.bridge.on_receive('allPatientDataResponse', handleAllPatientDataResponse);
     return () => {
-      remote.bridge.remove_listener('handleAllPatientDataResponse', handleAllPatientDataResponse);
+      remote.bridge.remove_listener('handleAllPatientDataResponse');
     }
   }, []);
 
