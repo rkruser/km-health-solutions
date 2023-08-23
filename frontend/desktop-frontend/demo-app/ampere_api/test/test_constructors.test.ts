@@ -27,7 +27,7 @@ const aggregateInfo = createObjectOfType('AggregateInfo', {basicInfoPair: basicI
 console.log("Aggregate Info");
 console.log(aggregateInfo);
 
-test('test_constructors', () => {
+test('Test constructors', () => {
     const result = (() => {return true})();
     expect(result).toBe(true);
 });
