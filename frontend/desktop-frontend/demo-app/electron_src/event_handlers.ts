@@ -32,6 +32,5 @@ const setEventHandlers = (ipcMain, patientData, completeText, api) => {
       }
     });
   };
-  
+
 export {setEventHandlers};
-  
