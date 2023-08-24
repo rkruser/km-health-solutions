@@ -2,6 +2,31 @@ import { FrontendAPI, ReturnedList } from "ampere_api/js/getter_and_setter_inter
 import { AggregateInfo } from "ampere_api/js/ampere_types";
 import { createObjectOfType } from "ampere_api/js/type_constructors";
 import remote from "./remote-bridge";
+import { response } from "express";
+
+function createAPIPromise(apiChannel:string, timeout:number, ...rest:any[]): Promise<string> {
+    return new Promise((resolve,reject)=>{
+        let isResolved = false;
+        let responseChannel = apiChannel + 'Response';
+        remote.bridge.on_receive(responseChannel, (event:any, ...args:any[]) => {
+            console.log("Received " + responseChannel + ": " + args);
+            isResolved = true;
+            resolve(args[0]);
+            remote.bridge.remove_listener(responseChannel);
+        });
+
+        remote.bridge.send('apiRequest', apiChannel, ...rest);
+
+        setTimeout(()=>{
+            if (!isResolved) {
+                isResolved = true;
+                console.log(responseChannel + " timed out");
+                reject('timeout');
+                remote.bridge.remove_listener(responseChannel);
+            }
+        }, timeout);
+    });
+}
 
 class RendererAPIService implements FrontendAPI {
     private setPatientIdState: (arg:string)=>void;
@@ -22,53 +47,34 @@ class RendererAPIService implements FrontendAPI {
         return [];
     }
 
-    async getCurrentPatientId(): Promise<string> {
+    getCurrentPatientId(): Promise<string> {
         // Your implementation here
-        return "some_patient_id"; // Just a dummy return for the example
+        return createAPIPromise('getCurrentPatientId', this.timeout); // Just a dummy return for the example
     }
 
-    async getPatientAggregateInfo(patientId: string, param: string): Promise<AggregateInfo> {
+    getPatientAggregateInfo(patientId: string, param: string): Promise<AggregateInfo> {
         // Your implementation here
         return createObjectOfType('AggregateInfo', {}); // Just a dummy return for the example
     }
 
     getOverallSummary(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return new Promise((resolve,reject)=>{
-            let isResolved = false;
-            remote.bridge.on_receive('getOverallSummaryResponse', (event:any, ...args:any[]) => {
-                console.log("Received getOverallSummaryResponse: " + args);
-                isResolved = true;
-                resolve(args[0]);
-                remote.bridge.remove_listener('getOverallSummaryResponse');
-            });
-
-            remote.bridge.send('apiRequest', 'getOverallSummary', patientId, param);
-
-            setTimeout(()=>{
-                if (!isResolved) {
-                    isResolved = true;
-                    console.log("getOverallSummaryResponse timed out");
-                    reject('timeout');
-                    remote.bridge.remove_listener('getOverallSummaryResponse');
-                }
-            }, this.timeout);
-        });
+        return createAPIPromise('getOverallSummary', this.timeout, patientId, param);
     }
 
-    async getOrderSummary(patientId: string, param: string): Promise<string> {
+    getOrderSummary(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return "some_order_summary";
+        return createAPIPromise('getOrderSummary', this.timeout,  patientId, param);
     }
 
-    async getMedicationSummary(patientId: string, param: string): Promise<string> {
+    getMedicationSummary(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return "some_medication_summary";
+        return createAPIPromise('getMedicationSummary', this.timeout, patientId, param);
     }
 
-    async getBasicInfo(patientId: string, param: string): Promise<string> {
+    getBasicInfo(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return "some_basic_info";
+        return createAPIPromise('getBasicInfo', this.timeout,  patientId, param);
     }
 
     setCurrentPatientId(patientId: string): Promise<void> {

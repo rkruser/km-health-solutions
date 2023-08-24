@@ -3,15 +3,34 @@ import AppContext from './app-context';
 import RendererAPIService from '../api/ampere-api';
 
 function AppInner() {
-    const { patientId, setPatientId, API } = useContext(AppContext);
+    const { patientId, API } = useContext(AppContext);
     const [patientSummary, setPatientSummary] = useState<string|null>(null);
+    const [orderSummary, setOrderSummary] = useState<string|null>(null);
+    const [basicInfo, setBasicInfo] = useState<string|null>(null);
 
     useEffect(() => {
         async function fetchSummary() {
+            setPatientSummary(null);
             const summary = await API?.getOverallSummary(patientId, 'param676');
             setPatientSummary(summary ? summary : null);
         }
         fetchSummary();
+    }, [patientId, API]);
+    useEffect(() => {
+        async function fetchOrderSummary() {
+            setOrderSummary(null);
+            const summary = await API?.getOrderSummary(patientId, 'param678');
+            setOrderSummary(summary ? summary : null);
+        }
+        fetchOrderSummary();
+    }, [patientId, API]);
+    useEffect(() => {
+        async function fetchBasicInfo() {
+            setBasicInfo(null);
+            const info = await API?.getBasicInfo(patientId,"lem2");
+            setBasicInfo(info ? info : null);
+        }
+        fetchBasicInfo();
     }, [patientId, API]);
 
     return (
@@ -19,6 +38,8 @@ function AppInner() {
             <h1>AppInner</h1>
             <p>PatientId: {patientId}</p>
             <p>{patientSummary ? patientSummary : "Loading..."}</p>
+            <p>{orderSummary ? orderSummary : "Loading order summary..."}</p>
+            <p>{basicInfo ? basicInfo:"loading basic info"}</p>
             <button onClick={() => API?.setCurrentPatientId(Math.random().toString())}>Change Patient</button>
         </div>
     );
@@ -32,7 +53,6 @@ export default function App() {
         <div>
             <AppContext.Provider value={{
                 patientId: patientId,
-                setPatientId: setPatientId,
                 API: APIinstance
             }}>
                 <AppInner />
