@@ -29,21 +29,7 @@ Next steps:
 */
 
 function AppInner() {
-    const { patientId, API } = useContext(AppContext);
-    const [patientSummary, setPatientSummary] = useState<string|null>(null);
-    const [orderSummary, setOrderSummary] = useState<string|null>(null);
-    const [basicInfo, setBasicInfo] = useState<string|null>(null);
-
-    const stateList:stateListEntryType[] = [
-        ['getOverallSummary', ()=>API, setPatientSummary, ()=>patientId],
-        ['getOrderSummary', ()=>API, setOrderSummary, ()=>patientId],
-        ['getBasicInfo', ()=>API, setBasicInfo, ()=>patientId],
-    ];
-    const effects = stateList.map(stateEntry => createAPIEffect(stateEntry));
-
-    useEffect(() => {
-        effects.forEach(effect => effect());
-    }, [patientId, API]);
+    const { patientId, API, patientSummary, orderSummary, basicInfo } = useContext(AppContext);
 
     return (
         <div>
@@ -59,13 +45,33 @@ function AppInner() {
 
 export default function App() {
     const [patientId, setPatientId] = useState('test_patient_id');
-    const APIinstance = new RendererAPIService(setPatientId);
+    const APIinstance = useRef(new RendererAPIService(setPatientId)).current;
+
+
+    const [patientSummary, setPatientSummary] = useState<string|null>(null);
+    const [orderSummary, setOrderSummary] = useState<string|null>(null);
+    const [basicInfo, setBasicInfo] = useState<string|null>(null);
+
+    const stateList:stateListEntryType[] = [
+        ['getOverallSummary', ()=>APIinstance, setPatientSummary, ()=>patientId],
+        ['getOrderSummary', ()=>APIinstance, setOrderSummary, ()=>patientId],
+        ['getBasicInfo', ()=>APIinstance, setBasicInfo, ()=>patientId],
+    ];
+    const effects = stateList.map(stateEntry => createAPIEffect(stateEntry));
+
+    useEffect(() => {
+        effects.forEach(effect => effect());
+    }, [patientId, APIinstance]);
+
 
     return (
         <div>
             <AppContext.Provider value={{
                 patientId: patientId,
-                API: APIinstance
+                API: APIinstance,
+                patientSummary: patientSummary,
+                orderSummary: orderSummary,
+                basicInfo: basicInfo
             }}>
                 <AppInner />
             </AppContext.Provider>
