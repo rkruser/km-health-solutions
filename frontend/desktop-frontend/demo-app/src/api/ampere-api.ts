@@ -15,6 +15,23 @@ async function appendStringWithRandomInt(input: string): Promise<string> {
     });
   }
 
+/*
+To do next:
+hierarchical model
+{
+    "patientId1": {
+        status: "loading"|"Loaded"|"Error",
+        timestamp: 123456789,
+        value: {...}; //have a subobject just for chat history regarding this patient?
+    }
+    "patientId2": {
+        ...
+    }
+
+}
+
+*/
+
 export class testAPIModel {
     private cache: any;
     constructor() {
