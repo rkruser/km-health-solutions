@@ -5,6 +5,37 @@ import remote from "./remote-bridge";
 import { response } from "express";
 import { update } from "lodash";
 
+
+async function appendStringWithRandomInt(input: string): Promise<string> {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const randomInt: number = Math.floor(Math.random() * 100);
+        resolve(`${input}${randomInt}`);
+      }, 2000);
+    });
+  }
+
+export class testAPIModel {
+    private cache: any;
+    constructor() {
+        this.cache = {};
+    }
+    obtain(key:string, notifierVar:number, setNotifierVar:(arg:number)=>void) : string {
+        if (key in this.cache) {
+            return this.cache[key];
+        } else {
+            let tempVal = 'placeholder';
+            this.cache[key] = tempVal;
+            appendStringWithRandomInt(key).then((result) => {
+                this.cache[key] = result;
+                setNotifierVar(notifierVar+1);
+            });
+            return tempVal;
+        }
+    }
+}
+
+
 function createGetterPromise(apiChannel:string, timeout:number, ...rest:any[]): Promise<string> {
     return new Promise((resolve,reject)=>{
         let isResolved = false;

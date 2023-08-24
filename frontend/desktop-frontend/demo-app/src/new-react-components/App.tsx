@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
 import AppContext from './app-context';
-import RendererAPIService from '../api/ampere-api';
+import RendererAPIService, {testAPIModel} from '../api/ampere-api';
 
 type stateListEntryType = [string, (a:any)=>void]
 function createAPIEffect(stateListEntry:stateListEntryType) : (a:RendererAPIService|null,b:string)=>void {
@@ -38,7 +38,6 @@ export default function App() {
     const [patientId, setPatientId] = useState('test_patient_id');
     const APIinstance = useRef(new RendererAPIService(setPatientId)).current;
 
-
     const [patientSummary, setPatientSummary] = useState<string|null>(null);
     const [orderSummary, setOrderSummary] = useState<string|null>(null);
     const [basicInfo, setBasicInfo] = useState<string|null>(null);
@@ -55,6 +54,13 @@ export default function App() {
     }, [patientId, APIinstance]);
 
 
+    /* 
+    Testing a different model of notification
+    */
+    const TestAPIModel = useRef(new testAPIModel()).current;
+    const [notifierVar, setNotifierVar] = useState<number>(0);
+    const [testKey, setTestKey] = useState<string>('firstKey');
+
     return (
         <div>
             <AppContext.Provider value={{
@@ -65,6 +71,8 @@ export default function App() {
                 basicInfo: basicInfo
             }}>
                 <AppInner />
+                <p>{TestAPIModel.obtain(testKey, notifierVar, setNotifierVar)}</p>
+                <button onClick={() => setTestKey('key_'+Math.random().toString())}>Change Key</button>
             </AppContext.Provider>
         </div>
     );
