@@ -10,7 +10,7 @@ async function appendStringWithRandomInt(input: string): Promise<string> {
     return new Promise((resolve) => {
       setTimeout(() => {
         const randomInt: number = Math.floor(Math.random() * 100);
-        resolve(`${input}${randomInt}`);
+        resolve(`${input}_${randomInt}`);
       }, 2000);
     });
   }
