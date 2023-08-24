@@ -47,9 +47,11 @@ export class MainAPIService implements FrontendAPI {
         // Your implementation here
     }
 
-    async setCurrentPatientAggregateInfo(info: AggregateInfo): Promise<void> {
+    /*
+    async setCurrentPatientAggregateInfo(dummy:string, info: AggregateInfo): Promise<void> {
         // Your implementation here
     }
+    */
 
     async setSearchState(param: string): Promise<void> {
         // Your implementation here

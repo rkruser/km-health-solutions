@@ -111,9 +111,11 @@ class RendererAPIService implements FrontendAPI {
             patientId);
     }
 
-    async setCurrentPatientAggregateInfo(info: AggregateInfo): Promise<void> {
+    /*
+    async setCurrentPatientAggregateInfo(dummy:string, info: AggregateInfo): Promise<void> {
         // Your implementation here
     }
+    */
 
     async setSearchState(param: string): Promise<void> {
         // Your implementation here

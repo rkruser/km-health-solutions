@@ -2,31 +2,22 @@ import React, { useState, useContext, useEffect, useRef, useCallback } from 'rea
 import AppContext from './app-context';
 import RendererAPIService from '../api/ampere-api';
 
-type stateListEntryType = [string, ()=>RendererAPIService|null, (a:any)=>void, ()=>any]
-function createAPIEffect(stateListEntry:stateListEntryType) : ()=>void {
-    return () => {
-        async function performAPIEffect() {
-            const [apiFunc, apiGetter, stateSetter, stateGetter] = stateListEntry;
+type stateListEntryType = [string, (a:any)=>void]
+function createAPIEffect(stateListEntry:stateListEntryType) : (a:RendererAPIService|null,b:string)=>void {
+    return (API:RendererAPIService|null, patientId:string) => {
+        async function performAPIEffect(API_in:RendererAPIService|null, patientId_in:string) {
+            const [apiFunc, stateSetter] = stateListEntry;
             stateSetter(null);
-            const API = apiGetter();
-            if (!API) {
+            if (!API_in) {
                 console.error("API not initialized");
                 return;
             }
-            const result = await API[apiFunc as keyof RendererAPIService](stateGetter(), 'param676');
+            const result = await API_in[apiFunc as keyof RendererAPIService](patientId_in, 'param676');
             stateSetter(result ? result : null);
         }
-        performAPIEffect();
+        performAPIEffect(API, patientId);
     };
 }
-
-/*
-Next steps:
-- Allow the various state variables to be formatted like the corresponding ampere types (maybe even just use the state aggregate type? eh, depends)
-- Use calls from the ampere API library to extract them into different display fields from the state
-- Be able to get patient list and display it too
-- Provide the various state variables to lower components?
-*/
 
 function AppInner() {
     const { patientId, API, patientSummary, orderSummary, basicInfo } = useContext(AppContext);
@@ -53,14 +44,14 @@ export default function App() {
     const [basicInfo, setBasicInfo] = useState<string|null>(null);
 
     const stateList:stateListEntryType[] = [
-        ['getOverallSummary', ()=>APIinstance, setPatientSummary, ()=>patientId],
-        ['getOrderSummary', ()=>APIinstance, setOrderSummary, ()=>patientId],
-        ['getBasicInfo', ()=>APIinstance, setBasicInfo, ()=>patientId],
+        ['getOverallSummary', setPatientSummary],
+        ['getOrderSummary', setOrderSummary],
+        ['getBasicInfo', setBasicInfo],
     ];
     const effects = stateList.map(stateEntry => createAPIEffect(stateEntry));
 
     useEffect(() => {
-        effects.forEach(effect => effect());
+        effects.forEach(effect => effect(APIinstance, patientId));
     }, [patientId, APIinstance]);
 
 
@@ -78,3 +69,13 @@ export default function App() {
         </div>
     );
 }
+
+
+
+/*
+Next steps:
+- Allow the various state variables to be formatted like the corresponding ampere types (maybe even just use the state aggregate type? eh, depends)
+- Use calls from the ampere API library to extract them into different display fields from the state
+- Be able to get patient list and display it too
+- Provide the various state variables to lower components?
+*/
