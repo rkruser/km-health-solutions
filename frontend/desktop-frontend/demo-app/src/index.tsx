@@ -1,15 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './css/index.css';
-import App from './react-components/App';
+//import App from './react-components/App';
+import App from './new-react-components/App';
 // import reportWebVitals from './reportWebVitals';
 
 import RendererAPIService from './api/ampere-api';
-
-const api = new RendererAPIService();
-api.getOrderSummary('', '').then((data) => {
-  console.log(data);
-});
 
 const root = ReactDOM.createRoot(
   document.getElementById('AppRoot') as HTMLElement

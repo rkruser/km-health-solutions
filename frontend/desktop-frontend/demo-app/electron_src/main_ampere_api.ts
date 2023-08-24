@@ -25,7 +25,7 @@ export class MainAPIService implements FrontendAPI {
 
     async getOverallSummary(patientId: string, param: string): Promise<string> {
         // Your implementation here
-        return "some_summary_"+param;
+        return "some_summary_"+param+"_"+Math.random().toString();
     }
 
     async getOrderSummary(patientId: string, param: string): Promise<string> {
