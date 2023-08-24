@@ -2,35 +2,39 @@ import React, { useState, useContext, useEffect, useRef, useCallback } from 'rea
 import AppContext from './app-context';
 import RendererAPIService from '../api/ampere-api';
 
+type stateListEntryType = [string, ()=>RendererAPIService|null, (a:any)=>void, ()=>any]
+function createAPIEffect(stateListEntry:stateListEntryType) : ()=>void {
+    return () => {
+        async function performAPIEffect() {
+            const [apiFunc, apiGetter, stateSetter, stateGetter] = stateListEntry;
+            stateSetter(null);
+            const API = apiGetter();
+            if (!API) {
+                console.error("API not initialized");
+                return;
+            }
+            const result = await API[apiFunc as keyof RendererAPIService](stateGetter(), 'param676');
+            stateSetter(result ? result : null);
+        }
+        performAPIEffect();
+    };
+}
+
 function AppInner() {
     const { patientId, API } = useContext(AppContext);
     const [patientSummary, setPatientSummary] = useState<string|null>(null);
     const [orderSummary, setOrderSummary] = useState<string|null>(null);
     const [basicInfo, setBasicInfo] = useState<string|null>(null);
 
+    const stateList:stateListEntryType[] = [
+        ['getOverallSummary', ()=>API, setPatientSummary, ()=>patientId],
+        ['getOrderSummary', ()=>API, setOrderSummary, ()=>patientId],
+        ['getBasicInfo', ()=>API, setBasicInfo, ()=>patientId],
+    ];
+    const effects = stateList.map(stateEntry => createAPIEffect(stateEntry));
+
     useEffect(() => {
-        async function fetchSummary() {
-            setPatientSummary(null);
-            const summary = await API?.getOverallSummary(patientId, 'param676');
-            setPatientSummary(summary ? summary : null);
-        }
-        fetchSummary();
-    }, [patientId, API]);
-    useEffect(() => {
-        async function fetchOrderSummary() {
-            setOrderSummary(null);
-            const summary = await API?.getOrderSummary(patientId, 'param678');
-            setOrderSummary(summary ? summary : null);
-        }
-        fetchOrderSummary();
-    }, [patientId, API]);
-    useEffect(() => {
-        async function fetchBasicInfo() {
-            setBasicInfo(null);
-            const info = await API?.getBasicInfo(patientId,"lem2");
-            setBasicInfo(info ? info : null);
-        }
-        fetchBasicInfo();
+        effects.forEach(effect => effect());
     }, [patientId, API]);
 
     return (

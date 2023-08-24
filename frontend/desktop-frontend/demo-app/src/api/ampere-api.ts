@@ -107,7 +107,7 @@ class RendererAPIService implements FrontendAPI {
     setCurrentPatientId(patientId: string): Promise<void> {
         return createSetterPromise(this.timeout, 
             'setCurrentPatientId', 
-            (_:any[], rest:any[]) => this.setPatientIdState(rest[0]+"heyyy"), 
+            (_:any[], rest:any[]) => this.setPatientIdState(rest[0]), 
             patientId);
     }
 
