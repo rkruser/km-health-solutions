@@ -20,6 +20,14 @@ function createAPIEffect(stateListEntry:stateListEntryType) : ()=>void {
     };
 }
 
+/*
+Next steps:
+- Allow the various state variables to be formatted like the corresponding ampere types (maybe even just use the state aggregate type? eh, depends)
+- Use calls from the ampere API library to extract them into different display fields from the state
+- Be able to get patient list and display it too
+- Provide the various state variables to lower components?
+*/
+
 function AppInner() {
     const { patientId, API } = useContext(AppContext);
     const [patientSummary, setPatientSummary] = useState<string|null>(null);
