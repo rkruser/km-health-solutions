@@ -33,7 +33,14 @@ class APICache {
         this.cache = {};
     }
 
-    traverse(keylist:string[], cacheLevel:CacheLevelType, prevKeyIndex=-1) {
+    //Todo:
+    // Add a force_create option to create nonexistent keys
+    // move returnval stuff to a creator function for better maintenance
+    static traverse(keylist:string[], 
+                    cacheLevel:CacheLevelType, 
+                    prevKeyIndex:number=-1, 
+                    force_create:boolean=false,
+                    prevNode:CacheNodeType|null=null) {
         if (keylist.length === 0) {
             let returnval:ReturnKeyStatus = {
                 keystatus: 'error:no_key_given',
@@ -52,23 +59,61 @@ class APICache {
                 }                
                 return returnval;
             }
+            else if (force_create) {
+                let cacheNode:CacheNodeType = {
+                    valuestatus: 'none',
+                    valuetimestamp: 'na',
+                    value: null,
+                    subtreestatus: 'present', //put 'empty' here instead?
+                    subtreetimestamp: 'na',
+                    subtree: {}
+                }
+                cacheLevel[key] = cacheNode;
+                let returnval:ReturnKeyStatus = {
+                    keystatus: 'present',
+                    node: cacheNode,
+                    keyIndexReached: prevKeyIndex+1
+                }
+                return returnval;
+            }
         }
         else {
             let [key, ...rest] = keylist;
             if (key in cacheLevel) {
-                return this.traverse(rest, cacheLevel[key].subtree, prevKeyIndex+1);
+                return APICache.traverse(rest, 
+                                        cacheLevel[key].subtree, 
+                                        prevKeyIndex+1, 
+                                        force_create,
+                                        cacheLevel[key]);
+            }
+            else if (force_create) {
+                let cacheNode:CacheNodeType = {
+                    valuestatus: 'none',
+                    valuetimestamp: 'na',
+                    value: null,
+                    subtreestatus: 'present',
+                    subtreetimestamp: 'na',
+                    subtree: {}
+                }
+                cacheLevel[key] = cacheNode;
+                return APICache.traverse(rest, 
+                    cacheNode.subtree, 
+                    prevKeyIndex+1, 
+                    force_create,
+                    cacheNode);
             }
         }
+
         let returnval:ReturnKeyStatus = {
             keystatus: 'key_not_found',
-            node: null,
+            node: prevNode,
             keyIndexReached: prevKeyIndex
         }
         return returnval;
     }
 
     getValue(keylist:string[]) {
-        let returnnode:ReturnKeyStatus = this.traverse(keylist, this.cache);
+        let returnnode:ReturnKeyStatus = APICache.traverse(keylist, this.cache);
         if (returnnode.keystatus === 'present') {
             let returnval: ReturnStatus = {
                 status: returnnode.node ? returnnode.node.valuestatus : 'error:node_is_null',
@@ -81,7 +126,8 @@ class APICache {
                 status: returnnode.keystatus,
                 content: {
                     keyIndexReached: returnnode.keyIndexReached,
-                    keysFound: keylist.slice(0,returnnode.keyIndexReached+1)
+                    keysFound: keylist.slice(0,returnnode.keyIndexReached+1),
+                    furthestNode: returnnode.node
                 }
             }
             return returnval;
@@ -95,13 +141,28 @@ class APICache {
 
 
 
-    set(keylist:string[], value:string) {
+    setValue(keylist:string[], value:string, status:string) {
         //this.cache[key] = value;
     }
-    delete(key) {
-        delete this.cache[key];
-    }
+
+    getSubtree(){
+
+    };
+    setSubtree(){
+
+    };
+    getCleanedDict() {
+
+    };
+    dictToSubtree() {
+
+    };
+
+
     flush(keylist:string[]) {
         
-    }
+    };
+    flushPending(){
+
+    };
 }
