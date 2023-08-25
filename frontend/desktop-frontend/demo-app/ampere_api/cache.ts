@@ -64,7 +64,7 @@ function makeReturnStatus(vals:Partial<ReturnStatus>): ReturnStatus {
 }
 
 
-class APICache {
+export class APICache {
     private cache: CacheLevelType;
 
     constructor() {
@@ -75,41 +75,26 @@ class APICache {
                     cacheLevel:CacheLevelType, 
                     prevKeyIndex:number=-1, 
                     force_create:boolean=false,
-                    prevNode:CacheNodeType|null=null) {
+                    prevNode:CacheNodeType|null=null): ReturnKeyStatus {
         if (keylist.length === 0) {
-            let returnval:ReturnKeyStatus = {
-                keystatus: 'error:no_key_given',
-                node: null,
-                keyIndexReached: -1
-            }
-            return returnval;
+            return makeReturnKeyStatus({ keystatus: 'error:no_key_given' });
         }
         else if (keylist.length === 1) {
             let key = keylist[0];
             if (key in cacheLevel) {
-                let returnval:ReturnKeyStatus = {
+                return makeReturnKeyStatus({
                     keystatus: 'present',
                     node: cacheLevel[key],
                     keyIndexReached: prevKeyIndex+1
-                }                
-                return returnval;
+                });
             }
             else if (force_create) {
-                let cacheNode:CacheNodeType = {
-                    valuestatus: 'none',
-                    valuetimestamp: 'na',
-                    value: null,
-                    subtreestatus: 'empty',
-                    subtreetimestamp: 'na',
-                    subtree: {}
-                }
-                cacheLevel[key] = cacheNode;
-                let returnval:ReturnKeyStatus = {
+                cacheLevel[key] = makeCacheNode({});
+                return makeReturnKeyStatus({
                     keystatus: 'present',
-                    node: cacheNode,
+                    node: cacheLevel[key],
                     keyIndexReached: prevKeyIndex+1
-                }
-                return returnval;
+                });
             }
         }
         else {
@@ -122,120 +107,142 @@ class APICache {
                                         cacheLevel[key]);
             }
             else if (force_create) {
-                let cacheNode:CacheNodeType = {
-                    valuestatus: 'none',
-                    valuetimestamp: 'na',
-                    value: null,
-                    subtreestatus: 'present',
-                    subtreetimestamp: 'na',
-                    subtree: {}
-                }
-                cacheLevel[key] = cacheNode;
+                cacheLevel[key] = makeCacheNode({ subtreestatus: 'present' });
                 return APICache.traverse(rest, 
-                    cacheNode.subtree, 
+                    cacheLevel[key].subtree, 
                     prevKeyIndex+1, 
                     force_create,
-                    cacheNode);
+                    cacheLevel[key]);
             }
         }
 
-        let returnval:ReturnKeyStatus = {
+        return makeReturnKeyStatus({
             keystatus: 'key_not_found',
-            node: prevNode, // The furthest node found on the key path
+            node: prevNode,
             keyIndexReached: prevKeyIndex
-        }
-        return returnval;
+        });
     }
 
-    getValue(keylist:string[]) {
-        let returnnode:ReturnKeyStatus = APICache.traverse(keylist, this.cache);
+    getValue(keylist:string[]): ReturnStatus {
+        let returnnode = APICache.traverse(keylist, this.cache);
         if (returnnode.keystatus === 'present') {
-            let returnval: ReturnStatus = {
+            return makeReturnStatus({
                 status: returnnode.node ? returnnode.node.valuestatus : 'error:node_is_null',
                 content: returnnode.node ? returnnode.node.value : null
-            }
-            return returnval;
+            });
         }
         else if (returnnode.keystatus === 'key_not_found') {
-            let returnval = {
+            return makeReturnStatus({
                 status: returnnode.keystatus,
                 content: {
                     keyIndexReached: returnnode.keyIndexReached,
-                    keysFound: keylist.slice(0,returnnode.keyIndexReached+1),
+                    keysFound: keylist.slice(0, returnnode.keyIndexReached+1),
                     furthestNode: returnnode.node
                 }
-            }
-            return returnval;
+            });
         }
-        let returnval = {
-            status: returnnode.keystatus,
-            content: null
-        }
-        return returnval;
+
+        return makeReturnStatus({ status: returnnode.keystatus });
     }
 
-
-    // True if key path exists and value is "present"
     hasValue(keylist:string[]): boolean {
-
+        const node = APICache.traverse(keylist, this.cache);
+        return node.keystatus === 'present' && !!node.node && node.node.valuestatus === 'present';
     };
-    // True if subtree exists and value is "present"
+    
     hasSubtree(keylist:string[]): boolean {
-        
+        const node = APICache.traverse(keylist, this.cache);
+        return node.keystatus === 'present' && !!node.node && node.node.subtreestatus === 'present';
     };
+    
 
-    /*
-    Set the value of the node given by the keylist to the given value.
-    Set the valuestatus to the given status.
-    Create any intermediate nodes necessary.
-    If any nodes are added to an empty subtree, change the subtree status from 'empty'
-      to 'present'
-    */
-    setValue(keylist:string[], value:any, valuestatus:string) {
-        
+    setValue(keylist:string[], value:any, valuestatus:string='present') {
+        const node = APICache.traverse(keylist, this.cache, -1, true);
+        if(node.node) {
+            node.node.value = value;
+            node.node.valuestatus = valuestatus;
+        }
     }
 
     getSubtree(keylist:string[]): ReturnStatus {
-
+        const node = APICache.traverse(keylist, this.cache);
+        return makeReturnStatus({
+            status: node.keystatus,
+            content: node.node && node.node.subtree || null
+        });
     };
 
-    /*
-    Like setValue but for the subtree.
-    */
-    setSubtree(keylist:string[], subtree:CacheLevelType, subtreestatus) {
-
+    setSubtree(keylist:string[], subtree:CacheLevelType, subtreestatus:string='present') {
+        const node = APICache.traverse(keylist, this.cache, -1, true);
+        if(node.node) {
+            node.node.subtree = subtree;
+            node.node.subtreestatus = subtreestatus;
+        }
     };
 
-    /* 
-    Make this.cache into a normal hierarchical dictionary for all the existing keys.
-    Ignore values and subtrees that do not have a status of 'present'.
-    If a keylist has both a present value and subtree, the returned dict should
-      map that keypath to a (cleaned) dictionary for the subtree with an additional
-      '_value' key mapped to the value.
-    */
     getCleanedDict() {
-
+        const recursivelyClean = (cacheLevel: CacheLevelType) => {
+            let cleaned: { [key: string]: any } = {};
+            for (const key in cacheLevel) {
+                if (cacheLevel[key].valuestatus === 'present') {
+                    cleaned[key] = { _value: cacheLevel[key].value };
+                }
+                if (cacheLevel[key].subtreestatus === 'present') {
+                    cleaned[key] = { ...cleaned[key], ...recursivelyClean(cacheLevel[key].subtree) };
+                }
+            }
+            return cleaned;
+        }
+        return recursivelyClean(this.cache);
     };
 
-    /*
-    Reverse the getCleanedDict operation to get a cache structure.
-    */
-    dictToCacheTree() {
-
+    dictToCacheTree(dict: any): CacheLevelType {
+        const recursivelyBuild = (dictLevel: any): CacheLevelType => {
+            let cacheLevel: CacheLevelType = {};
+            for (const key in dictLevel) {
+                if (key === '_value') continue;
+                const node: Partial<CacheNodeType> = {};
+                if ('_value' in dictLevel[key]) {
+                    node.valuestatus = 'present';
+                    node.value = dictLevel[key]._value;
+                }
+                const subtree = recursivelyBuild(dictLevel[key]);
+                if (Object.keys(subtree).length > 0) {
+                    node.subtreestatus = 'present';
+                    node.subtree = subtree;
+                }
+                cacheLevel[key] = makeCacheNode(node);
+            }
+            return cacheLevel;
+        }
+        return recursivelyBuild(dict);
     };
 
-    /*
-    Erase the subtree given by the keylist, if it exists. Optionally
-      erase the value at that node.
-    */
     flush(keylist:string[], flushvalue=true) {
-        
+        const node = APICache.traverse(keylist, this.cache);
+        if (node.node) {
+            if (flushvalue) {
+                node.node.valuestatus = 'none';
+                node.node.value = null;
+            }
+            node.node.subtree = {};
+            node.node.subtreestatus = 'empty';
+        }
     };
 
-    /*
-    Erase all elements (both value and subtree) of the cache whose status is not 'present'
-    */
-    flushPending(){
-
+    flushPending() {
+        const recursivelyFlush = (cacheLevel: CacheLevelType) => {
+            for (const key in cacheLevel) {
+                if (cacheLevel[key].valuestatus !== 'present') {
+                    cacheLevel[key].value = null;
+                }
+                if (cacheLevel[key].subtreestatus !== 'present') {
+                    cacheLevel[key].subtree = {};
+                } else {
+                    recursivelyFlush(cacheLevel[key].subtree);
+                }
+            }
+        }
+        recursivelyFlush(this.cache);
     };
 }
