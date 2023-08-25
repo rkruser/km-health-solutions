@@ -141,6 +141,12 @@ class APICache {
 
 
 
+    hasValue(keylist:string[]){
+
+    };
+    hasSubtree(keylist:string[]){
+        
+    };
     setValue(keylist:string[], value:string, status:string) {
         //this.cache[key] = value;
     }
