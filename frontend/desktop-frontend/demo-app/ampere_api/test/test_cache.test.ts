@@ -53,6 +53,10 @@ describe('APICache', () => {
         const result2 = apiCache.getSubtree(['key2']);
         expect(result2.status).toBe('present');
         expect(result2.content).toEqual(secondCache.getSubtree(['keyA']).content);
+
+        console.log("******************************");
+        console.log(apiCache.getTree().content);
+        console.log("******************************");
     });
     
 
@@ -68,14 +72,35 @@ describe('APICache', () => {
         expect(apiCache.hasSubtree(['key1'])).toBe(true);
         expect(apiCache.hasSubtree(['key_not_present'])).toBe(false);
     });
+    */
 
     test('getCleanedDict returns cleaned dictionary', () => {
-        apiCache.setValue(['key1'], 'value1');
-        apiCache.setSubtree(['key1'], { subkey1: 'subvalue1' });
+        let secondCache = new APICache();
+        secondCache.setValue(['keyA','keyB'], 'valueX');
+        secondCache.setValue(['keyA','keyC'], 'valueY');
+        secondCache.setValue(['keyD'], 'value999');
+        apiCache.setSubtree(['key1'], secondCache.getTree().content);
+        apiCache.setSubtree(['key2'], secondCache.getSubtree(['keyA']).content);
+
         const cleanedDict = apiCache.getCleanedDict();
-        expect(cleanedDict).toEqual({ key1: { _value: 'value1', subkey1: 'subvalue1' } });
+        expect(cleanedDict).toEqual({ 
+            key1: {
+                'keyA': {
+                    'keyB': { _value: 'valueX'},
+                    'keyC': { _value: 'valueY'}
+                },
+                'keyD': { _value: 'value999'}
+            },
+            key2: {
+                'keyB': { _value: 'valueX'},
+                'keyC': { _value: 'valueY'}        
+            }
+         });
+         console.log('CLEANED*************************');
+         console.log(cleanedDict);
+         console.log('*************************');
     });
-    */
+    
 
     test('flush cleans a key', () => {
         apiCache.setValue(['key1'], 'value1');
