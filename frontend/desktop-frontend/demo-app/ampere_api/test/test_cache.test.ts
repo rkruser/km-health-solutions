@@ -19,6 +19,20 @@ describe('APICache', () => {
         expect(result.content).toBe('value1');
     });
 
+    test('set value with multiple keys in path', ()=>{
+        apiCache.setValue(['key1','key2','key3'], "value!!");
+        const result = apiCache.getValue(['key1','key2','key3']);
+        expect(result.status).toBe('present');
+        expect(result.content).toBe('value!!');
+        apiCache.setValue(['key1','key2','key4'], "value4!!");
+        const result2 = apiCache.getValue(['key1','key2','key4']);
+        expect(result2.status).toBe('present');
+        expect(result2.content).toBe('value4!!');
+        const result3 = apiCache.getValue(['key1','key2']);
+        expect(result3.status).toBe('none');
+        expect(result3.content).toBe(null);
+    })
+
     test('getSubtree returns error status for empty cache', () => {
         const result = apiCache.getSubtree(['key1']);
         expect(result.status).toBe('key_not_found');
