@@ -11,6 +11,21 @@ type CacheNodeType = {
     subtree: CacheLevelType;
 }
 
+function makeCacheNode(vals:Partial<CacheNodeType>): CacheNodeType {
+    const defaultCacheNode = {
+        valuestatus: 'none',
+        valuetimestamp: Date(),
+        value: null,
+        subtreestatus: 'empty',
+        subtreetimestamp: Date(),
+        subtree: {}
+    }
+    return {
+        ...defaultCacheNode,
+        ...vals
+    }
+}
+
 type CacheLevelType = Record<string, CacheNodeType>;
 
 
@@ -20,9 +35,32 @@ type ReturnKeyStatus = {
     keyIndexReached: number;
 }
 
+function makeReturnKeyStatus(vals:Partial<ReturnKeyStatus>): ReturnKeyStatus {
+    const defaultReturnKeyStatus = {
+        keystatus: 'error',
+        node: null,
+        keyIndexReached: -1
+    }
+    return {
+        ...defaultReturnKeyStatus,
+        ...vals
+    }
+}
+
 type ReturnStatus = {
     status: string;
     content: any;
+}
+
+function makeReturnStatus(vals:Partial<ReturnStatus>): ReturnStatus {
+    const defaultReturnStatus = {
+        status: 'error',
+        content: null
+    }
+    return {
+        ...defaultReturnStatus,
+        ...vals
+    }
 }
 
 
@@ -33,9 +71,6 @@ class APICache {
         this.cache = {};
     }
 
-    //Todo:
-    // Add a force_create option to create nonexistent keys
-    // move returnval stuff to a creator function for better maintenance
     static traverse(keylist:string[], 
                     cacheLevel:CacheLevelType, 
                     prevKeyIndex:number=-1, 
@@ -64,7 +99,7 @@ class APICache {
                     valuestatus: 'none',
                     valuetimestamp: 'na',
                     value: null,
-                    subtreestatus: 'present', //put 'empty' here instead?
+                    subtreestatus: 'empty',
                     subtreetimestamp: 'na',
                     subtree: {}
                 }
@@ -106,7 +141,7 @@ class APICache {
 
         let returnval:ReturnKeyStatus = {
             keystatus: 'key_not_found',
-            node: prevNode,
+            node: prevNode, // The furthest node found on the key path
             keyIndexReached: prevKeyIndex
         }
         return returnval;
@@ -140,34 +175,66 @@ class APICache {
     }
 
 
-
-    hasValue(keylist:string[]){
+    // True if key path exists and value is "present"
+    hasValue(keylist:string[]): boolean {
 
     };
-    hasSubtree(keylist:string[]){
+    // True if subtree exists and value is "present"
+    hasSubtree(keylist:string[]): boolean {
         
     };
-    setValue(keylist:string[], value:string, status:string) {
-        //this.cache[key] = value;
+
+    /*
+    Set the value of the node given by the keylist to the given value.
+    Set the valuestatus to the given status.
+    Create any intermediate nodes necessary.
+    If any nodes are added to an empty subtree, change the subtree status from 'empty'
+      to 'present'
+    */
+    setValue(keylist:string[], value:any, valuestatus:string) {
+        
     }
 
-    getSubtree(){
+    getSubtree(keylist:string[]): ReturnStatus {
 
     };
-    setSubtree(){
+
+    /*
+    Like setValue but for the subtree.
+    */
+    setSubtree(keylist:string[], subtree:CacheLevelType, subtreestatus) {
 
     };
+
+    /* 
+    Make this.cache into a normal hierarchical dictionary for all the existing keys.
+    Ignore values and subtrees that do not have a status of 'present'.
+    If a keylist has both a present value and subtree, the returned dict should
+      map that keypath to a (cleaned) dictionary for the subtree with an additional
+      '_value' key mapped to the value.
+    */
     getCleanedDict() {
 
     };
-    dictToSubtree() {
+
+    /*
+    Reverse the getCleanedDict operation to get a cache structure.
+    */
+    dictToCacheTree() {
 
     };
 
-
-    flush(keylist:string[]) {
+    /*
+    Erase the subtree given by the keylist, if it exists. Optionally
+      erase the value at that node.
+    */
+    flush(keylist:string[], flushvalue=true) {
         
     };
+
+    /*
+    Erase all elements (both value and subtree) of the cache whose status is not 'present'
+    */
     flushPending(){
 
     };
