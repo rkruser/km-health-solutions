@@ -2,19 +2,29 @@
 Implements a simple cache structure for the API
 */
 
-type CacheEntryType = {
-    status: string;
-    timestamp: string;
-    value: CacheLevelType | string;
+type CacheNodeType = {
+    valuestatus: string;
+    valuetimestamp: string;
+    value: any;
+    subtreestatus: string;
+    subtreetimestamp: string;
+    subtree: CacheLevelType;
 }
 
-type CacheLevelType = Record<string, CacheEntryType>;
+type CacheLevelType = Record<string, CacheNodeType>;
+
+
+type ReturnKeyStatus = {
+    keystatus: string;
+    node: CacheNodeType | null;
+    keyIndexReached: number;
+}
 
 type ReturnStatus = {
     status: string;
-    indexReached: number;
-    value: string | null;
+    content: any;
 }
+
 
 class APICache {
     private cache: CacheLevelType;
@@ -23,45 +33,64 @@ class APICache {
         this.cache = {};
     }
 
-    get(keylist:string[]) {
-        let i=0;
-        let proceed=true;
-        let status = '';
-        let dictObject = this.cache;
-        let value = '';
-        while (proceed && i<keylist.length) {
-            let key = keylist[i];
-            if (!(key in dictObject)) {
-                status = 'key_not_found';
-                proceed = false;
+    traverse(keylist:string[], cacheLevel:CacheLevelType, prevKeyIndex=-1) {
+        if (keylist.length === 0) {
+            let returnval:ReturnKeyStatus = {
+                keystatus: 'error:no_key_given',
+                node: null,
+                keyIndexReached: -1
             }
-            else {
-                let entry = dictObject[key];
-                status = entry.status;                
-                if (status !== 'present') {
-                    proceed = false;
-                }
-                else if (typeof(entry.value) === 'string') {
-                    value = entry.value;
-                    proceed = false;
-                }
-                else {
-                    dictObject = entry.value;
-                    ++i;
-                }
+            return returnval;
+        }
+        else if (keylist.length === 1) {
+            let key = keylist[0];
+            if (key in cacheLevel) {
+                let returnval:ReturnKeyStatus = {
+                    keystatus: 'present',
+                    node: cacheLevel[key],
+                    keyIndexReached: prevKeyIndex+1
+                }                
+                return returnval;
             }
         }
-
-        if (i === keylist.length) {
-            status = 'insufficient_keys'
+        else {
+            let [key, ...rest] = keylist;
+            if (key in cacheLevel) {
+                return this.traverse(rest, cacheLevel[key].subtree, prevKeyIndex+1);
+            }
         }
-
-        return {
-            status: status,
-            indexReached: i,
-            value: value
+        let returnval:ReturnKeyStatus = {
+            keystatus: 'key_not_found',
+            node: null,
+            keyIndexReached: prevKeyIndex
         }
+        return returnval;
+    }
 
+    getValue(keylist:string[]) {
+        let returnnode:ReturnKeyStatus = this.traverse(keylist, this.cache);
+        if (returnnode.keystatus === 'present') {
+            let returnval: ReturnStatus = {
+                status: returnnode.node ? returnnode.node.valuestatus : 'error:node_is_null',
+                content: returnnode.node ? returnnode.node.value : null
+            }
+            return returnval;
+        }
+        else if (returnnode.keystatus === 'key_not_found') {
+            let returnval = {
+                status: returnnode.keystatus,
+                content: {
+                    keyIndexReached: returnnode.keyIndexReached,
+                    keysFound: keylist.slice(0,returnnode.keyIndexReached+1)
+                }
+            }
+            return returnval;
+        }
+        let returnval = {
+            status: returnnode.keystatus,
+            content: null
+        }
+        return returnval;
     }
 
 
