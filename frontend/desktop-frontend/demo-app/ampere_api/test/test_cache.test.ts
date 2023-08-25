@@ -38,14 +38,23 @@ describe('APICache', () => {
         expect(result.status).toBe('key_not_found');
     });
 
-    /*
+    
     test('setSubtree and getSubtree work correctly', () => {
-        apiCache.setSubtree(['key1'], { subkey1: 'subvalue1' });
+        let secondCache = new APICache();
+        secondCache.setValue(['keyA','keyB'], 'valueX');
+        secondCache.setValue(['keyA','keyC'], 'valueY');
+        secondCache.setValue(['keyD'], 'value999');
+        apiCache.setSubtree(['key1'], secondCache.getTree().content);
         const result = apiCache.getSubtree(['key1']);
         expect(result.status).toBe('present');
-        expect(result.content).toEqual({ subkey1: 'subvalue1' });
+        expect(result.content).toEqual(secondCache.getTree().content);
+
+        apiCache.setSubtree(['key2'], secondCache.getSubtree(['keyA']).content);
+        const result2 = apiCache.getSubtree(['key2']);
+        expect(result2.status).toBe('present');
+        expect(result2.content).toEqual(secondCache.getSubtree(['keyA']).content);
     });
-    */
+    
 
     test('hasValue works correctly', () => {
         apiCache.setValue(['key1'], 'value1');

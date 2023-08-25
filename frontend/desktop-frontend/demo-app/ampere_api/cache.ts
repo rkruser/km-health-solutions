@@ -164,6 +164,13 @@ export class APICache {
         }
     }
 
+    getTree(): ReturnStatus {
+        return makeReturnStatus({
+            status: 'present',
+            content: this.cache
+        });
+    }
+
     getSubtree(keylist:string[]): ReturnStatus {
         const node = APICache.traverse(keylist, this.cache);
         return makeReturnStatus({
