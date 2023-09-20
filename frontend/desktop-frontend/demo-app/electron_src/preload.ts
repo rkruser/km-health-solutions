@@ -2,6 +2,16 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 /*
 
+
+
+*/
+
+const validSendChannels = [
+  'apiRequest',
+  'requestAllPatientData',
+  'myEvent',
+  'completeTextRequest',
+
   'getPatientList', 
   'getSearchResults', 
   'getCurrentPatientId',
@@ -13,14 +23,6 @@ const { contextBridge, ipcRenderer } = require('electron');
   'setCurrentPatientId',
   'setCurrentPatientAggregateInfo',
   'setSearchState'
-
-*/
-
-const validSendChannels = [
-  'apiRequest',
-  'requestAllPatientData',
-  'myEvent',
-  'completeTextRequest'
 ];
 const validReceiveChannels = validSendChannels.map((channel) => channel + 'Response');
 

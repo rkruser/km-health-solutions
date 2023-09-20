@@ -24,8 +24,11 @@ const setEventHandlers = (ipcMain, patientData, completeText, api) => {
       let apiFunction = api[apiFunctionName];
       if (apiFunction) {
         let result = await apiFunction(...apiFunctionArgs);
+        if (result === undefined) {
+          result = "It worked I guess";
+        }
         console.log("API response: " + result);
-        event.reply('apiRequestResponse', result);
+        event.reply(apiFunctionName+'Response', result);
       }
       else {
         console.log("API function not found");

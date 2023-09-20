@@ -19,6 +19,6 @@ export interface FrontendAPI {
     getBasicInfo(patientId:string, param:string): Promise<string>;
 
     setCurrentPatientId(patientId:string): Promise<void>;
-    setCurrentPatientAggregateInfo(info:AggregateInfo): Promise<void>; //unclear if this is needed; mainly for caching
+    //setCurrentPatientAggregateInfo(param:string, info:AggregateInfo): Promise<void>; //unclear if this is needed; mainly for caching
     setSearchState(param:string): Promise<void>;
 }
