@@ -1,0 +1,61 @@
+% Standard headers
+\documentclass[12pt]{article}
+
+\title{Ampere Blockchain Model Whitepaper}
+\author{Ryen Krusinga}
+
+\begin{document}
+\maketitle
+
+% Here is a table of contents:
+\tableofcontents
+
+
+\section{Introduction}
+We describe a blockchain-based medical app capable of combining patient data from different institutions and formats into a coherent, decentralized whole. Our format allow for natural AI-assisted verification of data consistency and provides a secure, institution-independent way of representing personal medical information.
+
+\section{Components Overview}
+The app consists of several interconnected services running on cloud servers, whitelisted institutional computer networks, and whitelisted private devices. These components include:
+\begin{itemize}
+\item {\bf Blockchain core software:} A code library that allows authorized app instances to read from and/or write to a patient's blockchain.
+\item {\bf Data/AI layer software:} Code that formats patient data for use on the blockchain and checks data consistency with assistance from AI.
+\item {\bf FHIR/EHR bridging software:} A service that interfaces with EHR software from different institutions in order to obtain patient data and verify it.
+\item {\bf Cloud service bridging software:} Software components that interface with cloud computing providers such as Microsoft Azure and Amazon Web Services. These components abstract away cloud services so that core app components can run on different providers. These cloud services include:
+	\begin{itemize}
+	\item Serverless coding environments like Azure Functions and AWS Lambda
+	\item Scalable, replicated databases
+	\item API calls to AI models and other verification code.
+	\end{itemize}
+\item {\bf Key and version management software:} A service that manages whitelisted app instances, distributes and revokes cryptographic keys, and distributes code updates to nodes running the app.
+\item {\bf Frontend interface software:} A user-friendly desktop app for interacting with the blockchain service.
+\end{itemize}
+
+
+
+
+
+\section{Blockchain Design}
+
+
+
+
+
+\section{Security Design and Key Distribution Model}
+
+
+
+
+
+\section{Data/AI Layer Design}
+
+
+
+
+\section{Cloud and FHIR/EHR Bridging}
+
+
+
+
+
+
+\end{document}
