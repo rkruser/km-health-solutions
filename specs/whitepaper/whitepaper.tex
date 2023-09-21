@@ -35,7 +35,7 @@ The app consists of several interconnected services running on cloud servers, wh
 	\end{itemize}
 \item {\bf Key and version management software:} A service that manages whitelisted app instances, distributes and revokes cryptographic keys, and distributes code updates to nodes running the app.
 \item {\bf Frontend interface software:} A user-friendly desktop app for interacting with the blockchain service.
-\item {\bf Loggin, error reporting, and analytics software:} In order to constantly improve the app, we will need to extract usage analytics, data logs, and error reports from nodes implementing our technology.
+\item {\bf Logging, error reporting, and analytics software:} In order to constantly improve the app, we will need to extract usage analytics, data logs, and error reports from nodes implementing our technology.
 \end{itemize}
 
 In the future, as the app grows in complexity, other services may be needed, such as a load-balancing service, a shard management service like Kubernetes, and so forth.
@@ -93,6 +93,10 @@ The block algorithm shall be approximately as follows:
 \subsection{Philosophy Behind the Design}
 The flexible data formats, versioning system, and multi-block intake procedure all combine to make this blockchain maximally flexible in its ability to represent patients. It can accomodate patient information of any type in essentially any format. New formats and new data types can be added in the blockchain's future, along with better and better versions of the verification protocol. Furthermore, by storing intermediate computations as their own blocks, and by using the prefix-notation hash list to describe how each block was produced, the blockchain achieves full transparency of how it obtained, reformatted, and modified its data.
 
+To step back even further: what does it mean, at the widest level, to store data {\em about} something out in the world? This may seem like a trivial question, but it is not. Digital data is nothing but bits in computer memory. It does not have intrinsic meaning. Meaning derives from (1) how it is used in the computer program that handles it, and (2) how humans interpret the output of that computer program. This creates a problem of {\em drift}, which is when data becomes obsolete either because (a) the format has become useless as time progresses (due, perhaps, to newer computer technologies or professional practices), or (b) the literal meaning of the data has shifted (e.g., old medical categories are discovered to correspond to entirely different bodily processes than previously believed or agreed upon; social interpretations of gender versus sex is one example). Adding to these problems is the fact that one can never have {\em all} the data about a person; that would require an atomic-resolution movie of their entire life since birth. There is always more data to collect; a practical line must be drawn somewhere, and that line can shift.
+
+By designing the blockchain in the way described above, we can address all these problems by storing not just a rigid set of information fields mapped to values, as in current EHR systems, but multiple views to the same information in flexible, changeable formats, all the while maintaining computational transparency and drawing upon the flexibility of the latest AI technology as a proxy for human intuition.
+
 
 
 \section{Security Design and Key Distribution Model}
@@ -127,18 +131,57 @@ To achieve these ends, several pieces of core functionality may be implemented:
 
 
 \section{Data/AI Layer Design}
+\subsection{Data frames}
+Every new type and version of a data frame must have a corresponding description entry in the codebase specifying its purpose and its data format. Functions capable of handling the specific type and version will be registered in a global data handling table.
+
+Broadly, each type of data frame should implement at least the following functions:
+\begin{itemize}
+\item A hash function that maps a given data frame instance to a deterministic random hash.
+
+\item Constructors, possibly using AI, capable of taking data from various other formats and mapping them into the current format.
+
+\item Version casting constructors capable of mapping data in the current frame to past versions of the data format. Only necessary if backwards version compatibility is needed.
+
+\item At least two linearization/serialization functions: one for human readability, one for efficiently inputting the data into an AI.
+\end{itemize}
 
 
+\subsection{AI interface for consistency checking and recommendation}
+Broadly speaking, the consistency checking algorithm for a given blockchain would be as follows:
+\begin{enumerate}
+\item Find all past blocks containing the type of data being checked (or the most recent summary block on the central chain).
+
+\item Use the linearization function of each relevant data frame to extract a sequence of AI-readable inputs.
+
+\item Provide the AI with a prompt asking it to perform the given check, along with the linearized data, and give an answer in a particular format.
+
+\item Put the AI's response, if applicable, in a new data frame using a constructor function designed for this scenario.
+\end{enumerate}
+
+This can be adapted for making recommendations, performing logical inferences using classical reasoning techniques, and other potential tasks.
 
 
 \section{Patient Database Design}
+Patients must be mapped to their corresponding blockchain reliably, so that duplicate chains are avoided, as well as the problem of mistakenly attaching one patient's information to another's blockchain. This requires establishing a patient's identity. Identity establishment should be robust to errors and (among other things) slight variations in name spelling (such as, for example, including a middle name or not), and should handle the rare cases where there is more than one person with the same name and birthday.
 
+Within a single EHR system, this is done via a universally unique identifier (UUID) attached to each patient, along with the doctor asking clarifying questions about identity.
+
+The problem is that different EHR systems may use entirely different UUIDs for the same patient. Thus, for a decentralized app, identity must be established based on attributes alone. Therefore, patient data must be "fingerprinted" in a way that reliably establishes identity even in the presence of formatting differences, form errors, and so on. This is not likely to be a major concern, but it is something we will need to deal with.
 
 
 \section{Cloud and FHIR/EHR Bridging}
 
+This refers to background code that interacts with cloud and medical APIs, providing a layer of abstraction between the core app functionality and the world. Designs are based on company-specific API protocols. This code should strive to be as minimal and out-of-the-way as possible, relying heavily on pre-existing libraries.
 
+\section{Frontend Interface}
 
+We are currently using an electron/react paradigm, with the added benefit that the app can easily be run remotely through a browser.
+
+The interface should allow the viewing of a patient's blockchain, possibly making recommendations or drawing attention to errors.
+
+\section{Logging, error reporting, and analytics}
+
+This type of code is integrated throughout all the other code modules. A central service may be created to handle such information and send it to the developers.
 
 
 
