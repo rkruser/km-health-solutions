@@ -248,7 +248,26 @@ The design objectives for the first three modules to be implemented:
 \item {\bf Database module (\ref{module:database}):} Internal API interface must be machine-agnostic. The module must provide a database abstraction that can switch automatically between local and remote databases. It must keep any local databases up-to-date. It must implement some patient identity mapping function. Must demonstrate ability to store mappings between patient identity and large patient files (eventually, the blockchain files).
 \end{itemize}
 
+\section{Important Design Questions to Resolve}
 
+There are many specific questions to resolve about the blockchain protocol and the app implementation. These questions largely revolve around division of responsibility between various app nodes.
+
+\begin{itemize}
+\item Will hospital nodes store blockchain data and perform computational verifications on their own internal servers? Or will their app instances connect to our cloud servers to perform such verifications? The tradeoff: having hospitals do it internally supports the idea of true decentralization, as opposed to using our cloud model, which would technically all be provided by one company (Microsoft). On the other hand, this may get resource-intensive for hospitals to maintain on their own.
+
+\item For hospital app instances and other blockchain provider nodes, should we use Docker images? This seems reasonable; the serverless part of the app can be separate and support other things like AI calls.
+
+\item Which blockchain nodes should be responsible for which data? All nodes should maintain a ledger of the public keys of the overall network. But only our cloud nodes, plus the set of nodes at institutions that interact with a particular patient, should be responsible for that patient's blockchain info. This is partially to save resources by not having to broadcast a particular patient's blockchain to every node in the country. In general, a permissions system might be a good solution. All nodes, identified by their public key, will be associated with either read/write permissions, read-only permissions, verifier permissions (? all nodes should be verifiers in some sense, actually; perhaps I mean nodes with the authorization to call AIs), and so forth. These permissions will be maintained on the distributed chain of whitelisted nodes. Changing permissions will require signatures from nodes designated as capable of authorizing such changes (such as our nodes).
+
+\item How do we deal with AI calls? We don't want to make them too many times, as they are expensive. And how do we record the exact version of an AI, such that its output is deterministic given the input for the sake of validation?
+
+\item What specific blockchain consensus and distribution protocol should we use?
+
+\item What needs to be done with regards to digital certificates and DNS propagation? We will need to pay DNS companies and digital certificate authorities for authorization.
+
+\item What is the legality of storing patient data in different ways?
+
+\end{itemize}
 
 
 \end{document}
