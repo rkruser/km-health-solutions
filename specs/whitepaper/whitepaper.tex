@@ -136,7 +136,7 @@ Every new type and version of a data frame must have a corresponding description
 
 Broadly, each type of data frame should implement at least the following functions:
 \begin{itemize}
-\item A hash function that maps a given data frame instance to a deterministic random hash.
+\item A hash function that maps a given data frame instance to a deterministic cryptographic hash.
 
 \item Constructors, possibly using AI, capable of taking data from various other formats and mapping them into the current format.
 
@@ -166,7 +166,7 @@ Patients must be mapped to their corresponding blockchain reliably, so that dupl
 
 Within a single EHR system, this is done via a universally unique identifier (UUID) attached to each patient, along with the doctor asking clarifying questions about identity.
 
-The problem is that different EHR systems may use entirely different UUIDs for the same patient. Thus, for a decentralized app, identity must be established based on attributes alone. Therefore, patient data must be "fingerprinted" in a way that reliably establishes identity even in the presence of formatting differences, form errors, and so on. This is not likely to be a major concern, but it is something we will need to deal with.
+The problem is that different EHR systems may use entirely different UUIDs for the same patient. Thus, for a decentralized app, identity must be established based on attributes alone. Therefore, patient data must be ``fingerprinted'' in a way that reliably establishes identity even in the presence of formatting differences, form errors, and so on. This is not likely to be a major concern, but it is something we will need to deal with.
 
 
 \section{Cloud and FHIR/EHR Bridging}
@@ -184,5 +184,54 @@ The interface should allow the viewing of a patient's blockchain, possibly makin
 This type of code is integrated throughout all the other code modules. A central service may be created to handle such information and send it to the developers.
 
 
+\section{Minimal beta version goals and component set}
+
+The app described above is a complex multifaceted piece of software. Developing a beta version requires paring down functionality to the absolute minimum necessary to demonstrate the promise of the technology.
+
+The demonstration goals of beta are:
+\begin{enumerate}
+\item Show the ability to create a blockchain based on pre-existing patient data accessed through an FHIR interface, stored in multiple formats.
+
+\item Show the ability for multiple app instances to add blocks to the chain in a secure, decentralized manner.
+
+\item Show the ability to use AI to check errors in patient data and generate summary blocks.
+
+\item View the blockchain on a portable web app.
+\end{enumerate}
+
+
+\subsection{Necessary functional modules}
+To achieve these goals, the following modules must be implemented in some fashion:
+
+\begin{enumerate}
+\item {\bf Basic FHIR service:} Must be able to obtain all past FHIR entries for a given patient, as well as detect new entries as they arise. Must be able to connect to actual FHIR test servers. Must provide an API interface to the rest of the app abstracting away the details of FHIR calls.
+
+\item {\bf Basic patient database service:} Must be able to create and connect to secure databases, both local and remote. Must be able to store and retrieve blockchain data based on a patient's fingerprint. Must be able to cache data and automatically keep itself up-to-date if remote changes are made.
+
+\item {\bf Basic AI service:} \label{module:ai} Must be able to call GPT-4 in a HIPAA-compliant way through Microsoft Azure. Must provide an API interface to the rest of the app for making such calls.
+
+\item {\bf Minimal serverless wrapping code:} Code that wraps app functionality for all services listed here, allowing services to run in a serverless fashion through Azure Functions.
+
+\item {\bf Basic resource management service:} Must keep track of API URLs for all app and service instances. Must allow app instances to locate themselves in the wider ecosystem. Must manage digital certificates and connection security. Must manage running processes and restart them if necessary. Must keep track of whitelisted keys. Must track code versions on a basic level. Must provide an API interface for adding new whitelisted app instances.
+
+\item {\bf Blockchain core functionality:} Must be able to add blocks, verify blocks, and linearize blockchains for AI use. Must have a precise fault-tolerant consensus protocol.
+
+\item {\bf Data Frame core functionality:} A minimal set of data frames must be specified and implememented as described in the data layer design section. Their format information must be stored as data. They must be sufficient to store most types of relevant patient data.
+
+\item {\bf Logging ability:} Components must log their actions for the purposes of rapid debugging.
+
+\item {\bf Minimal frontend interface:} Must be able to load the blockchain for particular patients, visualize the blockchain information in some way, and perform actions on the blockchain such as human-initiated AI consistency checking.
+\end{enumerate}
+
+\subsection{Implementation details}
+All modules shall be implemented in Python with the exception of the frontend interface, which uses a stack of Typescript/Javascript/Node.js/React/Electron. 
+
+Modules shall be implemented in a way that takes maximum advantage of the serverless paradigm. Modules shall be conceived of as (stateless?) event-driven functions that interact with other resources such as databases. The internal logic shall only be dependent on internal APIs, abstracting away execution environment details. Cloud interfacing services are code wrappers for instances of the internal functions.
+
+Individual functions shall be as short and self-contained as possible (partially to allow them to fit within chatGPT's context window for development). They shall follow general style guidelines. They shall be tested where possible (requiring a basic mocking system around them). They shall rely on standard libraries where possible.
+
+\subsection{Predicted difficulty and implementation scheduling}
+
+Item \ref{module:ai} is
 
 \end{document}
