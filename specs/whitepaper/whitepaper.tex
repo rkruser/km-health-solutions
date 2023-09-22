@@ -204,23 +204,23 @@ The demonstration goals of beta are:
 To achieve these goals, the following modules must be implemented in some fashion:
 
 \begin{enumerate}
-\item {\bf Basic FHIR service:} Must be able to obtain all past FHIR entries for a given patient, as well as detect new entries as they arise. Must be able to connect to actual FHIR test servers. Must provide an API interface to the rest of the app abstracting away the details of FHIR calls.
+\item {\bf Minimal serverless wrapping code:} \label{module:serverless} Code that wraps app functionality for all services listed here, allowing services to run in a serverless fashion through Azure Functions.
 
-\item {\bf Basic patient database service:} Must be able to create and connect to secure databases, both local and remote. Must be able to store and retrieve blockchain data based on a patient's fingerprint. Must be able to cache data and automatically keep itself up-to-date if remote changes are made.
+\item {\bf Basic FHIR service:} \label{module:fhir} Must be able to obtain all past FHIR entries for a given patient, as well as detect new entries as they arise. Must be able to connect to actual FHIR test servers. Must provide an API interface to the rest of the app abstracting away the details of FHIR calls.
+
+\item {\bf Basic patient database service:} \label{module:database} Must be able to create and connect to secure databases, both local and remote. Must be able to store and retrieve blockchain data based on a patient's fingerprint. Must be able to cache data and automatically keep itself up-to-date if remote changes are made.
 
 \item {\bf Basic AI service:} \label{module:ai} Must be able to call GPT-4 in a HIPAA-compliant way through Microsoft Azure. Must provide an API interface to the rest of the app for making such calls.
 
-\item {\bf Minimal serverless wrapping code:} Code that wraps app functionality for all services listed here, allowing services to run in a serverless fashion through Azure Functions.
+\item {\bf Basic resource management service:} \label{module:management} Must keep track of API URLs for all app and service instances. Must allow app instances to locate themselves in the wider ecosystem. Must manage digital certificates and connection security. Must manage running processes and restart them if necessary. Must keep track of whitelisted keys. Must track code versions on a basic level. Must provide an API interface for adding new whitelisted app instances.
 
-\item {\bf Basic resource management service:} Must keep track of API URLs for all app and service instances. Must allow app instances to locate themselves in the wider ecosystem. Must manage digital certificates and connection security. Must manage running processes and restart them if necessary. Must keep track of whitelisted keys. Must track code versions on a basic level. Must provide an API interface for adding new whitelisted app instances.
+\item {\bf Blockchain core functionality:} \label{module:blockchain} Must be able to add blocks, verify blocks, and linearize blockchains for AI use. Must have a precise fault-tolerant consensus protocol.
 
-\item {\bf Blockchain core functionality:} Must be able to add blocks, verify blocks, and linearize blockchains for AI use. Must have a precise fault-tolerant consensus protocol.
+\item {\bf Data Frame core functionality:} \label{module:data} A minimal set of data frames must be specified and implememented as described in the data layer design section. Their format information must be stored as data. They must be sufficient to store most types of relevant patient data.
 
-\item {\bf Data Frame core functionality:} A minimal set of data frames must be specified and implememented as described in the data layer design section. Their format information must be stored as data. They must be sufficient to store most types of relevant patient data.
+\item {\bf Logging ability:} \label{module:logging} Components must log their actions for the purposes of rapid debugging.
 
-\item {\bf Logging ability:} Components must log their actions for the purposes of rapid debugging.
-
-\item {\bf Minimal frontend interface:} Must be able to load the blockchain for particular patients, visualize the blockchain information in some way, and perform actions on the blockchain such as human-initiated AI consistency checking.
+\item {\bf Minimal frontend interface:} \label{module:frontend} Must be able to load the blockchain for particular patients, visualize the blockchain information in some way, and perform actions on the blockchain such as human-initiated AI consistency checking.
 \end{enumerate}
 
 \subsection{Implementation details}
@@ -232,6 +232,23 @@ Individual functions shall be as short and self-contained as possible (partially
 
 \subsection{Predicted difficulty and implementation scheduling}
 
-Item \ref{module:ai} is
+The core set of functional modules are \ref{module:ai}, \ref{module:management}, \ref{module:blockchain}, and \ref{module:data}. Of those, \ref{module:management}, \ref{module:blockchain}, and \ref{module:data} are likely to be the largest and most technically involved modules at first. However, with careful abstraction, their logic can be mostly internal, allowing for ease of development by reducing the reliance on outside libraries and execution paradigms.
+
+The least immediately important modules are \ref{module:logging} and \ref{module:frontend}, so those can be saved for last (though \ref{module:logging} can somewhat be done as I go along).
+
+\ref{module:serverless}, \ref{module:fhir}, \ref{module:database}, and \ref{module:ai} all interface with external APIs and libraries, and thus have the largest learning curve even if they aren't the biggest modules. They also are prerequisites for the core functionality of the app, and may guide some design decisions about core functionality. Therefore, I plan to work on these first. I have already implemented a test version of \ref{module:ai} to call chatGPT's API, so that code can be adapted. That leaves \ref{module:serverless}, \ref{module:fhir}, and \ref{module:database} as the first I should implement. Since getting FHIR data is the most important step, I will work on \ref{module:fhir} first, then \ref{module:serverless}, then \ref{module:database}.
+
+\subsection{Minimal Module Design Objectives}
+The design objectives for the first three modules to be implemented:
+\begin{itemize}
+\item {\bf FHIR module (\ref{module:fhir}):} Provide a minimal set of functions for (a) obtaining a list of patients from FHIR, (b) obtaining the information and complete medical histories of said patients, and (c) automatically finding new patient entries as they arise. Must be demonstrated on actual FHIR test servers.
+
+\item {\bf Serverless module (\ref{module:serverless}):} Must provide a wrapper for the core functions of the app, such as the database module, AI module, and blockchain module, that allows the code to work in a serverless framework (in this case, Azure Functions). This involves connecting to Azure resources like database services and AI services. Must demonstrate ability to run general functions in a serverless manner, retrieve and store data from Azure resources, and make API calls to other Azure functions and AI services.
+
+\item {\bf Database module (\ref{module:database}):} Internal API interface must be machine-agnostic. The module must provide a database abstraction that can switch automatically between local and remote databases. It must keep any local databases up-to-date. It must implement some patient identity mapping function. Must demonstrate ability to store mappings between patient identity and large patient files (eventually, the blockchain files).
+\end{itemize}
+
+
+
 
 \end{document}
